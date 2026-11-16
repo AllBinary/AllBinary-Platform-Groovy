@@ -1,0 +1,38 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.image.GameFeatureImageCacheFactory;
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationBehaviorFactory;
+import org.allbinary.graphics.displayable.ScreenRelationalUtil;
+import org.allbinary.logic.math.PrimitiveIntUtil;
+import org.allbinary.media.image.ImageScaleUtil;
+import org.microemu.android.device.AndroidImageInterface;
+
+@groovy.transform.CompileStatic
+public class AllBinaryScreenRelationalImageAnimationInterfaceFactory extends BaseImageAnimationFactory {
+    private Image lastImage = NullImage.NULL_IMAGE;
+
+    public AllBinaryScreenRelationalImageAnimationInterfaceFactory(final Image image, final AnimationBehaviorFactory animationBehaviorFactory) throws Exception {
+        //int width, int height
+        super(image, PrimitiveIntUtil.getArrayInstance(), 0, 0, 0, 0, animationBehaviorFactory);
+        //Image image = this.getImage();
+        if (this.lastImage !== NullImage.NULL_IMAGE) {
+            final AndroidImageInterface androidImageInterface = ((AndroidImageInterface) this.lastImage);
+            androidImageInterface.getBitmap().recycle();
+        }
+        float scale = ScreenRelationalUtil.getInstance().getScaleImage(image);
+        this.lastImage = ImageScaleUtil.getInstance().createImage(GameFeatureImageCacheFactory.getInstance(), this.getImage(), scale, scale, false);
+    }
+
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        return new ImageAnimation(this.lastImage, this.animationBehaviorFactory.getOrCreateInstance());
+    }
+
+}
+
+

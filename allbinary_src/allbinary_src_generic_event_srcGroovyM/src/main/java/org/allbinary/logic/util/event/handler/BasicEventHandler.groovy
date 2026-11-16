@@ -1,0 +1,106 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.util.event.handler;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.logic.util.event.EventListenerInterface;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class BasicEventHandler implements BasicEventHandlerInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public static final String PERFORMANCE_MESSAGE = 'Use Custom onEvent Methods for needed optimization';
+
+    private BasicArrayList eventListenerInterfaceList;
+
+    // private Condition condition = reentrantLock.newCondition();
+    public BasicEventHandler() {
+        this.eventListenerInterfaceList = new BasicArrayListD();
+    }
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        final String LISTENER = ' Listener: ';
+        stringBuffer.append('Total Listeners: ');
+        stringBuffer.appendint(this.eventListenerInterfaceList.size());
+        EventListenerInterface eventListenerInterface;
+        int index = 0;
+        while (index < this.eventListenerInterfaceList.size()) {
+            try {
+                eventListenerInterface = ((EventListenerInterface) this.eventListenerInterfaceList.@objectArray[index]);
+                stringBuffer.append(LISTENER);
+                stringBuffer.append(StringUtil.getInstance().toString(eventListenerInterface));
+            } catch (Exception e) {
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                this.logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@TOSTRING, e);
+            }
+            index++;
+        }
+        return stringBuffer.toString();
+    }
+
+    public synchronized void removeAllListeners() {
+        this.eventListenerInterfaceList = new BasicArrayListD();
+    }
+
+    /*     public synchronized void addListeners(BasicArrayList vector)     {         int size = vector.size();         for (int index = 0; index < size; index++)         {             EventListenerInterface eventListenerInterface =                 (EventListenerInterface) vector.get(index);             this.addListener(eventListenerInterface);         }     }     */
+    public void addListenerSingleThreaded(EventListenerInterface eventListenerInterface) {
+        if (!this.eventListenerInterfaceList.contains(eventListenerInterface)) {
+            //      CommonLabels.getInstance().START + eventListenerInterface, this, this.commonStrings.ADD_LISTENER);
+            this.eventListenerInterfaceList.add(eventListenerInterface);
+        }
+    }
+
+    public synchronized void addListenerInterface(EventListenerInterface eventListenerInterface) {
+        // reentrantLock.isHeldByCurrentThread(), this, this.commonStrings.ADD_LISTENER);
+        if (!this.eventListenerInterfaceList.contains(eventListenerInterface)) {
+            //      CommonLabels.getInstance().START + eventListenerInterface, this, this.commonStrings.ADD_LISTENER);
+            this.eventListenerInterfaceList.add(eventListenerInterface);
+        }
+    }
+
+    public void removeListenerSingleThreaded(EventListenerInterface eventListenerInterface) {
+        //      CommonLabels.getInstance().START + eventListenerInterface, this, this.commonStrings.ADD_LISTENER);
+        this.eventListenerInterfaceList.remove(eventListenerInterface);
+    }
+
+    public synchronized void removeListener(EventListenerInterface eventListenerInterface) {
+        //      CommonLabels.getInstance().START + eventListenerInterface, this, this.commonStrings.ADD_LISTENER);
+        this.eventListenerInterfaceList.remove(eventListenerInterface);
+    }
+
+    public synchronized void fireEvent(AllBinaryEventObject eventObject) throws Exception {
+        /*          * reentrantLock.lock(); try {          *          * while(this.reentrantLock.getHoldCount() > 1) {          * this.condition.await(); }          *          * //if(this instance of DestroyedEventHandler) //LogUtil.put(new          * Log("Start: Locks Held: " + reentrantLock.getHoldCount() + " Held By          * Current Thread: " + reentrantLock.isHeldByCurrentThread(), this,          * EventStrings.getInstance().FIRE_EVENT)); //this.logUtil.putF(this.commonStrings.START, this, EventStrings.getInstance().FIRE_EVENT);          *          * iter = this.eventListenerInterfaceVector; while          * (iter.hasNext()) { EventListenerInterface eventListenerInterface =          * (EventListenerInterface) iter .next();          *          * this.process(eventObject, eventListenerInterface); }          *          * this.condition.signal(); } catch(Exception e) { LogUtil.put(new          * Log(this.commonStrings.EXCEPTION, this, EventStrings.getInstance().FIRE_EVENT, e)); } finally {          * reentrantLock.unlock(); }          */
+        int index = 0;
+        EventListenerInterface eventListenerInterface;
+        while (index < this.eventListenerInterfaceList.size()) {
+            try {
+                eventListenerInterface = ((EventListenerInterface) this.eventListenerInterfaceList.@objectArray[index]);
+                this.process(eventObject, eventListenerInterface);
+            } catch (Exception e) {
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                this.logUtil.put(commonStrings.@EXCEPTION, this, EventStrings.getInstance().@FIRE_EVENT, e);
+            }
+            index++;
+        }
+    }
+
+    protected void process(AllBinaryEventObject eventObject, EventListenerInterface eventListenerInterface) throws Exception {
+        // (BasicEventListenerInterface) eventListenerInterface;
+        eventListenerInterface.onEvent(eventObject);
+    }
+
+    public BasicArrayList getEventListenerInterfaceListP() {
+        return this.eventListenerInterfaceList;
+    }
+
+}
+
+

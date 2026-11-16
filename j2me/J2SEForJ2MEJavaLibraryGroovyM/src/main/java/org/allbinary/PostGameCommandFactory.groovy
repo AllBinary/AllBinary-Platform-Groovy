@@ -1,0 +1,24 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.game.configuration.feature.MultiPlayerGameFeatureFactory;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class PostGameCommandFactory {
+    private static final PostGameCommandFactory instance = new PostGameCommandFactory();
+
+    /**      * @return the instance      */
+    public static PostGameCommandFactory getInstance() {
+        return PostGameCommandFactory.instance;
+    }
+
+    public void addCommands(Canvas canvas) {
+        MultiPlayerGameFeatureFactory.getInstance().addCommands(canvas);
+    }
+
+}
+
+

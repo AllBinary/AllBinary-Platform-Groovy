@@ -1,0 +1,130 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.io.path;
+
+import org.allbinary.logic.io.file.FilePathData;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.StringValidationUtil;
+
+//Used to correct user input for paths
+@groovy.transform.CompileStatic
+public class PathUtil {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static final PathUtil instance = new PathUtil();
+
+    public static PathUtil getInstance() {
+        return PathUtil.instance;
+    }
+
+    private final AbPathData abPathData = AbPathData.getInstance();
+
+    private final FilePathData filePathData = FilePathData.getInstance();
+
+    private PathUtil() {
+    }
+
+    public String getExtensionWithAbFilePath(AbFilePath abFilePath) {
+        return this.abPathData.getExtension(abFilePath.toString());
+    }
+
+    public String getExtensionWithAbPath(AbPath abPath) {
+        return this.abPathData.getExtension(abPath.toString());
+    }
+
+    public String getWithoutExtensionWithAbFilePath(AbFilePath abFilePath) throws Exception {
+        return this.getWithoutExtension(abFilePath.toString());
+    }
+
+    public String getWithoutExtensionWithAbPath(AbPath abPath) throws Exception {
+        return this.getWithoutExtension(abPath.toString());
+    }
+
+    public String getWithoutExtension(String filePath) throws Exception {
+        int indexOfFileExtensionDelmiter = this.abPathData.getExtensionIndex(filePath);
+        //No extension by default
+        String pathWithoutExtension = filePath;
+        if (indexOfFileExtensionDelmiter >= 0) {
+            pathWithoutExtension = filePath.substring(0, indexOfFileExtensionDelmiter);
+        }
+        /*         if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().VIEW))         {             PreLogUtil.put("FileWithoutExtension: " + pathWithoutExtension, this, "getWithoutExtension()");         }         */
+        return pathWithoutExtension;
+    }
+
+    public boolean isValid(String path) {
+        if (this.isValidStart(path)) {
+            if (this.isValidEnd(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidStart(String path) {
+        if (path.charAt(0) == this.abPathData.@SEPARATORCHAR || path.charAt(0) == ('.' as char)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isValidEnd(String path) {
+        final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+        if (stringValidationUtil.isEmpty(path)) {
+            return false;
+        }
+        if (path.charAt(path.length() - 1) == this.abPathData.@SEPARATORCHAR) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String adjustStart(String path) {
+        if (!this.isValidStart(path)) {
+            path = this.abPathData.@SEPARATOR + path;
+        }
+        return path;
+    }
+
+    public String adjustEnd(String path) {
+        if (!this.isValidEnd(path)) {
+            path = path + this.abPathData.@SEPARATOR;
+        }
+        return path;
+    }
+
+    public String adjust(String path) {
+        final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+        if (stringValidationUtil.isEmpty(path)) {
+            return this.abPathData.@SEPARATOR;
+        }
+        //Convert \ to / I.E. from dos/windows file path to uri/unix path
+        if (path.indexOf('\\') >= 0) {
+            //PreLogUtil.put("Adjusting Path: " + path, this, "adjust");
+            path = path.replace(('\\' as char), this.abPathData.@SEPARATORCHAR);
+        }
+        /*         if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().FILE))         {             PreLogUtil.put("Path: " + path, this, "adjust");         }         */
+        return path;
+    }
+
+    //Do not update without checking the removeNameFromPath in AbPathData
+    public AbPath removeNameFromPath(String path) throws Exception {
+        int endIndex = path.lastIndexOf(this.abPathData.@SEPARATOR);
+        if (endIndex < 0) {
+            endIndex = path.lastIndexOf(((int) this.filePathData.@SEPARATORCHAR));
+        }
+        if (endIndex < 0) {
+            return AbPath.createAbPath();
+        }
+        //if the last char is sep then use the last token as the name
+        if (path.length() == endIndex + 1) {
+            return this.removeNameFromPath(path.substring(0, endIndex - 1));
+        } else {
+            final String pathWithoutName = path.substring(0, endIndex);
+            return new AbPath(pathWithoutName, StringUtil.getInstance().@EMPTY_STRING);
+        }
+    }
+
+}
+
+

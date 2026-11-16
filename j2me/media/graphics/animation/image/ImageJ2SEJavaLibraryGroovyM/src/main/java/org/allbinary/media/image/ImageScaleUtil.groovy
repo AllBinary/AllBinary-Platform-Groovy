@@ -1,0 +1,76 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import javax.microedition.lcdui.Image;
+import org.allbinary.image.ImageCache;
+
+@groovy.transform.CompileStatic
+public class ImageScaleUtil {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static final ImageScaleUtil instance = new ImageScaleUtil();
+
+    public static ImageScaleUtil getInstance() {
+        return ImageScaleUtil.instance;
+    }
+
+    private final ImageUtil imageUtil = ImageUtil.getInstance();
+
+    private final ImageJ2SEUtil imageJ2SEUtil = ImageJ2SEUtil.getInstance();
+
+    private final ImageCreationUtil imageCreationUtil = ImageCreationUtil.getInstance();
+
+    private ImageScaleUtil() {
+    }
+
+    //private int anchor = Anchor.TOP_LEFT;
+    public Image createImage2(final ImageCache imageCache, final Image originalImage, final float scaleNominatorX, final float scaleDenominatorX, final float scaleNominatorY, final float scaleDenominatorY, final boolean cached) throws Exception {
+        return this.createImage3(imageCache, originalImage, scaleNominatorX, scaleDenominatorX, scaleNominatorY, scaleDenominatorY, cached, true);
+    }
+
+    //private int anchor = Anchor.TOP_LEFT;
+    public Image createImage3(final ImageCache imageCache, final Image originalImage, final float scaleNominatorX, final float scaleDenominatorX, final float scaleNominatorY, final float scaleDenominatorY, final boolean cached, final boolean mutable) throws Exception {
+        final int width = originalImage.getWidth();
+        final int height = originalImage.getHeight();
+        final float scaleX = ((float) (scaleNominatorX / scaleDenominatorX));
+        final float scaleY = ((float) (scaleNominatorY / scaleDenominatorY));
+        Image image;
+        if (cached) {
+            image = imageCache.get(this.getClass().getName(), ((int) (((float) (width * scaleX)))), ((int) (((float) (height * scaleY)))));
+        } else {
+            //image = Image.createImage(width, height);
+            image = imageCache.get('createImage', ((int) (((float) (width * scaleX)))), ((int) (((float) (height * scaleY)))));
+        }
+        this.scale(originalImage, image, scaleX, scaleY, true);
+        return image;
+    }
+
+    public void scale2(final Image originalImage, final Image[] originalImageArray, final Image[] ximageToShowArray, final int unused, final float scaleX, final float scaleY, final float maxScaleX, final float maxScaleY) throws Exception {
+        //Set the max image size needed.
+        if (maxScaleX * originalImage.getWidth() > originalImageArray[0].getWidth() || maxScaleY * originalImage.getHeight() > originalImageArray[0].getHeight()) {
+            //this.logUtil.putF(new StringMaker().append("scale canvas: ").append(maxScaleX).toString(), this, this.commonStrings.UPDATE);
+            originalImageArray[0] = this.imageCreationUtil.createImage(originalImage.getWidth(), originalImage.getHeight(), maxScaleX, maxScaleY);
+        }
+        //this.logUtil.putF(new StringMaker().append("scaleX: ").append(scaleX).append("scaleY: ").append(scaleY).toString(), this, this.commonStrings.UPDATE);
+        this.scale(originalImage, originalImageArray[0], scaleX, scaleY, false);
+    }
+
+    public void scale(final Image originalImage, final Image newMaxSizeImage, final float scaleX, final float scaleY, final boolean clear) {
+        final BufferedImage bufferedImage = this.imageUtil.getBufferedImage(originalImage);
+        final BufferedImage newBufferedImage = this.imageUtil.getBufferedImage(newMaxSizeImage);
+        final AffineTransform at = AffineTransform.getScaleInstance(scaleX, scaleY);
+        final Graphics2D g = newBufferedImage.createGraphics();
+        if (clear) {
+            g.setBackground(this.imageJ2SEUtil.@TRANSPARENT_COLOR);
+            g.clearRect(0, 0, newBufferedImage.getWidth(), newBufferedImage.getHeight());
+        }
+        g.drawRenderedImage(bufferedImage, at);
+        g.dispose();
+    }
+
+}
+
+

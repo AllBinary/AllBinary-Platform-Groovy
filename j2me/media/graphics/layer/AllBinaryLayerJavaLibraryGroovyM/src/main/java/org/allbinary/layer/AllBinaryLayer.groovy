@@ -1,0 +1,241 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.layer;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.game.identification.BasicGroupFactory;
+import org.allbinary.game.identification.Group;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.graphics.RectangleFactory;
+import org.allbinary.graphics.opengles.OpenGLFeatureUtil;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.math.PositionStrings;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.view.ViewPositionBase;
+import org.allbinary.view.event.ViewPositionEvent;
+
+@groovy.transform.CompileStatic
+public class AllBinaryLayer extends Layer implements LayerInterface {
+    public static final AllBinaryLayer NULL_ALLBINARY_LAYER = new AllBinaryLayer(StringUtil.getInstance().@EMPTY_STRING, RectangleFactory.SINGLETON, ViewPositionBase.NULL_VIEW_POSITION);
+
+    protected final ViewPositionEvent viewPositionEvent = new ViewPositionEvent(this);
+
+    private int halfWidth;
+
+    private int halfHeight;
+
+    private final String name;
+
+    private ViewPositionBase viewPosition = ViewPositionBase.NULL_VIEW_POSITION;
+
+    public AllBinaryLayer(final String name, final Rectangle rectangle, final ViewPositionBase viewPosition) {
+        super(rectangle.getWidth(), rectangle.getHeight());
+        final String localName;
+        //        } else {
+        localName = new StringMaker().append(name).append(CommonSeps.getInstance().@COLON).append(Integer.toHexString(TsUtil.getInstance().hashCode(this))).toString();
+        //        }
+        this.name = localName;
+        final GPoint point = rectangle.getPoint();
+        this.setPosition(point.getX(), point.getY(), point.getZ());
+        this.setHalfWidth((this.getWidth() >> 1));
+        this.setHalfHeight((this.getHeight() >> 1));
+        this.viewPosition = viewPosition;
+        this.viewPosition.setAllbinaryLayer(this);
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void setPosition(final int x, final int y, final int z) {
+        super.setPosition(x, y, z);
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void moveDXYZ(final int dx, final int dy, final int dz) {
+        super.moveDXYZ(dx, dy, dz);
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getXP() {
+        return super.getXP();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getYP() {
+        return super.getYP();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getZP() {
+        return super.getZP();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getWidth() {
+        return super.getWidth();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getHeight() {
+        return super.getHeight();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void setVisible(final boolean visible) {
+        super.setVisible(visible);
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public boolean isVisible() {
+        return super.isVisible();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void paint(final Graphics graphics) {
+        super.paint(graphics);
+    }
+
+    public void onChangeEvent(final ViewPositionEvent layerManagerEvent) throws Exception {
+    }
+
+    @Override
+    public void paintThreed(final Graphics graphics) {
+    }
+
+    @Override
+    public int getX2() {
+        return this.getXP() + this.getWidth();
+    }
+
+    @Override
+    public int getY2() {
+        return this.getYP() + this.getHeight();
+    }
+
+    @Override
+    public int getZ2() {
+        return ((int) (this.getZP() + this.getDepth()));
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    protected void setHalfWidth(final int halfWidth) {
+        this.halfWidth = halfWidth;
+    }
+
+    @Override
+    public int getHalfWidth() {
+        return this.halfWidth;
+    }
+
+    protected void setHalfHeight(final int halfHeight) {
+        this.halfHeight = halfHeight;
+    }
+
+    @Override
+    public int getHalfHeight() {
+        return this.halfHeight;
+    }
+
+    public int getHalfDepth() {
+        return Math.divideExact(((int) this.getDepth()), 2);
+    }
+
+    public ViewPositionBase getViewPosition() {
+        return this.viewPosition;
+    }
+
+    public void setViewPosition(final ViewPositionBase viewPosition) {
+        this.viewPosition = viewPosition;
+    }
+
+    @Override
+    public Group[] getGroupInterface() {
+        return BasicGroupFactory.getInstance().@NONE_ARRAY;
+    }
+
+    @Override
+    public boolean implmentsTickableInterface() {
+        return false;
+    }
+
+    @Override
+    public boolean implmentsGameInputInterface() {
+        return false;
+    }
+
+    @Override
+    public boolean implmentsArtificialIntelligenceCompositeInterface() {
+        return false;
+    }
+
+    @Override
+    public boolean implmentsCollidableInterface() {
+        return false;
+    }
+
+    public boolean implementsThreedInterface() {
+        return OpenGLFeatureUtil.getInstance().isAnyThreed();
+    }
+
+    @Override
+    public int getType() {
+        return -1;
+    }
+
+    public int getMultiPlayerType() {
+        return -1;
+    }
+
+    private static final String TYPE = 'Type: ';
+
+    @Override
+    public void toStringAppend(final StringMaker stringBuffer) {
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final PositionStrings positionStrings = PositionStrings.getInstance();
+        final CommonLabels commonLabels = CommonLabels.getInstance();
+        stringBuffer.append(this.getName());
+        stringBuffer.append(commonSeps.@COLON);
+        stringBuffer.append(AllBinaryLayer.TYPE);
+        stringBuffer.appendint(this.getType());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(positionStrings.@X_LABEL);
+        stringBuffer.appendint(this.getXP());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(positionStrings.@Y_LABEL);
+        stringBuffer.appendint(this.getYP());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(positionStrings.@Z_LABEL);
+        stringBuffer.appendint(this.getZP());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(commonLabels.@WIDTH_LABEL);
+        stringBuffer.appendint(this.getWidth());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(commonLabels.@HEIGHT_LABEL);
+        stringBuffer.appendint(this.getHeight());
+    }
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        this.toStringAppend(stringBuffer);
+        return stringBuffer.toString();
+    }
+
+}
+
+

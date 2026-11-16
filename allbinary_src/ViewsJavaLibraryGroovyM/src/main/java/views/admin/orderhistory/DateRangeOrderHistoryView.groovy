@@ -1,0 +1,308 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package views.admin.orderhistory;
+
+import java.util.Calendar;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import javax.servlet.http.HttpServletRequest;
+import org.allbinary.business.user.commerce.inventory.order.OrderData;
+import org.allbinary.business.user.commerce.inventory.order.OrderHistory;
+import org.allbinary.business.user.commerce.inventory.order.OrderHistoryData;
+import org.allbinary.data.tables.user.commerce.inventory.order.OrderHistoryEntityFactory;
+import org.allbinary.data.tree.dom.DomNodeInterface;
+import org.allbinary.data.tree.dom.ModDomHelper;
+import org.allbinary.globals.GLOBALS2;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.control.validate.ValidationComponentInterface;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.StringValidationUtil;
+import org.allbinary.logic.visual.transform.info.TransformInfoInterface;
+import org.allbinary.time.TimeUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import views.business.context.modules.storefront.HttpStoreComponentView;
+
+@groovy.transform.CompileStatic
+public class DateRangeOrderHistoryView extends HttpStoreComponentView implements ValidationComponentInterface, DomNodeInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    //private final String VIEWORDERSINLAST30DAYS = "View Orders In Last 30 Days";
+    private final String VIEWALLORDERS = 'View All';
+
+    private final String VIEWORDERSINLASTHOUR = 'Last Hour';
+
+    private final String VIEWORDERSINLASTDAY = 'Last Day';
+
+    private final String VIEWORDERSINLASTWEEK = 'Last Week';
+
+    private final String VIEWORDERSINLAST30DAYS = '30 Days';
+
+    //private PageContext pageContext;
+    private HttpServletRequest request;
+
+    private String shipped;
+
+    private String partiallyShipped;
+
+    private String processing;
+
+    private String preprocessing;
+
+    private String cancelled;
+
+    private String dateType;
+
+    //long string
+    private String toDate;
+
+    private String fromDate;
+
+    private String fromYear;
+
+    private String fromMonth;
+
+    private String fromDay;
+
+    private String fromHour;
+
+    private String toYear;
+
+    private String toMonth;
+
+    private String toDay;
+
+    private String toHour;
+
+    private String command;
+
+    private final String ON = 'on';
+
+    private int MAXLEN = 15;
+
+    public DateRangeOrderHistoryView(TransformInfoInterface transformInfoInterface) throws Exception {
+        super(transformInfoInterface);
+        this.request = ((HttpServletRequest) this.getPageContext().getRequest());
+        this.getFormData();
+    }
+
+    private void getFormData() {
+        this.dateType = this.request.getParameter(OrderHistoryData.DATETYPE);
+        this.preprocessing = this.request.getParameter(OrderHistoryData.PREPROCESSINGNAME);
+        this.shipped = this.request.getParameter(OrderHistoryData.SHIPPEDNAME);
+        this.partiallyShipped = this.request.getParameter(OrderHistoryData.PARTIALLYSHIPPEDNAME);
+        this.processing = this.request.getParameter(OrderHistoryData.PROCESSINGNAME);
+        this.cancelled = this.request.getParameter(OrderHistoryData.CANCELLEDNAME);
+        this.fromYear = this.request.getParameter(OrderHistoryData.FROMYEAR);
+        this.fromMonth = this.request.getParameter(OrderHistoryData.FROMMONTH);
+        this.fromDay = this.request.getParameter(OrderHistoryData.FROMDAY);
+        this.fromHour = this.request.getParameter(OrderHistoryData.FROMHOUR);
+        this.toYear = this.request.getParameter(OrderHistoryData.TOYEAR);
+        this.toMonth = this.request.getParameter(OrderHistoryData.TOMONTH);
+        this.toDay = this.request.getParameter(OrderHistoryData.TODAY);
+        this.toHour = this.request.getParameter(OrderHistoryData.TOHOUR);
+        this.command = this.request.getParameter(GLOBALS2.ADMINCOMMAND);
+    }
+
+    public void addDomNodeInterfaces() {
+        this.addDomNodeInterface(((DomNodeInterface) this));
+    }
+
+    public String view() throws Exception {
+        try {
+            this.addDomNodeInterfaces();
+            return super.view();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@TAGHELPERERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'view()', e);
+            }
+            throw e;
+        }
+    }
+
+    public Node toXmlNode(Document document) {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Attempt to View orders in (fromDate=');
+                stringBuffer.append(this.fromDate);
+                stringBuffer.append(',toDate=');
+                stringBuffer.append(this.toDate);
+                stringBuffer.append(') and status');
+                this.logUtil.putF(stringBuffer.toString(), this, 'view');
+            }
+            Node node = document.createElement(OrderData.ORDERS);
+            /*             BasicArrayList orderHistoryVector = OrderHistoryEntityFactory.getInstance().getOrders(fromDate, toDate);                           iter = orderHistoryVector;             while(iter.hasNext())             {                OrderHistory orderHistory = (OrderHistory) iter.next();                node.appendChild(orderHistory.toXmlNode(document));             }              */
+            if (this.preprocessing != null && this.preprocessing.compareTo(this.ON) == 0) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF('Adding Preprocessing Orders', this, 'toXmlNode');
+                }
+                BasicArrayList orderHistoryVector = OrderHistoryEntityFactory.getInstance().getOrders(OrderHistoryData.PREPROCESSING, fromDate, toDate);
+                final int size = orderHistoryVector.size();
+                for (int index = 0; index < size; index++) {
+                    OrderHistory orderHistory = ((OrderHistory) orderHistoryVector.get(index));
+                    node.appendChild(orderHistory.toXmlNode(document));
+                }
+            }
+            if (this.shipped != null && this.shipped.compareTo(this.ON) == 0) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF('Adding Shipped Orders', this, 'toXmlNode');
+                }
+                BasicArrayList orderHistoryVector = OrderHistoryEntityFactory.getInstance().getOrders(OrderHistoryData.SHIPPED, fromDate, toDate);
+                final int size = orderHistoryVector.size();
+                for (int index = 0; index < size; index++) {
+                    OrderHistory orderHistory = ((OrderHistory) orderHistoryVector.get(index));
+                    node.appendChild(orderHistory.toXmlNode(document));
+                }
+            }
+            if (this.partiallyShipped != null && this.partiallyShipped.compareTo(this.ON) == 0) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF('Adding Partially Shipped Orders', this, 'toDomNode');
+                }
+                BasicArrayList orderHistoryVector = OrderHistoryEntityFactory.getInstance().getOrders(OrderHistoryData.PARTIALLYSHIPPED, fromDate, toDate);
+                final int size = orderHistoryVector.size();
+                for (int index = 0; index < size; index++) {
+                    OrderHistory orderHistory = ((OrderHistory) orderHistoryVector.get(index));
+                    node.appendChild(orderHistory.toXmlNode(document));
+                }
+            }
+            if (this.processing != null && this.processing.compareTo(this.ON) == 0) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF('Adding Processing Orders', this, 'toXmlNode');
+                }
+                BasicArrayList orderHistoryVector = OrderHistoryEntityFactory.getInstance().getOrders(OrderHistoryData.PROCESSING, fromDate, toDate);
+                final int size = orderHistoryVector.size();
+                for (int index = 0; index < size; index++) {
+                    OrderHistory orderHistory = ((OrderHistory) orderHistoryVector.get(index));
+                    node.appendChild(orderHistory.toXmlNode(document));
+                }
+            }
+            if (this.cancelled != null && this.cancelled.compareTo(this.ON) == 0) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF('Adding Cancelled Orders', this, 'view');
+                }
+                BasicArrayList orderHistoryVector = OrderHistoryEntityFactory.getInstance().getOrders(OrderHistoryData.CANCELLED, fromDate, toDate);
+                final int size = orderHistoryVector.size();
+                for (int index = 0; index < size; index++) {
+                    OrderHistory orderHistory = ((OrderHistory) orderHistoryVector.get(index));
+                    node.appendChild(orderHistory.toXmlNode(document));
+                }
+            }
+            node.appendChild(ModDomHelper.createNameValueNodes(document, OrderHistoryData.PREPROCESSINGNAME, OrderHistoryData.PREPROCESSING));
+            node.appendChild(ModDomHelper.createNameValueNodes(document, OrderHistoryData.PROCESSINGNAME, OrderHistoryData.PROCESSING));
+            node.appendChild(ModDomHelper.createNameValueNodes(document, OrderHistoryData.CANCELLEDNAME, OrderHistoryData.CANCELLED));
+            node.appendChild(ModDomHelper.createNameValueNodes(document, OrderHistoryData.PARTIALLYSHIPPEDNAME, OrderHistoryData.PARTIALLYSHIPPED));
+            node.appendChild(ModDomHelper.createNameValueNodes(document, OrderHistoryData.SHIPPEDNAME, OrderHistoryData.SHIPPED));
+            node.appendChild(ModDomHelper.createNameValueNodes(document, GLOBALS2.VIEWNAME, GLOBALS2.VIEW));
+            return node;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@XSLLOGGINGERROR)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, 'toXmlNode', e);
+            }
+            return null;
+        }
+    }
+
+    public Boolean isValid() {
+        try {
+            Boolean isValid = Boolean.TRUE;
+            if (this.dateType == null || (this.dateType.compareTo(OrderHistoryData.TYPELONG) != 0 && this.dateType.compareTo(OrderHistoryData.TYPECAESAR) != 0)) {
+                isValid = Boolean.FALSE;
+            }
+            if (this.dateType != null) {
+                if (this.dateType.compareTo(OrderHistoryData.TYPELONG) == 0) {
+                    Calendar calendar = Calendar.getInstance();
+                    long currentTime = calendar.getTimeInMillis();
+                    //set date delta OrderHistoryData.DATEDELTA
+                    String rangeDate = StringUtil.getInstance().@EMPTY_STRING;
+                    if (this.command.compareTo(this.VIEWORDERSINLASTHOUR) == 0) {
+                        long oneHour = ((long) 60) * 60 * 1000;
+                        rangeDate = new Long(oneHour).toString();
+                    } else if (this.command.compareTo(this.VIEWORDERSINLASTDAY) == 0) {
+                        long oneDay = ((long) 24) * 60 * 60 * 1000;
+                        rangeDate = new Long(oneDay).toString();
+                    } else if (this.command.compareTo(this.VIEWORDERSINLASTWEEK) == 0) {
+                        long oneWeek = ((long) 7) * 24 * 60 * 60 * 1000;
+                        rangeDate = new Long(oneWeek).toString();
+                    } else if (this.command.compareTo(this.VIEWORDERSINLAST30DAYS) == 0) {
+                        long thirtyDays = ((long) 30) * 24 * 60 * 60 * 1000;
+                        rangeDate = new Long(thirtyDays).toString();
+                    } else if (this.command.compareTo(this.VIEWALLORDERS) == 0) {
+                        rangeDate = new Long(currentTime).toString();
+                    }
+                    long rangeDateLong = new Long(rangeDate).longValue();
+                    this.fromDate = new Long(currentTime - rangeDateLong).toString();
+                    String time = new String(new Long(currentTime).toString());
+                    this.toDate = time;
+                } else if (this.dateType.compareTo(OrderHistoryData.TYPECAESAR) == 0) {
+                    Calendar calendar = Calendar.getInstance();
+                    TimeUtil.getInstance().setCalendar(calendar, this.fromYear, this.fromMonth, this.fromDay, this.fromHour);
+                    this.fromDate = new Long(calendar.getTimeInMillis()).toString();
+                    TimeUtil.getInstance().setCalendar(calendar, this.toYear, this.toMonth, this.toDay, this.toHour);
+                    this.toDate = new Long(calendar.getTimeInMillis()).toString();
+                }
+                if (StringValidationUtil.getInstance().isEmpty(this.toDate) || this.toDate.length() > this.MAXLEN) {
+                    isValid = Boolean.FALSE;
+                }
+                if (StringValidationUtil.getInstance().isEmpty(this.fromDate) || this.fromDate.length() > this.MAXLEN) {
+                    isValid = Boolean.FALSE;
+                }
+            }
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Attempt to View orders in (fromDate=');
+                stringBuffer.append(this.fromDate);
+                stringBuffer.append(',toDate=');
+                stringBuffer.append(this.toDate);
+                stringBuffer.append(')');
+                this.logUtil.putF(stringBuffer.toString(), this, this.commonStrings.@IS_VALID);
+            }
+            return isValid;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.put('Exception in validation', this, this.commonStrings.@IS_VALID, e);
+            }
+            return Boolean.FALSE;
+        }
+    }
+
+    public Document toValidationInfoDoc() {
+        return null;
+    }
+
+    public Node toValidationInfoNode(Document document) {
+        return null;
+    }
+
+    public String validationInfo() throws Exception {
+        try {
+            StringMaker result = new StringMaker();
+            if (this.dateType == null || (this.dateType.compareTo(OrderHistoryData.TYPELONG) != 0 && this.dateType.compareTo(OrderHistoryData.TYPECAESAR) != 0)) {
+                result.append('DATETYPE not recognized');
+            }
+            if (StringValidationUtil.getInstance().isEmpty(this.toDate) || this.toDate.length() > this.MAXLEN) {
+                result.append('Invalid To Date');
+            }
+            if (StringValidationUtil.getInstance().isEmpty(this.fromDate) || this.fromDate.length() > this.MAXLEN) {
+                result.append('Invalid From Date');
+            }
+            //"Date Range Invalid"
+            return result.toString();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEWERROR)) {
+                this.logUtil.put('Failed to generate validation error info', this, 'validationInfo()', e);
+            }
+            return 'Error Getting Validation Info';
+        }
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public TransformInfoInterface getTransformInfoInterface() throws Exception {
+        return super.getTransformInfoInterface();
+    }
+
+}
+
+

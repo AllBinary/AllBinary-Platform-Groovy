@@ -1,0 +1,65 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.identification;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class GroupFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final GroupFactory instance = new GroupFactory();
+
+    public static GroupFactory getInstance() {
+        return GroupFactory.instance;
+    }
+
+    public final Group[] NULL_GROUP_ARRAY = new Group[0];
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private int index = 0;
+
+    public Group getNextGroup() {
+        //        }
+        final Group group = ((Group) this.list.@objectArray[this.index]);
+        //this.logUtil.putF(new StringMaker().append("group: ").append(group).append(" index: ").append(index).toString(), this, "getNextGroup");
+        this.index++;
+        return group;
+    }
+
+    public Group getNextGroupByName(final String name) {
+        final Group group = this.getNextGroup();
+        //this.logUtil.putF(new StringMaker().append("group: ").append(group).append(" name: ").append(name).toString(), this, "getNextGroup");
+        group.setName(name);
+        return group;
+    }
+
+    public void init(final short groups, final String[] nameArray) {
+        final StringMaker stringMaker = new StringMaker();
+        final StringUtil stringUtil = StringUtil.getInstance();
+        final String TEAM = 'Team ';
+        this.list.clear();
+        this.index = 0;
+        int size = this.list.size();
+        String name;
+        while (size < groups) {
+            name = stringUtil.@EMPTY_STRING;
+            if (size < nameArray.length) {
+                name = nameArray[size];
+            } else {
+                stringMaker.delete(0, stringMaker.length());
+                name = stringMaker.append(TEAM).appendint(size).toString();
+            }
+            this.list.add(new Group(name, ((short) (size + 3))));
+            size++;
+        }
+    }
+
+}
+
+

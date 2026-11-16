@@ -1,0 +1,97 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.transform.template.customizer.includes.style.css.template.retail;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.data.tree.dom.DomNodeInterface;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.control.validate.Validation;
+import org.allbinary.logic.control.validate.ValidationInterface;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.visual.dhtml.style.StyleData;
+import org.allbinary.logic.visual.dhtml.style.StylesData;
+import org.allbinary.logic.visual.dhtml.style.StylesValidationFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+@groovy.transform.CompileStatic
+public class CssStyleValidation extends Validation implements DomNodeInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected BasicArrayList cssStyleElementVector;
+
+    public CssStyleValidation() {
+        this.cssStyleElementVector = new BasicArrayListD();
+    }
+
+    public CssStyleValidation(Document document) throws Exception {
+        this.cssStyleElementVector = StylesValidationFactory.getInstance().getInstance(document);
+    }
+
+    public CssStyleValidation(HashMap hashMap) throws Exception {
+        this.cssStyleElementVector = StylesValidationFactory.getInstance(hashMap);
+    }
+
+    public Boolean isValid() {
+        try {
+            Boolean isValid = Boolean.TRUE;
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@IS_VALID);
+            }
+            int size = this.cssStyleElementVector.size();
+            for (int i = 0; i < size; i++) {
+                ValidationInterface styleValidationInterface = ((ValidationInterface) this.cssStyleElementVector.get(i));
+                if (!styleValidationInterface.isValid().booleanValue()) {
+                    isValid = Boolean.FALSE;
+                }
+            }
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.putF('End: ' + isValid, this, this.commonStrings.@IS_VALID);
+            }
+            return isValid;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put('Failed to validate form', this, this.commonStrings.@IS_VALID, e);
+            }
+            return Boolean.FALSE;
+        }
+    }
+
+    public String validationInfo() {
+        try {
+            StringMaker stringBuffer = new StringMaker();
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEWERROR)) {
+                this.logUtil.put('Failed to generate validation error info', this, 'validationInfo()', e);
+            }
+            return 'Error Validating Form';
+        }
+    }
+
+    public Document toValidationInfoDoc() {
+        return null;
+    }
+
+    public Node toValidationInfoNode(Document document) {
+        return null;
+    }
+
+    public Node toXmlNode(Document document) throws Exception {
+        Node node = document.createElement(StylesData.getInstance().@NAME);
+        Node styleNode = document.createElement(StyleData.getInstance().@NAME);
+        node.appendChild(styleNode);
+        int size = this.cssStyleElementVector.size();
+        for (int i = 0; i < size; i++) {
+            DomNodeInterface styleDomNodeInterface = ((DomNodeInterface) this.cssStyleElementVector.get(i));
+            styleNode.appendChild(styleDomNodeInterface.toXmlNode(document));
+        }
+        return node;
+    }
+
+}
+
+

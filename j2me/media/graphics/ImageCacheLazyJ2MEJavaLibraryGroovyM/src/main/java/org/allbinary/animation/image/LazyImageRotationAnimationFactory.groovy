@@ -1,0 +1,49 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationBehaviorFactory;
+import org.allbinary.animation.AnimationInterfaceFactoryInterface;
+import org.allbinary.image.ImageCacheFactory;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.media.ScaleProperties;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class LazyImageRotationAnimationFactory implements AnimationInterfaceFactoryInterface {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final int layoutIndex;
+
+    private final BaseImageAnimationFactory animationInterfaceFactoryInterface;
+
+    public ScaleProperties scaleProperties = ScaleProperties.instance;
+
+    public LazyImageRotationAnimationFactory(final int layoutIndex, final int associatedLazyAnimationId, final BaseImageAnimationFactory animationInterfaceFactoryInterface) {
+        this.layoutIndex = layoutIndex;
+        this.animationInterfaceFactoryInterface = animationInterfaceFactoryInterface;
+        ImageCacheFactory.getInstance().@hasAnyLazyAnimationFactories = true;
+        if (this.animationInterfaceFactoryInterface.@animationBehaviorFactory === AnimationBehaviorFactory.getInstance()) {
+            ForcedLogUtil.log('Using default AnimationBehaviorFactory with IndexedAnimationFactory', this);
+        }
+    }
+
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        if (this.animationInterfaceFactoryInterface.getImage().isReady()) {
+            this.animationInterfaceFactoryInterface.setInitialScale(this.scaleProperties);
+            return this.animationInterfaceFactoryInterface.getInstance(instanceId);
+        } else {
+            return new LazyImageRotationAnimation(this.layoutIndex, instanceId, this.scaleProperties, this.animationInterfaceFactoryInterface, this.animationInterfaceFactoryInterface.@animationBehaviorFactory.getOrCreateInstance());
+        }
+    }
+
+    @Override
+    public void setInitialScale(final ScaleProperties scaleProperties) {
+        //this.logUtil.putF(scaleProperties.toString(), this, commonStrings.CONSTRUCTOR);
+        this.scaleProperties = scaleProperties;
+    }
+
+}
+
+

@@ -1,0 +1,151 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.audio;
+
+import javax.microedition.media.Control;
+import javax.microedition.media.Controllable;
+import javax.microedition.media.Player;
+import javax.microedition.media.PlayerListener;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.time.GameTickTimeDelayHelper;
+import org.allbinary.time.GameTickTimeDelayHelperFactory;
+import org.allbinary.time.TimeDelayHelper;
+
+//BasicPlayer
+@groovy.transform.CompileStatic
+public class PlayerComposite implements Controllable, Player {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final Player player;
+
+    private final TimeDelayHelper timeElapsedHelper = new TimeDelayHelper(0);
+
+    public PlayerComposite(final Player player, final int repeatTime) {
+        this.player = player;
+        this.timeElapsedHelper.@delay = repeatTime;
+    }
+
+    /*      * public PlayerComposite(Player player, long repeatTime) { this.player =      * player; this.repeatTime = repeatTime; timeElapsedHelper.setStartTime(); }      */
+    @Override
+    public synchronized void addPlayerListener(PlayerListener playerListener) {
+        this.player.addPlayerListener(playerListener);
+    }
+
+    @Override
+    public void removePlayerListener(PlayerListener playerListener) {
+        this.player.removePlayerListener(playerListener);
+    }
+
+    @Override
+    public void close() {
+        this.player.close();
+    }
+
+    @Override
+    public void deallocate() {
+        this.player.deallocate();
+    }
+
+    @Override
+    public String getContentType() {
+        return this.player.getContentType();
+    }
+
+    @Override
+    public long getDuration() {
+        return this.player.getDuration();
+    }
+
+    @Override
+    public long getMediaTime() {
+        return this.player.getMediaTime();
+    }
+
+    /*    public TimeBase getTimeBase()    {       return this.player.getTimeBase();    }     public synchronized void setTimeBase(TimeBase timeBase)        throws MediaException    {       this.player.setTimeBase(timeBase);    }    */
+    @Override
+    public void prefetch() {
+        try {
+            this.player.prefetch();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'prefetch', e);
+        }
+    }
+
+    @Override
+    public void realize() {
+        try {
+            this.player.realize();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'realize', e);
+        }
+    }
+
+    @Override
+    public int getState() {
+        return this.player.getState();
+    }
+
+    @Override
+    public void setLoopCount(int count) {
+        this.player.setLoopCount(count);
+    }
+
+    @Override
+    public long setMediaTime(long now) {
+        try {
+            // this.logUtil.putF(this.commonStrings.START, this, this.commonStrings);
+            return this.player.setMediaTime(now);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'setMediaTime', e);
+            return -1;
+        }
+    }
+
+    private final GameTickTimeDelayHelper gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory.getInstance();
+
+    @Override
+    public void start() {
+        try {
+            // this.getMediaTime()
+            if (this.timeElapsedHelper.isTime(this.gameTickTimeDelayHelper.@startTime)) {
+                this.player.start();
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@START_METHOD_NAME, e);
+        }
+    }
+
+    @Override
+    public void stop() {
+        try {
+            this.player.stop();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'stop', e);
+        }
+    }
+
+    @Override
+    public Control getControl(String controlType) {
+        return this.player.getControl(controlType);
+    }
+
+    @Override
+    public Control[] getControls() {
+        throw new RuntimeException();
+    }
+
+    public void setVolume(final int leftVolume, final int rightVolume) {
+        final Controllable2 controllable2 = (((Controllable2) this.player));
+        controllable2.setVolume(leftVolume, rightVolume);
+    }
+
+    public Player getPlayerP() {
+        return this.player;
+    }
+
+}
+
+

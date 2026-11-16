@@ -1,0 +1,312 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.form;
+
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.graphics.form.item.ABCustomItem;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.math.RectangleCollisionUtil;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class ScrollSelectionForm extends PaintableForm {
+    private static PaintableForm createForm(final String title, final ABCustomItem[] items, final ItemPaintableFactory formPaintableFactory, final int border, final BasicColor backgroundBasicColor, final BasicColor foregroundBasicColor) {
+        try {
+            if (formPaintableFactory === ItemPaintableFactory.getInstance()) {
+                return new ScrollSelectionForm(title, items, formPaintableFactory, border, -3, backgroundBasicColor, foregroundBasicColor);
+            } else {
+                //This call should only work with ItemPaintableFactory.getInstance()
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                final LogUtil logUtil = LogUtil.getInstance();
+                logUtil.putF(commonStrings.@EXCEPTION, logUtil, commonStrings.@EXCEPTION);
+                //throw new RuntimeException();
+                return PaintableForm.getNullPaintableForm();
+            }
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            final LogUtil logUtil = LogUtil.getInstance();
+            logUtil.put(commonStrings.@EXCEPTION, logUtil, commonStrings.@EXCEPTION, e);
+            //throw new RuntimeException();
+            return PaintableForm.getNullPaintableForm();
+        }
+    }
+
+    private static Object NULL_SCROLL_SELECTION_FORM = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static ScrollSelectionForm getNullScrollSelectionForm() {
+        if (ScrollSelectionForm.NULL_SCROLL_SELECTION_FORM === NullUtil.getInstance().@NULL_OBJECT) {
+            ScrollSelectionForm.NULL_SCROLL_SELECTION_FORM = ScrollSelectionForm.createForm(StringUtil.getInstance().@EMPTY_STRING, new ABCustomItem[0], ItemPaintableFactory.getInstance(), 0, BasicColorFactory.getInstance().@BLACK, BasicColorFactory.getInstance().@WHITE);
+        }
+        return ((ScrollSelectionForm) ScrollSelectionForm.NULL_SCROLL_SELECTION_FORM);
+    }
+
+    private static Object NULL_SCROLL_SELECTION_HORIZONTAL_FORM = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static ScrollSelectionForm getNullScrollSelectionFormHorizontal() {
+        if (ScrollSelectionForm.NULL_SCROLL_SELECTION_HORIZONTAL_FORM === NullUtil.getInstance().@NULL_OBJECT) {
+            ScrollSelectionForm.NULL_SCROLL_SELECTION_HORIZONTAL_FORM = ScrollSelectionForm.createForm(StringUtil.getInstance().@EMPTY_STRING, new ABCustomItem[0], ItemPaintableFactory.getInstance(), 0, BasicColorFactory.getInstance().@BLACK, BasicColorFactory.getInstance().@WHITE);
+        }
+        return ((ScrollSelectionForm) ScrollSelectionForm.NULL_SCROLL_SELECTION_HORIZONTAL_FORM);
+    }
+
+    private static final String INSIDE_FORM = ' inside form';
+
+    private static final String IS_IN_FORM = 'isInForm';
+
+    private final RectangleCollisionUtil rectangleCollisionUtil = RectangleCollisionUtil.getInstance();
+
+    protected final int border;
+
+    protected final int halfBorder;
+
+    private BasicColor buttonBasicColor;
+
+    protected ItemIndexPaintable scrollSelectionFormFormTypeItemIndexPaintable = ItemIndexPaintable.getInstance();
+
+    private ItemIndexDx formTypeItemIndexDx = ItemIndexDx.getInstance();
+
+    protected ItemPaintable paintable = ItemPaintableFactory.getInstance();
+
+    private final int adjustedExtraBorder;
+
+    public ScrollSelectionForm(final String title, final ABCustomItem[] items, final ItemPaintableFactory formPaintableFactory, final int border, final int adjustedExtraBorder, final BasicColor backgroundBasicColor, final BasicColor foregroundBasicColor) throws Exception {
+        super(title, items, backgroundBasicColor, foregroundBasicColor);
+        this.adjustedExtraBorder = adjustedExtraBorder;
+        this.buttonBasicColor = foregroundBasicColor;
+        //        }
+        this.border = border;
+        this.halfBorder = (border >> 1);
+        this.paintable = formPaintableFactory.getInstanceItemPaintable(this);
+    }
+
+    @Override
+    public void init(final Rectangle rectangle, final FormType formType) throws Exception {
+        super.init(rectangle, formType);
+        //this.logUtil.putF("ScrollSelectionForm formType: " + formType.toString(), this, this.commonStrings.INIT);
+        final FormTypeFactory formTypeFactory = FormTypeFactory.getInstance();
+        if (formType === formTypeFactory.@HORIZONTAL_FORM) {
+            this.scrollSelectionFormFormTypeItemIndexPaintable = new ScrollSelectionFormHorizontalPaintable(this);
+            this.formTypeItemIndexDx = new ScrollSelectionFormHorizontalDx(this);
+        } else if (formType === formTypeFactory.@VERTICAL_CENTER_FORM) {
+            this.scrollSelectionFormFormTypeItemIndexPaintable = new ScrollSelectionFormVerticalPaintable(this);
+            this.formTypeItemIndexDx = new ScrollSelectionFormVericalDx(this);
+        } else if (formType === formTypeFactory.@TEMP_HORIZONTAL_FORM) {
+            this.scrollSelectionFormFormTypeItemIndexPaintable = new ScrollSelectionFormTempHorizontalPaintable(this);
+            this.formTypeItemIndexDx = new ScrollSelectionFormTempHorizontalDx(this);
+        } else if (formType === formTypeFactory.@NULL_FORM_TYPE) {
+        } else {
+            throw new Exception(formTypeFactory.@UNK);
+        }
+    }
+
+    public int paintItemHorizontal(final Graphics graphics, final int index, final ABCustomItem item, final int x, final int y) {
+        final int width = item.getMinimumWidth();
+        return x + width + this.border;
+    }
+
+    public int paintItemVertical(final Graphics graphics, final int index, final ABCustomItem item, final int x, final int y) {
+        final int height = item.getMinimumHeight();
+        return y + height + this.border;
+    }
+
+    public int paintItemTempHorizontal(final Graphics graphics, final int index, final ABCustomItem item, final int x, final int y) {
+        return 0;
+    }
+
+    public int getSelectedIndexForPointHorizontalDx(final int index, final ABCustomItem item, int dx, final int dy) {
+        return dx - this.halfBorder;
+    }
+
+    public int getSelectedIndexForPointVerticalDx(final int index, final ABCustomItem item, int dx, final int dy) {
+        return dx + this.getDiffX(item);
+    }
+
+    public int getSelectedIndexForPointTempHorizontalDx(final int index, final ABCustomItem item, int dx, final int dy) {
+        return dx + this.getDiffX(item);
+    }
+
+    @Override
+    public int append(final ABCustomItem item) {
+        //((FormItemInterface) item).setOwner(this);
+        return super.append(item);
+    }
+
+    public ABCustomItem getSelectedItem(final GPoint point) throws Exception {
+        int index = this.getSelectedIndexForPoint(point);
+        if (index != -1) {
+            return this.get(index);
+        } else {
+            return ABCustomItem.getNullInstance();
+        }
+    }
+
+    public int getItemIndex(final ABCustomItem item) throws Exception {
+        ABCustomItem nextItem;
+        final int size = this.size();
+        for (int index = 0; index < size; index++) {
+            nextItem = ((ABCustomItem) this.get(index));
+            if (nextItem === item) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    public int getStartIndex() {
+        return 0;
+    }
+
+    private static final String GET_SELECTED_INDEX = 'getSelectedIndexForPoint';
+
+    public int getSelectedIndexForPoint(final GPoint point) throws Exception {
+        final int start = this.getStartIndex();
+        final int size = this.size();
+        int dx = this.getDx();
+        int dy = this.getDy();
+        final FormTypeFactory formTypeFactory = FormTypeFactory.getInstance();
+        final CommonLabels commonLabels = CommonLabels.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(commonLabels.@START_LABEL);
+        stringBuffer.appendint(start);
+        stringBuffer.append(CommonSeps.getInstance().@SPACE);
+        stringBuffer.append(commonLabels.@TOTAL_LABEL);
+        stringBuffer.appendint(size);
+        this.logUtil.putF(stringBuffer.toString(), this, ScrollSelectionForm.GET_SELECTED_INDEX);
+        ABCustomItem item;
+        int width;
+        int height;
+        int diffX;
+        for (int index = start; index < size; index++) {
+            item = this.get(index);
+            width = item.getMinimumWidth();
+            height = item.getMinimumHeight();
+            //int diffX = dx + this.getDiffX(item) - this.halfBorder;
+            diffX = this.formTypeItemIndexDx.getDx(index, item, dx, dy);
+            //if (RectangleCollisionUtil.isInside(dx, dy, dx + width, this.rectangle.getMaxY(),
+            if (this.rectangleCollisionUtil.isInside(diffX, dy - this.halfBorder, diffX + width + this.border, dy + height + this.halfBorder + 1, point.getX(), point.getY())) {
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(commonLabels.@ITEM_LABEL);
+                stringBuffer.append(item.getLabel());
+                stringBuffer.append(CommonSeps.getInstance().@SPACE);
+                stringBuffer.append(commonLabels.@INDEX_LABEL);
+                stringBuffer.appendint(index);
+                this.logUtil.putF(stringBuffer.toString(), this, ScrollSelectionForm.GET_SELECTED_INDEX);
+                return index;
+            }
+            if (this.formType === formTypeFactory.@HORIZONTAL_FORM) {
+                dx = dx + width + this.border;
+                // dx = dx + width;
+                if (dx > this.rectangle.getMaxX()) {
+                    break;
+                }
+            } else if (this.formType === formTypeFactory.@VERTICAL_CENTER_FORM) {
+                dy = dy + height + this.border;
+                if (dy > this.rectangle.getMaxY()) {
+                    break;
+                }
+            } else if (this.formType === formTypeFactory.@NULL_FORM_TYPE) {
+            } else {
+                throw new Exception(formTypeFactory.@UNK);
+            }
+        }
+        return -1;
+    }
+
+    public int processInputKey(final int gameKeyCode) throws Exception {
+        //PreLogUtil.put("Start - Selected " commonLabels.INDEX_LABEL).append(this.getSelectedIndex()).append(" of: ").append(this.size(), this, GameInputStrings.getInstance());
+        final FormTypeFactory formTypeFactory = FormTypeFactory.getInstance();
+        if (this.size() == 0) {
+            return -1;
+        }
+        int index = this.getSelectedIndex();
+        if (this.formType === formTypeFactory.@HORIZONTAL_FORM || this.formType === formTypeFactory.@TEMP_HORIZONTAL_FORM) {
+            if (gameKeyCode == Canvas.RIGHT) {
+                index++;
+            } else if (gameKeyCode == Canvas.LEFT) {
+                index--;
+            }
+        } else if (this.formType === formTypeFactory.@VERTICAL_CENTER_FORM) {
+            if (gameKeyCode == Canvas.DOWN) {
+                index++;
+            } else if (gameKeyCode == Canvas.UP) {
+                index--;
+            }
+        } else if (this.formType === formTypeFactory.@NULL_FORM_TYPE) {
+        } else {
+            throw new Exception(formTypeFactory.@UNK);
+        }
+        final int max = this.size() - 1;
+        if (index < 0) {
+            this.setSelectedIndex(0);
+        } else if (index > max) {
+            this.setSelectedIndex(max);
+        } else {
+            this.setSelectedIndex(index);
+        }
+        //this.logUtil.putF("End - Selected ").append(commonLabels.INDEX_LABEL).append(this.getSelectedIndex(), this, GameInputStrings.getInstance());
+        return -1;
+    }
+
+    public boolean isInForm(final GPoint point) {
+        //- halfBorder
+        if (this.rectangleCollisionUtil.isInside(this.x, this.y - this.halfBorder, this.rectangle.getMaxX() + this.border, this.rectangle.getMaxY() + this.border, point.getX(), point.getY())) {
+            this.logUtil.putF(new StringMaker().append(StringUtil.getInstance().toString(point)).append(ScrollSelectionForm.INSIDE_FORM).toString(), this, ScrollSelectionForm.IS_IN_FORM);
+            return true;
+        }
+        return false;
+    }
+
+    public int paintItem(final Graphics graphics, final int index, final ABCustomItem item, final int x, final int y) throws Exception {
+        item.paintXY(graphics, x, y);
+        final int width = item.getMinimumWidth();
+        final int height = item.getMinimumHeight();
+        graphics.setColor(this.getButtonBasicColor().intValue());
+        //TWB - Adjust gap between menu items rectangles
+        final int adjustedBorder = 3;
+        //graphics.drawRect(x - border, y - border_y, width + border, height + border);
+        graphics.drawRect(x - this.halfBorder - adjustedBorder, y - this.halfBorder - adjustedBorder, width + this.border + this.adjustedExtraBorder, height + this.border + this.adjustedExtraBorder);
+        return this.scrollSelectionFormFormTypeItemIndexPaintable.paint(graphics, index, item, x, y);
+    }
+
+    public int paintUnselectedItem(final Graphics graphics, final int index, final ABCustomItem item, final int x, final int y) throws Exception {
+        //graphics.setColor(BasicColor.GREY.intValue());
+        graphics.setColor(this.getButtonBasicColor().intValue());
+        item.paintUnselected(graphics, x, y);
+        return this.scrollSelectionFormFormTypeItemIndexPaintable.paint(graphics, index, item, x, y);
+    }
+
+    protected int getDiffX(final ABCustomItem item) {
+        return 0;
+    }
+
+    /**      * @return the dx      */
+    public int getDx() {
+        return this.x;
+    }
+
+    /**      * @return the dy      */
+    public int getDy() {
+        return this.y;
+    }
+
+    public void setButtonBasicColor(final BasicColor buttonBasicColor) {
+        this.buttonBasicColor = buttonBasicColor;
+    }
+
+    private BasicColor getButtonBasicColor() {
+        return this.buttonBasicColor;
+    }
+
+}
+
+

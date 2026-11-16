@@ -1,0 +1,240 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.canvas.transition.progress;
+
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.NullCanvas;
+import javax.microedition.lcdui.NullCommandListener;
+import org.allbinary.canvas.Processor;
+import org.allbinary.canvas.RunnableCanvas;
+import org.allbinary.game.commands.GameCommandsFactory;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.displayable.CanvasStrings;
+import org.allbinary.graphics.font.MyFontProcessor;
+import org.allbinary.graphics.font.UpdateMyFontInterface;
+import org.allbinary.graphics.font.UpdateMyFontProcessor;
+import org.allbinary.graphics.form.item.ABCustomGaugeItem;
+import org.allbinary.graphics.paint.NullPaintable;
+import org.allbinary.graphics.paint.Paintable;
+import org.allbinary.graphics.paint.PaintableInterface;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.midlet.AllBinaryMidlet;
+import org.allbinary.thread.PathFindingThreadPool;
+import org.allbinary.thread.ThreadPool;
+
+@groovy.transform.CompileStatic
+public class ProgressCanvas extends RunnableCanvas implements PaintableInterface, UpdateMyFontInterface {
+    //protected static final String END_FROM_INITIAL_LAZY_LOADING_COMPLETE = "endFromInitialLazyLoadingComplete";
+    protected boolean hasPainted;
+
+    private final BasicColor backgroundBasicColor;
+
+    public final Paintable GAUGE_PAINTABLE = new ProgressPaintable(this);
+
+    private final float maxValue = 100.0f;
+
+    protected final ABCustomGaugeItem gauge;
+
+    private final String TEXT = this.commonStrings.@LOADING;
+
+    private final MyFontProcessor updateMyFontProcessor = new UpdateMyFontProcessor(this);
+
+    private MyFontProcessor myFontProcessor = this.updateMyFontProcessor;
+
+    protected AllBinaryMidlet allbinaryMidlet = AllBinaryMidlet.getNullInstance();
+
+    private float value;
+
+    private String text = this.TEXT;
+
+    private boolean background = true;
+
+    protected PaintableInterface paintable = this.GAUGE_PAINTABLE;
+
+    public boolean inProgress = false;
+
+    private final Processor IN_GAME_PROCESSOR = new Processor() {
+            private final ThreadPool pathFindingThreadPool = PathFindingThreadPool.getInstance();
+
+            public void process() throws Exception {
+                this.pathFindingThreadPool.runAPriorityTask();
+            }
+
+        };
+
+    public Processor inGameProcessor = Processor.getInstance();
+
+    public ProgressEndListener progressEndListener = ProgressEndListener.instance;
+
+    //    }
+    ProgressCanvas(final String title, final BasicColor backgroundBasicColor, final BasicColor foregroundBasicColor) {
+        super(NullCommandListener.NULL_COMMAND_LISTENER, CanvasStrings.getInstance().@EMPTY_CHILD_NAME_LIST, false);
+        this.backgroundBasicColor = backgroundBasicColor;
+        this.gauge = new ABCustomGaugeItem(StringUtil.getInstance().@EMPTY_STRING, ((int) this.maxValue), 0, backgroundBasicColor, foregroundBasicColor);
+    }
+
+    @Override
+    public void updateMeasurement(final Graphics graphics) {
+        final Font font = graphics.getFont();
+        this.gauge.setHeight(font.getHeight() + 2);
+        this.myFontProcessor = MyFontProcessor.getInstance();
+    }
+
+    public void init(AllBinaryMidlet gameMidlet) {
+        this.allbinaryMidlet = gameMidlet;
+    }
+
+    public void update(Graphics graphics) throws Exception {
+    }
+
+    /*     public boolean isInitialized()     {         if (this.allbinaryMidlet != null)             return true;         else             return false;     }     */
+    @Override
+    public void initCommands(CommandListener cmdListener) {
+    }
+
+    /*      * public boolean isDone() { if (this.PROGRESS_SCREEN.getValue() <      * this.PROGRESS_SCREEN .getMaxValue()) { return false; } else { return      * true; } }      */
+    protected final float getMaxValue() {
+        return this.maxValue;
+    }
+
+    public void start() {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@START_METHOD_NAME);
+        this.setBackground(true);
+        this.gauge.setHeight(30);
+        this.gauge.setLabel(this.commonStrings.@PLEASE_WAIT);
+        this.setText(this.TEXT);
+        this.setValue(0);
+        //this.setDisplayed(false);
+        this.inGameProcessor = Processor.getInstance();
+        this.paintable = this.GAUGE_PAINTABLE;
+        this.inProgress = true;
+    }
+
+    private final String backgroundLabel = 'Background AI Game Loading...';
+
+    private final String START_BACKGROUND = 'startBackground';
+
+    public void startBackground(boolean background) {
+        this.logUtil.putF(this.commonStrings.@START, this, this.START_BACKGROUND);
+        this.setBackground(background);
+        this.myFontProcessor = this.updateMyFontProcessor;
+        this.gauge.setLabel(this.backgroundLabel);
+        this.setText(this.TEXT);
+        this.setValue(0);
+        this.inGameProcessor = Processor.getInstance();
+        this.paintable = this.GAUGE_PAINTABLE;
+    }
+
+    public void endActual() {
+        //getCommandListener()
+        this.allbinaryMidlet.commandAction(GameCommandsFactory.getInstance().@SHOW_GAME_CANVAS, NullCanvas.NULL_CANVAS);
+        this.inProgress = false;
+        this.inGame();
+    }
+
+    public void inGame() {
+        this.progressEndListener.onEndEvent();
+        this.inGameProcessor = this.IN_GAME_PROCESSOR;
+    }
+
+    public void end() {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@END_METHOD_NAME);
+        this.gauge.setValue(this.getMaxValue());
+        this.endActual();
+        this.paintable = NullPaintable.getInstance();
+    }
+
+    public void endFromInitialLazyLoadingComplete() {
+        //this.logUtil.putF(this.commonStrings.START, this, END_FROM_INITIAL_LAZY_LOADING_COMPLETE);
+        this.progressEndListener.onEndEvent();
+        this.gauge.setValue(this.getMaxValue());
+        this.inGameProcessor = this.IN_GAME_PROCESSOR;
+    }
+
+    public boolean isInGame() {
+        if (this.inGameProcessor === this.IN_GAME_PROCESSOR) {
+            return true;
+        }
+        return false;
+    }
+
+    public void endIfPaintedSinceStart() {
+    }
+
+    protected final String ADD_PORTION = 'addPortion';
+
+    protected final String ADD_EARLY_PORTION = 'addEarlyPortion';
+
+    public void addEarlyPortion(int value, String text, int index) {
+        //PreLogUtil.put(this.text, this, ADD_PORTION);
+        this.setText(new StringMaker().append(text).append(SmallIntegerSingletonFactory.getInstance().getAt(index).toString()).toString());
+        this.gauge.setValue(((float) (this.gauge.getValue() + ((float) (this.getMaxValue() / value)))));
+    }
+
+    public void addPortion(int value, String text, int index) {
+        this.setText(new StringMaker().append(text).append(SmallIntegerSingletonFactory.getInstance().getAt(index).toString()).toString());
+        //this.logUtil.putF(this.text, this, ADD_PORTION);
+        PreLogUtil.put(this.text, this, this.ADD_PORTION);
+        this.gauge.setValue(((float) (this.gauge.getValue() + ((float) (this.getMaxValue() / value)))));
+    }
+
+    public void addNormalPortion(int value, String text) {
+        //this.logUtil.putF(text, this, ADD_PORTION);
+        if (this.text !== text) {
+            PreLogUtil.put(text, this, this.ADD_PORTION);
+        }
+        this.setText(text);
+        this.gauge.setValue(((float) (this.gauge.getValue() + ((float) (this.getMaxValue() / value)))));
+    }
+
+    protected void setValue(int value) {
+        this.value = ((float) value);
+        this.gauge.setValue(((float) value));
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        this.paintable.paint(graphics);
+    }
+
+    public void paint2(Graphics graphics) {
+        this.myFontProcessor.process(graphics);
+        graphics.setColor(this.backgroundBasicColor.intValue());
+        graphics.fillRect(0, 0, this.displayInfo.getLastWidth(), this.displayInfo.getLastHeight());
+        this.gauge.paintXY(graphics, 0, 0);
+        this.hasPainted = true;
+    }
+
+    @Override
+    public void paintThreed(Graphics graphics) {
+    }
+
+    /*     public void waitUntilDisplayed()     {         try         {             int index = 0;             while ((!this.isDisplayed()) && index < 50)             {                 this.logUtil.putF(                         "Waiting for it to be displayed", this, "waitUntilDisplayed");                 Thread.sleep(200);                 index++;             }             this.logUtil.putF("Displayed", this, "waitUntilDisplayed");          }         catch (Exception e)         {             this.logUtil.put(this.commonStrings.EXCEPTION, this,                     "waitUntilDisplayed", e);         }     }     */
+    protected float getValue() {
+        return this.value;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return this.text;
+    }
+
+    protected void setBackground(boolean background) {
+        this.background = background;
+    }
+
+    protected boolean isBackground() {
+        return this.background;
+    }
+
+}
+
+

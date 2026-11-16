@@ -1,0 +1,76 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.configuration;
+
+import java.io.File;
+import java.util.List;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import org.allbinary.data.tree.dom.document.DomDocumentFileHelper;
+import org.allbinary.data.tree.dom.document.DomDocumentHelper;
+import org.allbinary.input.automation.module.configuration.InputAutomationModuleConfiguration;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.file.FileUtil;
+import org.allbinary.logic.io.file.FileWrapperUtil;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.string.StringUtil;
+import org.w3c.dom.Document;
+
+//name="inputAutomationConfiguration", 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(namespace = 'http://www.allbinary.com/InputAutomationConfiguration')
+@XmlType(name = 'InputAutomationConfiguration')
+@groovy.transform.CompileStatic
+public class InputAutomationConfiguration {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final static String FILENAME = 'InputAutomationConfig.xml';
+
+    @XmlElement(name = 'INPUT_AUTOMATION_INSTALLATION')
+    private boolean installed;
+
+    @XmlElement(name = 'INPUT_AUTOMATION_MODULE')
+    private List<InputAutomationModuleConfiguration> inputAutomationModuleConfigurationList;
+
+    public InputAutomationConfiguration() throws Exception {
+    }
+
+    public static File getFile() {
+        return new File(FILENAME);
+    }
+
+    /*     //Get create dom node from new module on the existing document     public void add(         InputAutomationModuleConfiguration inputAutomationModuleConfiguration)         throws Exception     {         this.logUtil.putF("Adding: " + inputAutomationModuleConfiguration.getName(), this, "add");          Node newNode = inputAutomationModuleConfiguration.toDomNode(             this.getDocument();         NodeList nodeList = this.getDocument().getElementsByTagName(             InputAutomationModulesData.NAME);                  if(nodeList.getLength() != 0)         {             Node node = nodeList.item(0);             node.appendChild(newNode);         }         else         {             throw new Exception("Unable to add new module");         }     }          public void remove(InputAutomationModuleFactoryInterface inputAutomationModuleInterface)         throws Exception     {         this.logUtil.putF("Removing: " + inputAutomationModuleInterface.getName(), this, "remove");          Document document = this.getDocument();                  Node modulesNode = document.getElementsByTagName(             InputAutomationModulesData.NAME).item(0);                  NodeList nameNodeList =             document.getElementsByTagName(InputAutomationModuleData.NAME);                  this.logUtil.putF("Number Of Module(s) Specified: " + nameNodeList.getLength(), this, "remove");                  for(int index = 0; index < nameNodeList.getLength(); index++)         {             Node node = nameNodeList.item(index);             NodeList nodeList = node.getChildNodes();                          if(nodeList!=null)             {                 Node classNameNode =                     DomSearchHelper.getNode(DynamicObjectData.NAME, nodeList);                                  if(classNameNode!=null)                 {                     String className =                         DomNodeHelper.getTextNodeValue(classNameNode);                                          this.logUtil.putF("Name : " + className, this, "Contructor");                                          InputAutomationModuleFactoryInterface gameAutomationRobotModuleInterface =                         (InputAutomationModuleFactoryInterface) AbeFactory.getInstance().getInstance(className);                                          if(inputAutomationModuleInterface.getName().compareTo(                         gameAutomationRobotModuleInterface.getName()) == 0)                     {                                                  modulesNode.removeChild(node);                     }                 }                 else                 {                     this.logUtil.putF("Class Node Null", this, "Contructor");                 }             }             else             {                 LogUtil.putF(InputAutomationData.NAME + " Name Node Node Children", this,"Contructor");             }         }         this.save();     }     */
+    public boolean isInstalled() {
+        return this.installed;
+    }
+
+    public void setInstalled(boolean installed) {
+        this.installed = installed;
+        this.logUtil.putF('Installed: ' + installed, this, 'setIntalled');
+    }
+
+    /**      * @return the inputAutomationModuleConfigurationList      */
+    public List<InputAutomationModuleConfiguration> getInputAutomationModuleConfigurationList() {
+        return this.inputAutomationModuleConfigurationList;
+    }
+
+    public void save() throws Exception {
+        Document document = DomDocumentHelper.create();
+        ;
+        File file = new File(FILENAME);
+        FileUtil.getInstance().copy(new AbPath(file.getAbsolutePath(), StringUtil.getInstance().@EMPTY_STRING), new AbPath(String.valueOf(file.getAbsolutePath()) + '.bak.xml', StringUtil.getInstance().@EMPTY_STRING));
+        JAXBContext jaxbContext = JAXBContext.newInstance(InputAutomationConfiguration.class);
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(this, document);
+        DomDocumentFileHelper.save(FileWrapperUtil.wrapFile(file), document);
+    }
+
+}
+
+

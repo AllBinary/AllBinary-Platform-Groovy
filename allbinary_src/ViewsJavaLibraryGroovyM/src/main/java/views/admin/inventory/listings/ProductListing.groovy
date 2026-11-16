@@ -1,0 +1,245 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package views.admin.inventory.listings;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.business.context.modules.storefront.StoreFrontInterface;
+import org.allbinary.business.user.commerce.inventory.item.BasicItemData;
+import org.allbinary.data.tables.context.module.storefronts.StoreFrontsEntity;
+import org.allbinary.data.tables.staticpages.StaticPagesEntity;
+import org.allbinary.data.tables.user.commerce.inventory.item.InventoryEntity;
+import org.allbinary.globals.GLOBALS2;
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.control.search.SearchParams;
+import org.allbinary.logic.control.search.SearchRequest;
+import org.allbinary.logic.io.AbDataOutputStream;
+import org.allbinary.logic.io.DataOutputStreamFactory;
+import org.allbinary.logic.io.InputOutputTypeData;
+import org.allbinary.logic.io.StreamUtil;
+import org.allbinary.logic.io.file.AbFile;
+import org.allbinary.logic.io.file.directory.Directory;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.io.path.AbPathData;
+import org.allbinary.logic.string.SpecialCharacterUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.regex.replace.Replace;
+import org.allbinary.logic.string.tokens.UniqueTokens;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.logic.system.security.licensing.ServiceClientInformationInterfaceFactory;
+import org.allbinary.string.CommonPhoneStrings;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.util.BasicArrayList;
+import views.generic.inventory.InventoryColumnUtil;
+import views.generic.inventory.InventorySearchUtil;
+
+@groovy.transform.CompileStatic
+public class ProductListing implements ProductListingInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final Directory directory = Directory.getInstance();
+
+    protected final BasicItemData basicItemData = BasicItemData.getInstance();
+
+    private final StoreFrontsEntity storeFronts;
+
+    private final StaticPagesEntity staticPages;
+
+    private final InventoryEntity inventory;
+
+    private final SearchRequest searchRequest;
+
+    private final String INVENTORY = '.InventoryView';
+
+    public ProductListing(SearchRequest searchRequest) {
+        this.searchRequest = searchRequest;
+        this.storeFronts = new StoreFrontsEntity();
+        this.staticPages = new StaticPagesEntity();
+        this.inventory = new InventoryEntity();
+    }
+
+    private final HashSet getHashSet(StoreFrontInterface storeFront) throws Exception {
+        InventoryColumnUtil inventoryColumnUtil = InventoryColumnUtil.getInstance();
+        BasicArrayList keywords = inventoryColumnUtil.getColumnWhereLike(this.inventory, storeFront.getCategoryPath(), basicItemData.@KEYWORDS);
+        BasicArrayList subStoreVector = storeFront.getSubStores();
+        int size = subStoreVector.size();
+        for (int index = 0; index < size; index++) {
+            String subStore = ((String) subStoreVector.get(index));
+            //AbSqlData.ANYSINGLECHARACTERMATCH
+            BasicArrayList substoreKeywords = inventoryColumnUtil.getColumnWhereLike(this.inventory, AbPathData.getInstance().@SEPARATOR + subStore, basicItemData.@CATEGORY);
+            keywords.addAllList(substoreKeywords);
+        }
+        //}
+        UniqueTokens uniqueTokens = new UniqueTokens();
+        HashSet keywordHashSet = uniqueTokens.getWhithoutDashesAndSkipNumberOnlyTokens(keywords);
+        return keywordHashSet;
+    }
+
+    private void savePage(String file, String data) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@STATICPAGEGENERATIONLOGGING)) {
+            //Creates a new File
+            this.logUtil.putF('Creating File: ' + file, this, 'generateAll()');
+        }
+        AbFile newFile = AbFile.createAbFile(file);
+        if (newFile.exists()) {
+            newFile.delete();
+        }
+        newFile.createNewFile();
+        if (newFile.exists()) {
+            AbDataOutputStream idOutData = DataOutputStreamFactory.getInstance().getInstanceForAbFile(newFile);
+            idOutData.writeBytes(data);
+            idOutData.flush();
+            StreamUtil.getInstance().close(idOutData);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@STATICPAGEGENERATIONLOGGING)) {
+                this.logUtil.putF('Wrote Total Bytes: ' + newFile.length(), this, 'generateAll()');
+            }
+        } else {
+            throw new Exception('Could Not Create: ' + file);
+        }
+    }
+
+    private void create(String keywordData, HashMap keywordFilenameHashMap, BasicArrayList vector, AbPath staticPath) throws Exception {
+        StringMaker stringBuffer = new StringMaker();
+        HashMap hashMap = SpecialCharacterUtil.getHashMap();
+        hashMap.put(CommonSeps.getInstance().@SPACE, StringUtil.getInstance().@EMPTY_STRING);
+        String pageName = new Replace(hashMap).all(keywordData);
+        //add keywords to search params
+        SearchParams searchParams = this.searchRequest.getParams();
+        searchParams.add(basicItemData.@KEYWORDS, keywordData);
+        searchParams.setStartPage(CommonPhoneStrings.getInstance().@ZERO);
+        this.searchRequest.setParams(searchParams);
+        this.searchRequest.setFileBaseName(pageName);
+        //  InventoryViewFactory.getInstance(this.searchRequest);
+        final AbeClientInformationInterface abeClientInformation = ServiceClientInformationInterfaceFactory.getInstance();
+        final InventorySearchUtil inventorySearchUtil = InventorySearchUtil.getInstance();
+        //creates a listing from the created search data ^
+        String[] productListingPages = inventorySearchUtil.search(abeClientInformation, searchRequest, vector);
+        for (int index = 0; index < productListingPages.length; index++) {
+            if (productListingPages[index] == null) {
+                break;
+            }
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@STATICPAGEGENERATIONLOGGING)) {
+                this.logUtil.putF('Saving Listing: ' + index, this, 'generateAll()');
+            }
+            String indexStr = StringUtil.getInstance().@EMPTY_STRING;
+            if (index > 0) {
+                indexStr = new Integer(index).toString();
+            }
+            keywordFilenameHashMap.put(keywordData, pageName + indexStr);
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append(staticPath.toString());
+            stringBuffer.append(pageName);
+            stringBuffer.append(indexStr);
+            stringBuffer.append(AbPathData.getInstance().@EXTENSION_SEP);
+            stringBuffer.append(InputOutputTypeData.getInstance().@DEFAULT);
+            String file = stringBuffer.toString();
+            //Create Directories
+            if (!this.directory.create(staticPath)) {
+                throw new Exception('Could Not Create Directory: ' + staticPath);
+            }
+            this.savePage(file, productListingPages[index]);
+        }
+    }
+
+    private void addStaticPageInfoToDatabase(StoreFrontInterface storeFront, HashMap keywordFilenameHashMap) {
+        //add to Static info to staticpages db
+        Set keywordHashSet = keywordFilenameHashMap.keySet();
+        final Object[] keywordArray = keywordHashSet.toArray();
+        final int size = keywordArray.length;
+        for (int index = 0; index < size; index++) {
+            BasicArrayList insertVector = new BasicArrayListD();
+            String keywordData = ((String) keywordArray[index]);
+            String fileName = ((String) keywordFilenameHashMap.get(keywordData));
+            insertVector.add(storeFront.getName());
+            insertVector.add(keywordData);
+            insertVector.add(fileName);
+            this.staticPages.insert(insertVector);
+        }
+    }
+
+    public String generateAll() throws Exception {
+        try {
+            final StoreFrontInterface storeFront = this.searchRequest.getStoreFront();
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(URLGLOBALS.getWebappPath());
+            stringBuffer.append(storeFront.getName());
+            stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+            stringBuffer.append(storeFront.getStaticPath());
+            //+ storeFront.getTestHtmlPath() + storeFront.getStaticPath()
+            final AbPath staticPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@STATICPAGEGENERATIONLOGGING)) {
+                this.logUtil.putF('Store Static Pages Path: ' + staticPath, this, 'generateAll()');
+            }
+            //compile a list of possible keywords
+            final HashSet keywordHashSet = this.getHashSet(storeFront);
+            final Object[] keywordArray = keywordHashSet.toArray();
+            final int size = keywordArray.length;
+            //their associated Static page filenames
+            HashMap keywordFilenameHashMap = StdUtil.getInstance().createHashMap();
+            if (size == 0) {
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append('Products For ');
+                stringBuffer.append(storeFront.getName());
+                stringBuffer.append(' Store Not Found');
+                return stringBuffer.toString();
+            }
+            final InventorySearchUtil inventorySearchUtil = InventorySearchUtil.getInstance();
+            final BasicArrayList vector = inventorySearchUtil.getBasicItemIdColumn(this.searchRequest);
+            for (int index = 0; index < size; index++) {
+                String keywordData = ((String) keywordArray[index]);
+                if (keywordData.length() > 1) {
+                    this.create(keywordData, keywordFilenameHashMap, vector, staticPath);
+                }
+            }
+            this.addStaticPageInfoToDatabase(storeFront, keywordFilenameHashMap);
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append('Static Files Generated Successfully For ');
+            stringBuffer.append(storeFront.getName());
+            stringBuffer.append(' it used packages ');
+            stringBuffer.append(storeFront.getPackageLocation());
+            stringBuffer.append(this.INVENTORY);
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public String generateAll(String storeName) throws Exception {
+        try {
+            StringMaker stringBuffer = new StringMaker();
+            if (storeName != null) {
+                if (storeName.compareTo(GLOBALS2.GENERATEALLSTORES) != 0) {
+                    this.searchRequest.setStoreFront(this.storeFronts.getStoreFrontInterface(storeName));
+                    // result = temp + "<br>";
+                    stringBuffer.append(this.generateAll());
+                    stringBuffer.append('<br />');
+                } else {
+                    BasicArrayList storeFrontVector = this.storeFronts.getStoreFrontNames();
+                    final int size = storeFrontVector.size();
+                    for (int index = 0; index < size; index++) {
+                        storeName = ((String) storeFrontVector.get(index));
+                        this.searchRequest.setStoreFront(this.storeFronts.getStoreFrontInterface(storeName));
+                        // result += temp + "<br>";
+                        stringBuffer.append(this.generateAll());
+                        stringBuffer.append('<br />');
+                    }
+                }
+            } else {
+                return 'Generation Failed No Store Specified<br/>';
+            }
+            stringBuffer.append('All Static Pages Generated<br/>');
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+}
+
+

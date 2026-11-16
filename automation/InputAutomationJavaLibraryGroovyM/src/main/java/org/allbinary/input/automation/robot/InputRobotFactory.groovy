@@ -1,0 +1,131 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.robot;
+
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
+import javax.help.HelpSet;
+import javax.help.event.HelpSetEvent;
+import javax.help.event.HelpSetListener;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.java.help.JavaHelpSetNotifier;
+import org.allbinary.logic.java.anyType.InterfaceUtil;
+import org.allbinary.logic.system.loader.SecuredNativeLibraryInterface;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class InputRobotFactory {
+    private static final InputRobotFactory inputRobotFactory = new InputRobotFactory();
+
+    public static InputRobotFactory getInstance() throws Exception {
+        return InputRobotFactory.inputRobotFactory;
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+
+    private HelpSetListener helpSetListenerInterface;
+
+    private InputRobotFactory() {
+        try {
+            final GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            final GraphicsDevice[] screens = graphenv.getScreenDevices();
+            InputRobotInterface inputRobotInterface;
+            for (int i = 0; i < screens.length; i++) {
+                inputRobotInterface = ((InputRobotInterface) new InputRobot(screens[i]));
+                this.logUtil.putF('Adding Robot: ' + inputRobotInterface.getName(), this, 'getRobots');
+                this.get().put(inputRobotInterface.getName(), inputRobotInterface);
+            }
+            this.logUtil.putF('Number Of Robots: ' + this.hashtable.size(), this, 'getRobots');
+        } catch (Exception e) {
+            this.logUtil.putF(this.commonStrings.@EXCEPTION, this, this.commonStrings.@CONSTRUCTOR);
+        }
+    }
+
+    public void addListener(final HelpSetListener helpSetListenerInterface) {
+        this.helpSetListenerInterface = helpSetListenerInterface;
+    }
+
+    public void add(final InputRobotInterface inputRobotInterface) throws Exception {
+        this.logUtil.putF('Adding InputRobotInterface: ' + inputRobotInterface.getName(), this, 'add');
+        this.get().put(inputRobotInterface.getName(), inputRobotInterface);
+        final HelpSet helpSet = inputRobotInterface.getHelpSet();
+        if (this.helpSetListenerInterface != null) {
+            if (helpSet != null) {
+                if (!JavaHelpSetNotifier.isNotified(helpSet)) {
+                    final HelpSetEvent helpSetEvent = new HelpSetEvent(this, helpSet, HelpSetEvent.HELPSET_ADDED);
+                    this.helpSetListenerInterface.helpSetAdded(helpSetEvent);
+                }
+            } else {
+                this.logUtil.putF('Null HelpSet For: ' + inputRobotInterface.getName(), this, 'add');
+            }
+        } else {
+            this.logUtil.putF('No HelpSet Listener', this, 'add');
+        }
+    }
+
+    public void loadLibraries() throws Exception {
+        final Set set = this.get().keySet();
+        this.logUtil.putF('Loading Libraries', this, 'loadLibraries');
+        final Object[] nameArray = set.toArray();
+        final int size = nameArray.length;
+        for (int index = 0; index < size; index++) {
+            InputRobotInterface inputRobotInterface = InputRobotFactory.getInstance().get(((String) nameArray[index]));
+            InputRobotFactory.loadLibrary(inputRobotInterface);
+        }
+    }
+
+    public static void loadLibraries(Collection collection) throws Exception {
+        final LogUtil logUtil = LogUtil.getInstance();
+        logUtil.putF('Loading Libraries', 'InputRobotFactory', 'loadLibraries');
+        final Iterator iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            InputRobotFactory.loadLibrary(((InputRobotInterface) iterator.next()));
+        }
+    }
+
+    public static void loadLibrary(final InputRobotInterface inputRobotInterface) throws Exception {
+        final LogUtil logUtil = LogUtil.getInstance();
+        if (InterfaceUtil.isImplemented(SecuredNativeLibraryInterface.class, inputRobotInterface)) {
+            logUtil.putF('Loading Library: ' + inputRobotInterface.getName(), 'InputRobotFactory', 'loadLibraries');
+            final SecuredNativeLibraryInterface securedNativeLibraryInterface = ((SecuredNativeLibraryInterface) inputRobotInterface);
+            securedNativeLibraryInterface.load();
+        }
+    }
+
+    public void unloadLibraries() throws Exception {
+        this.logUtil.putF('Unloading Libraries', this, 'unloadLibraries');
+        final Set set = this.get().keySet();
+        InputRobotInterface inputRobotInterface;
+        final Object[] inputRobotArray = set.toArray();
+        final int size = inputRobotArray.length;
+        for (int index = 0; index < size; index++) {
+            inputRobotInterface = this.get(((String) inputRobotArray[index]));
+            if (InterfaceUtil.isImplemented(SecuredNativeLibraryInterface.class, inputRobotInterface)) {
+                this.logUtil.putF('Unloading Library: ' + inputRobotInterface.getName(), this, 'unloadLibraries');
+                SecuredNativeLibraryInterface securedNativeLibraryInterface = ((SecuredNativeLibraryInterface) inputRobotInterface);
+                securedNativeLibraryInterface.unload();
+            }
+        }
+    }
+
+    public ABHashtable<Object, Object> get() throws Exception {
+        return this.hashtable;
+    }
+
+    public InputRobotInterface get(final String name) {
+        this.logUtil.putF('Getting Robot: ' + name, this, 'getRobots');
+        return ((InputRobotInterface) this.hashtable.get(name));
+    }
+
+}
+
+

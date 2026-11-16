@@ -1,0 +1,59 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2025 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.unit;
+
+import org.allbinary.string.CommonLabels;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class UnitWaypointStrings {
+    private static final UnitWaypointStrings instance = new UnitWaypointStrings();
+
+    /**      * @return the instance      */
+    public static UnitWaypointStrings getInstance() {
+        return UnitWaypointStrings.instance;
+    }
+
+    public final String PATHING = 'Pathing';
+
+    //"Lalala" //"What Now? //"Wander";
+    public final String WANDERING = 'Order?';
+
+    public final String THINKING = 'Thinking';
+
+    //"Analyzing" //"Hmmm?"
+    public final String THINKING_ABOUT_TARGET = 'Hmmm';
+
+    public final String TARGET = 'Target';
+
+    public final String KILL = 'Kill!';
+
+    public final String STOP = 'Stop';
+
+    public final String WAYPOINT_DESTROYED_SHORT = 'Uh Oh';
+
+    public final String WAYPOINT_DESTROYED = 'Waypoint Destroyed';
+
+    public final String ALL_VISITED_SHORT = 'Arrived';
+
+    public final String ALL_VISITED = 'All Visited';
+
+    public final String ALREADY_THERE_SHORT = 'Again?';
+
+    public final String ALREADY_THERE = 'Already There';
+
+    public final String NEXT_PATH_NODE = CommonLabels.getInstance().@NEXT + ' Path Node';
+
+    public final String _ALL_VISITED_SHORT = ' Arrived';
+
+    //public final final String ALL_VISITED = "All Visited";
+    public final String _ALREADY_THERE_SHORT = ' Again?';
+
+    //public final String ALREADY_THERE = "Already There";
+    public final String VISITED_MOST_OF_THE_PATH = ' visited most of the path';
+
+    public final String RETURNING_AS_WAYPOINT_PATH_LIST = ' returning as waypointPathsList was runningWaypointPathList';
+
+}
+
+

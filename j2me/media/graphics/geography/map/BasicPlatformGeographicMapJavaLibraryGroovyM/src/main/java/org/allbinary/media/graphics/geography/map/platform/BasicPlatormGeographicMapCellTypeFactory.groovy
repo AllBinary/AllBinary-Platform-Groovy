@@ -1,0 +1,93 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map.platform;
+
+import java.util.Enumeration;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellType;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellTypeFactory;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.EnumerationUtil;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class BasicPlatormGeographicMapCellTypeFactory extends GeographicMapCellTypeFactory {
+    private final EnumerationUtil enumerationUtil = EnumerationUtil.getInstance();
+
+    public final BasicPlatormGeographicMapCellType BLOCK_CELL_TYPE;
+
+    public final BasicPlatormGeographicMapCellType JUMP_THRU_CELL_TYPE;
+
+    public final BasicPlatormGeographicMapCellType LADDER_CELL_TYPE;
+
+    private final int maxTileId;
+
+    public BasicPlatormGeographicMapCellTypeFactory(final ABHashtable<Object, Object> tileTypeToTileIdsMap, final int maxTileId) {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        this.logUtil.putF(commonStrings.@START, this, commonStrings.@INIT);
+        this.maxTileId = maxTileId;
+        //GeographicMapCellTypeFactory.getInstance().EMPTY_CELL_TYPE = 
+        new GeographicMapCellType(0, 0);
+        //new GeographicMapCellType(1);
+        BasicPlatormGeographicMapCellType BLOCK_CELL_TYPE = BasicPlatormGeographicMapCellType.createType(1);
+        BasicPlatormGeographicMapCellType JUMP_THRU_CELL_TYPE = BLOCK_CELL_TYPE;
+        BasicPlatormGeographicMapCellType LADDER_CELL_TYPE = BLOCK_CELL_TYPE;
+        //final String OTHER = "Other";
+        final String PLATFORM = 'Platform';
+        final String JUMP_TRHU = 'JumpThru';
+        final String LADDER = 'Ladder';
+        final Enumeration enumeration = tileTypeToTileIdsMap.keys();
+        BasicArrayList idsWithTypeList;
+        String key;
+        BasicPlatormGeographicMapCellType basicPlatormGeographicMapCellType;
+        while (this.enumerationUtil.hasMoreElements(enumeration)) {
+            key = ((String) this.enumerationUtil.nextElement(enumeration));
+            this.logUtil.putF(key, this, commonStrings.@INIT);
+            idsWithTypeList = ((BasicArrayList) tileTypeToTileIdsMap.get(key));
+            basicPlatormGeographicMapCellType = new BasicPlatormGeographicMapCellType(idsWithTypeList);
+            if (key.equals(PLATFORM)) {
+                BLOCK_CELL_TYPE = basicPlatormGeographicMapCellType;
+            }
+            if (key.equals(JUMP_TRHU)) {
+                JUMP_THRU_CELL_TYPE = basicPlatormGeographicMapCellType;
+            }
+            if (key.equals(LADDER)) {
+                LADDER_CELL_TYPE = basicPlatormGeographicMapCellType;
+            }
+        }
+        this.BLOCK_CELL_TYPE = BLOCK_CELL_TYPE;
+        this.JUMP_THRU_CELL_TYPE = JUMP_THRU_CELL_TYPE;
+        this.LADDER_CELL_TYPE = LADDER_CELL_TYPE;
+        new GeographicMapCellType(this.maxTileId - 1, 0);
+        new GeographicMapCellType(this.maxTileId - 2, 0);
+    }
+
+    @Override
+    public int getStartType() {
+        //7
+        return this.maxTileId - 1;
+    }
+
+    @Override
+    public int getEndType() {
+        //8
+        return this.maxTileId - 2;
+    }
+
+    @Override
+    public int getEmptyType() {
+        return 0;
+    }
+
+    @Override
+    public boolean isPath(final GeographicMapCellType cellType) {
+        if (cellType.getType() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+}
+
+

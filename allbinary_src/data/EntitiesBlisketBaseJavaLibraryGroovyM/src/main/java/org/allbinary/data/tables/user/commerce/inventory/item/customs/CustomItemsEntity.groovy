@@ -1,0 +1,78 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.data.tables.user.commerce.inventory.item.customs;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.business.DynamicObjectData;
+import org.allbinary.business.entry.EntryData;
+import org.allbinary.business.init.db.InventoryDbInitInfo;
+import org.allbinary.business.user.commerce.inventory.item.BasicItemData;
+import org.allbinary.business.user.commerce.inventory.item.custom.CustomItemData;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.sql.AbSqlBean;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class CustomItemsEntity extends AbSqlBean implements CustomItemsEntityInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final BasicItemData basicItemData = BasicItemData.getInstance();
+
+    protected final String tableName = 'customitems';
+
+    public CustomItemsEntity() {
+        super(new InventoryDbInitInfo());
+        this.setTableName(this.tableName);
+    }
+
+    public void insert(BasicArrayList values) {
+        try {
+            super.insert(values);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.putF(this.commonStrings.@SUCCESS, this, INSERT);
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, INSERT, e);
+            }
+        }
+    }
+
+    public void delete(String value) {
+        try {
+            super.deleteWhere(basicItemData.@ID, value);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.putF(this.commonStrings.@SUCCESS, this, this.commonStrings.@delete);
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, this.commonStrings.@delete, e);
+            }
+        }
+    }
+
+    /*      public String getTable(String itemId)      {      return super.getTableWhere(basicItemData.ID,itemId);      }      */
+    public final String createTableStatement() {
+        StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(this.sqlStrings.@CREATE_TABLE).append(tableName).append(this.sqlStrings.@START).append(basicItemData.@ID).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(DynamicObjectData.NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(CustomItemData.PACKAGE).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(EntryData.getInstance().@TIMECREATED).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(EntryData.getInstance().@LASTMODIFIED).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(this.sqlStrings.@PRIMARY_KEY).append(basicItemData.@ID).append(this.sqlStrings.@END);
+        return stringBuffer.toString();
+    }
+
+    public String createTable() {
+        return super.createTable(this.createTableStatement());
+    }
+
+    /*      public String getForm(String id)      {      return super.getInputWhere(basicItemData.ID,id);      }*/
+    public void update(HashMap updatedValues) {
+        super.updateWhere(basicItemData.@ID, ((String) updatedValues.get(basicItemData.@ID)), updatedValues);
+    }
+
+    public String dropTable() {
+        return super.dropTable();
+    }
+
+}
+
+

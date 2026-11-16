@@ -1,0 +1,50 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.form.item;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.graphics.color.BasicColor;
+
+@groovy.transform.CompileStatic
+public class ABTextItem extends CustomCustomItem implements ABCustomItemInterface {
+    public ABTextItem(String label, int layout, String altText, BasicColor backgroundBasicColor, BasicColor foregroundBasicColor) {
+        super(label, backgroundBasicColor, foregroundBasicColor);
+    }
+
+    public void keyPressed(int keyCode) {
+    }
+
+    @Override
+    public void paintUnselected(Graphics graphics, int x, int y) {
+    }
+
+    public ABStringComponent getLabelStringComponent() {
+        return ABStringComponent.NULL_STRING_COMPONENT;
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getMinimumWidth() {
+        return super.getMinimumWidth();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public int getMinimumHeight() {
+        return super.getMinimumHeight();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public String getLabel() {
+        return super.getLabel();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void paintXY(final Graphics graphics, final int x, final int y) {
+        super.paintXY(graphics, x, y);
+    }
+
+}
+
+

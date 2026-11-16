@@ -1,0 +1,225 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.actions.script.condition.processors.input;
+
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.data.tree.dom.DomNodeHelper;
+import org.allbinary.data.tree.dom.DomSearchHelper;
+import org.allbinary.data.tree.dom.ModDomHelper;
+import org.allbinary.input.KeySingletonFactory;
+import org.allbinary.input.KeyUtil;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonLabels;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+@groovy.transform.CompileStatic
+public class KeyboardActionScriptInput extends BasicProfileActionScriptInput implements KeyboardActionScriptInputInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private Integer[] keyArray = new Integer[] {KeySingletonFactory.getInstance(KeyEvent.VK_0)};
+
+    private static final String NAME = 'Keyboard';
+
+    private KeyboardActionScriptInputJPanel keyboardActionScriptInputJPanel;
+
+    private boolean press;
+
+    private boolean release;
+
+    private int delayBetweenKeys;
+
+    public KeyboardActionScriptInput(Node node) throws Exception {
+        super(NAME, node);
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        Node actionNode = DomSearchHelper.getNode(KeyboardActionScriptInputData.NAME, node.getChildNodes());
+        if (actionNode != null) {
+            NodeList nodeList = actionNode.getChildNodes();
+            BasicArrayList vector = new BasicArrayListD();
+            for (int index = 0; index < nodeList.getLength(); index++) {
+                Node childNode = nodeList.item(index);
+                if (childNode.getNodeName().startsWith(KeyboardActionScriptInputData.KEY)) {
+                    String keyString = DomNodeHelper.getTextNodeValue(childNode);
+                    vector.add(Integer.valueOf(keyString));
+                } else if (childNode.getNodeName().compareTo(KeyboardActionScriptInputData.DELAY_BETWEEN_KEYS) == 0) {
+                    String time = DomNodeHelper.getTextNodeValue(childNode);
+                    this.setDelayBetweenKeys(Integer.valueOf(time).intValue());
+                } else if (childNode.getNodeName().compareTo(KeyboardActionScriptInputData.PRESS) == 0) {
+                    String value = DomNodeHelper.getTextNodeValue(childNode);
+                    this.setPress(Boolean.valueOf(value));
+                } else if (childNode.getNodeName().compareTo(KeyboardActionScriptInputData.RELEASE) == 0) {
+                    String value = DomNodeHelper.getTextNodeValue(childNode);
+                    this.setRelease(Boolean.valueOf(value));
+                } else {
+                    throw new Exception('Action Script Input Unknown Node');
+                }
+            }
+            this.setKeyArray(((Integer[]) vector.toArrayType(new Integer[vector.size()])));
+        } else {
+            throw new Exception('Action Script Input Node Null');
+        }
+        this.setAllowsChildren(false);
+        if (!this.isPress() && !this.isRelease()) {
+            this.setNormal();
+        }
+        this.keyboardActionScriptInputJPanel = new KeyboardActionScriptInputJPanel(this);
+    }
+
+    public KeyboardActionScriptInput() throws Exception {
+        super(NAME);
+        if (!this.isPress() && !this.isRelease()) {
+            this.setNormal();
+        }
+        this.setAllowsChildren(false);
+        this.setTime(120);
+        this.keyboardActionScriptInputJPanel = new KeyboardActionScriptInputJPanel(this);
+    }
+
+    public int getDelayBetweenKeys() {
+        return this.delayBetweenKeys;
+    }
+
+    public void setDelayBetweenKeys(int delayBetweenKeys) {
+        this.delayBetweenKeys = delayBetweenKeys;
+    }
+
+    public boolean isPress() {
+        return this.press;
+    }
+
+    public void setPress(boolean press) {
+        this.press = press;
+    }
+
+    public boolean isRelease() {
+        return this.release;
+    }
+
+    public void setRelease(boolean release) {
+        this.release = release;
+    }
+
+    public boolean isNormal() {
+        return this.isRelease() && this.isPress();
+    }
+
+    public void setNormal() {
+        this.setPress(true);
+        this.setRelease(true);
+    }
+
+    public Integer[] getKeyArray() {
+        return this.keyArray;
+    }
+
+    public void setKeyArray(Integer[] keyArray) {
+        if (keyArray != null) {
+            this.logUtil.putF(CommonLabels.getInstance().@START + keyArray.length, this, 'setKeyArray');
+        }
+        this.keyArray = keyArray;
+    }
+
+    public void showDialog() {
+        this.keyboardActionScriptInputJPanel.getKeyActionJDialog().setVisible(true);
+    }
+
+    public String getText() {
+        return this.getText(this.getKeyArray());
+    }
+
+    public void setText(String text) {
+        this.logUtil.putF(CommonLabels.getInstance().@START + text, this, 'setText');
+        Integer[] integerArray = this.integerArrayValue(text);
+        this.setKeyArray(integerArray);
+    }
+
+    private static String getText(Integer[] integerArray) {
+        int index = 0;
+        StringMaker stringBuffer = new StringMaker();
+        while (index < integerArray.length) {
+            Integer nextInteger = integerArray[index];
+            if (KeyUtil.isNormallyDisplayed(nextInteger)) {
+                stringBuffer.append(KeyEvent.getKeyText(nextInteger));
+            } else {
+                stringBuffer.append('&#' + nextInteger + ';');
+            }
+            index++;
+        }
+        return stringBuffer.toString();
+    }
+
+    private Integer[] integerArrayValue(String text) {
+        this.logUtil.putF(CommonLabels.getInstance().@START + text, this, 'integerArrayValue');
+        BasicArrayList vector = new BasicArrayListD();
+        int index = 0;
+        while (index < text.length()) {
+            char aChar = text.charAt(index);
+            if (aChar == ('&' as char)) {
+                if (text.charAt(index + 1) == ('#' as char)) {
+                    int endIndex = text.indexOf(((int) (';' as char)), index + 1);
+                    if (endIndex != -1) {
+                        String nextCharString = text.substring(index + 2, endIndex);
+                        this.logUtil.putF(CommonLabels.getInstance().@NEXT + ' Char String: ' + nextCharString, this, 'integerArrayValue');
+                        vector.add(Integer.valueOf(nextCharString.substring(index, nextCharString.length())));
+                        index = index + nextCharString.length() + 3;
+                        continue;
+                    }
+                }
+            }
+            vector.add(KeySingletonFactory.getHashtable().get(String.valueOf(aChar)));
+            index++;
+        }
+        Integer[] integerArray = ((Integer[]) vector.toArrayType(new Integer[vector.size()]));
+        return integerArray;
+    }
+
+    public HashMap toHashMap() {
+        HashMap hashMap = StdUtil.getInstance().createHashMap();
+        //super.toHashMap().put(KeyActionScriptInputData.NAME, hashMap);
+        for (int index = 0; index < this.getKeyArray().length; index++) {
+            hashMap.put(KeyboardActionScriptInputData.KEY + index, Integer.toString(this.getKeyArray()[index]));
+        }
+        hashMap.put(KeyboardActionScriptInputData.DELAY_BETWEEN_KEYS, Integer.toString(this.getDelayBetweenKeys()));
+        hashMap.put(KeyboardActionScriptInputData.PRESS, Boolean.toString(this.isPress()));
+        hashMap.put(KeyboardActionScriptInputData.RELEASE, Boolean.toString(this.isRelease()));
+        this.logUtil.putF('HashMap: ' + hashMap.toString(), this, 'toHashMap()');
+        return hashMap;
+    }
+
+    public Node toXmlNode(Document document) throws Exception {
+        Node node = super.toXmlNode(document);
+        node.appendChild(ModDomHelper.createNodeWithValueNodes(document, KeyboardActionScriptInputData.NAME, this.toHashMap()));
+        return node;
+    }
+
+    public void process(Long frame) throws Exception {
+        KeyboardInputAutomationProcessor.process(this);
+    }
+
+    public void log() {
+        this.logUtil.putF(this.toString(), this, 'log');
+    }
+
+    public String toString() {
+        StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(super.toString());
+        stringBuffer.append(' Text: ');
+        stringBuffer.append(this.getText());
+        stringBuffer.append(' isPress: ');
+        stringBuffer.appendboolean(this.isPress());
+        stringBuffer.append(' isRelease: ');
+        stringBuffer.appendboolean(this.isRelease());
+        stringBuffer.append(' Between Key Delay: ');
+        stringBuffer.appendint(this.getDelayBetweenKeys());
+        return stringBuffer.toString();
+    }
+
+}
+
+

@@ -1,0 +1,64 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image.comparison.motion;
+
+import java.awt.*;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+
+@groovy.transform.CompileStatic
+public class ConsolidateMotionRectangles extends MotionRectangles {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final String NAME = 'consolidatedMotionRectangles_';
+
+    public ConsolidateMotionRectangles(MotionRectangles motionRectangles) throws Exception {
+        super(NAME, motionRectangles.getImageComparisonResult());
+        final BasicArrayList vector = motionRectangles.getVector();
+        final int size = vector.size();
+        for (int index = 0; index < size; index++) {
+            MotionRectangle motionRectangle = ((MotionRectangle) vector.get(index));
+            vector.add(motionRectangle.clone());
+        }
+        this.consolidateMotionRectangles();
+    }
+
+    private void consolidateMotionRectangles() {
+        final BasicArrayList vector = this.getVector();
+        this.logUtil.putF('Start - Size Before: ' + vector.size(), this, 'consolidateMotionRectangleConstraints');
+        final BasicArrayList removeVector = new BasicArrayListD();
+        final int size = vector.size();
+        for (int index = 0; index < size; index++) {
+            MotionRectangle motionRectangle = ((MotionRectangle) vector.get(index));
+            for (int i = index + 1; i < vector.size(); i++) {
+                MotionRectangle motionRectangle2 = ((MotionRectangle) vector.get(i));
+                //Only remove encapsulated rectangles
+                Rectangle rectangle = motionRectangle.getRectangle();
+                Rectangle rectangle2 = motionRectangle2.getRectangle();
+                int x2 = rectangle.@x + rectangle.@width;
+                int y2 = rectangle.@y + rectangle.@height;
+                int rightX = rectangle2.@x + rectangle2.@width;
+                int bottomY = rectangle2.@y + rectangle2.@height;
+                if (rectangle.@x <= rectangle2.@x && rectangle.@y <= rectangle2.@y && x2 >= rightX && y2 >= bottomY) {
+                    /*         this.logUtil.putF(new StringMaker().append("Should Consolidating: " + rectangle.x + "<" + rectangle2.x + " " +              rectangle.y + "<" + rectangle2.y + " " + x2 + ">" + rightX + " " + y2 + ">" + bottomY, this, "consolidateMotionRectangleConstraints");                         */
+                    removeVector.add(motionRectangle2);
+                }
+            }
+        }
+        this.remove(removeVector);
+    }
+
+    private void remove(BasicArrayList removeVector) {
+        final BasicArrayList vector = this.getVector();
+        //Remove the consolidated rectangles
+        final int size = removeVector.size();
+        for (int index = 0; index < size; index++) {
+            vector.remove(removeVector.get(index));
+        }
+    }
+
+}
+
+

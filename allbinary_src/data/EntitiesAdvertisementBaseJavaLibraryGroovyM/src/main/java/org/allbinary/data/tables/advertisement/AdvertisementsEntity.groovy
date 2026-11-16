@@ -1,0 +1,100 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.data.tables.advertisement;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.business.DynamicObjectData;
+import org.allbinary.business.advertisement.AdvertisementData;
+import org.allbinary.business.advertisement.AdvertisementInterface;
+import org.allbinary.business.context.modules.storefront.StoreFrontData;
+import org.allbinary.business.entry.EntryData;
+import org.allbinary.business.init.db.UserDbInitInfo;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.sql.AbSqlBean;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class AdvertisementsEntity extends AbSqlBean implements AdvertisementsEntityInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final String tableName = 'advertisements';
+
+    private final String _INDEX = '_index';
+
+    public AdvertisementsEntity() {
+        super(new UserDbInitInfo());
+        this.setTableName(this.tableName);
+    }
+
+    /*      public void insert(BasicArrayList values)      {      try      {      super.insert(values);                if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().SQLLOGGING))      {      this.logUtil.putF(this.commonStrings.SUCCESS, this, INSERT);      }      }      catch(Exception e)      {      if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().SQLLOGGING))      {      this.logUtil.put(this.commonStrings.FAILURE,this,INSERT,e);      }      }      }      */
+    public void delete(String value) {
+        try {
+            super.deleteWhere(EntryData.getInstance().@ID, value);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.putF(this.commonStrings.@SUCCESS, this, this.commonStrings.@delete);
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, this.commonStrings.@delete, e);
+            }
+        }
+    }
+
+    //AdvertisementsInterface
+    public BasicArrayList get(String storeName) {
+        HashMap keysAndValues = StdUtil.getInstance().createHashMap();
+        keysAndValues.put(StoreFrontData.getInstance().@NAME, storeName);
+        BasicArrayList hashMapVector = super.getRows(keysAndValues);
+        BasicArrayList vector = new BasicArrayListD();
+        final int size = hashMapVector.size();
+        for (int index = 0; index < size; index++) {
+            HashMap hashMap = ((HashMap) hashMapVector.get(index));
+        }
+        return vector;
+    }
+
+    public AdvertisementInterface get(String storeName, String advertismentName) {
+        HashMap keysAndValues = StdUtil.getInstance().createHashMap();
+        keysAndValues.put(StoreFrontData.getInstance().@NAME, storeName);
+        keysAndValues.put(AdvertisementData.getInstance().@NAME, advertismentName);
+        HashMap hashMap = super.getRow(keysAndValues);
+        // else 
+        return null;
+    }
+
+    public final String createTableStatement() {
+        AdvertisementData advertisementData = AdvertisementData.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(this.sqlStrings.@CREATE_TABLE);
+        stringBuffer.append(this.getTableName()).append(this.sqlStrings.@START).append(advertisementData.@NAME).append(_INDEX).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(advertisementData.@NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(StoreFrontData.getInstance().@NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(advertisementData.@DESCRIPTION).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL);
+        //AdComponent that uses the AdViewComponent
+        stringBuffer.append(DynamicObjectData.NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(EntryData.getInstance().@TIMECREATED).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(EntryData.getInstance().@LASTMODIFIED).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(this.sqlStrings.@PRIMARY_KEY).append(advertisementData.@NAME).append(this.sqlStrings.@END);
+        return stringBuffer.toString();
+    }
+
+    public String createTable() {
+        String returnStr = super.createTable(this.createTableStatement());
+        return returnStr;
+    }
+
+    public void update(HashMap updatedValues) {
+        //super.updateWhere(StoreFrontData.NAME,(String) updatedValues.get(StoreFrontData.NAME),updatedValues);      
+        super.updateWhere(EntryData.getInstance().@ID, ((String) updatedValues.get(EntryData.getInstance().@ID)), updatedValues);
+    }
+
+    public String dropTable() {
+        return super.dropTable();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void insert(final BasicArrayList values) {
+        super.insert(values);
+    }
+
+}
+
+

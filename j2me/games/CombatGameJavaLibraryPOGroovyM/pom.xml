@@ -1,0 +1,142 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.allbinary</groupId>
+  <artifactId>CombatGameJavaLibraryPOMGroovy</artifactId>
+  <packaging>pom</packaging>
+  <!-- AllBinary Platform Version Start -->
+  <version>1.0.0-SNAPSHOT</version>
+  <!-- AllBinary Platform Version End -->
+
+  <name>CombatGameJavaLibraryPOMGroovy</name>
+  <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+
+        <!--
+
+        -->
+
+        <module>../../games/TickableJavaLibraryGroovyM</module>
+
+        <module>../../games/CommonHeadsUpDisplayLibraryGroovyM</module>
+
+        <module>../../../physics/MovementJavaLibraryGroovyM</module>
+        <!--        -->
+        <module>../../games/PartsJavaLibraryGroovyM</module>
+        <module>../../games/PickupGameJavaLibraryGroovyM</module>
+
+        <module>../../../allbinary_src/licensing/HardCodedLicenseInitInfoJavaLibraryGroovyM</module>
+        <module>../../../allbinary_src/licensing/FileLicenseInitInfoJavaLibraryGroovyM</module>
+        <module>../../../allbinary_src/licensing/ClientInfoLicensingJavaLibraryGroovyM</module>
+
+        <module>../../games/licensing/PartnerJ2MEJavaLibraryGroovyM</module>
+        <module>../../games/licensing/PartnerHTMLJavaLibraryGroovyM</module>
+        <module>../../games/licensing/PartnerAndroidJavaLibraryGroovyM</module>
+        <module>../../games/licensing/NoGameLicensingJavaLibraryGroovyM</module>
+        <module>../../games/licensing/GameLicensingOnlyDemoJavaLibraryGroovyM</module>
+        <module>../../games/licensing/GameLicensingOnlyNormalJavaLibraryGroovyM</module>
+        <module>../../games/licensing/GameLicensingBaseJavaLibraryGroovyM</module>
+
+        <!--
+        <module>../../games/GameScoresBaseLibraryGroovyM</module>
+        <module>../../games/GameScoresBaseHTMLLibraryGroovyM</module>
+        <module>../../games/GameScoresBaseJ2MELibraryGroovyM</module>
+        -->
+        <module>../../games/GameScoresLocalJavaLibraryGroovyM</module>
+        <module>../../games/GameScoresRemoteAndLocalJavaLibraryGroovyM</module>
+
+        <module>../../../store/ThirdPartyStoreJavaLibraryGroovyM</module>
+        <module>../../../store/NoThirdPartyStoreJavaLibraryGroovyM</module>
+
+        <module>../../media/graphics/layer/CollisionLayerJavaLibraryGroovyM</module>
+        <module>../../games/CollisionLibraryGroovyM</module>
+
+        <module>../../games/multiplayer/AllBinaryGameClientBaseNullJavaLibraryGroovyM</module>
+
+        <module>../../games/PickupLayerJavaLibraryGroovyM</module>
+
+        <module>../../games/DamageGameJavaLibraryGroovyM</module>
+        <module>../../games/DropJavaLibraryGroovyM</module>
+        <module>../../games/WeaponLayerJavaLibraryGroovyM</module>
+
+        <module>../../games/CombatGameJavaLibraryGroovyM</module>
+        <module>../../games/LifeJavaLibraryGroovyM</module>
+
+        <module>../../games/CommonHeadsUpDisplayCombatGameLibraryGroovyM</module>
+        <module>../../games/LifeOrDeathDataJavaLibraryGroovyM</module>
+
+        <module>../../games/BasicWeaponPartsJavaLibraryGroovyM</module>
+        <module>../../games/weapon/WeaponPropertiesJavaLibraryGroovyM</module>
+
+        <module>../../games/weapon/WeaponMineJavaLibraryGroovyM</module>
+
+        <!--
+        <module>../../media/graphics/effects/fireworks/FireworksJavaLibraryGroovyM</module>
+        -->
+
+        <module>../../media/graphics/geography/map/TerrainEventJavaLibraryGroovyM</module>
+
+<!--
+        <module>../../media/graphics/geography/map/BasicPlatformGeographicMapJavaLibraryGroovyM</module>
+        -->
+
+        <!--
+        <module>../../media/graphics/geography/map/RaceTrackGroovyP</module>
+        -->
+
+        <!--
+        XmlRpcJavaLibrary
+        RemoteXmlRpcJavaLibrary
+
+        Since POMs are built before the other libs is it best to handle this differently
+        ../../
+        <module>../../../../workgroovy/j2me/games/strategy/rts/RTSGameJavaLibraryGroovyP</module>
+        -->
+
+        <module>../../media/graphics/OtherGraphicsMediaLibraryGroovyP</module>
+
+        <module>../../input/NoTouchButtonResourceAnimationJavaLibraryGroovyM</module>
+        <module>../../input/TouchButtonResourceAnimationJavaLibraryGroovyM</module>
+        <module>../../input/TouchButtonResourceOpenGLESAnimationJavaLibraryGroovyM</module>
+
+        <module>../../input/TrackingEventJavaLibraryGroovyM</module>
+        <module>../../../game/behavior/BehaviorLibraryGroovyP</module>
+
+        <module>../../media/sound/OtherSoundMediaLibraryGroovyP</module>
+
+        <module>../../../allbinary_src/licensing/ApplicationConfigurationJavaLibraryGroovyM</module>
+        <module>../../../allbinary_src/licensing/ApplicationConfigurationNoFSJavaLibraryGroovyM</module>
+        <module>../../input/AllBinaryMagneticFieldSensorJavaLibraryGroovyM</module>
+        <module>../../android/VirtualKeyboardJavaLibraryGroovyM</module>
+
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
+

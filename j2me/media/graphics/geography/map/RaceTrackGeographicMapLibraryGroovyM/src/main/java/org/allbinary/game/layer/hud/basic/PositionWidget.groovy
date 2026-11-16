@@ -1,0 +1,54 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.hud.basic;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.game.graphics.hud.BasicHud;
+import org.allbinary.graphics.color.BasicColor;
+
+//super.paint(graphics, positionString, currentPostString, offset2, offset);
+@groovy.transform.CompileStatic
+public class PositionWidget extends BasicHud {
+    private int position;
+
+    private String positionString = StringUtil.getInstance().@EMPTY_STRING;
+
+    public PositionWidget(int position, int location, int direction, BasicColor basicColor) throws Exception {
+        super(location, direction, 2, basicColor);
+        this.updateMaxHeight = 10;
+        this.updateMaxWidth = 40;
+    }
+
+    public int get() {
+        return this.position;
+    }
+
+    public void set(int position) {
+        this.position = position;
+        this.positionString = PositionWidget.toString(this.get());
+    }
+
+    public void paint(Graphics graphics) {
+        super.paintString(graphics, this.positionString);
+    }
+
+    public static String toString(int position) {
+        StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(Integer.toString(position));
+        if (position == 1) {
+            stringBuffer.append('st');
+        } else if (position == 2) {
+            stringBuffer.append('nd');
+        } else if (position == 3) {
+            stringBuffer.append('rd');
+        } else {
+            stringBuffer.append('th');
+        }
+        return stringBuffer.toString();
+    }
+
+}
+
+

@@ -1,0 +1,48 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.vector;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.animation.Animation;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.ColorCompositeInterface;
+
+@groovy.transform.CompileStatic
+public class CircleFilledAnimation extends Animation implements ColorCompositeInterface {
+    private int width;
+
+    private int height;
+
+    public CircleFilledAnimation(final int width, final int height, final BasicColor basicColor) {
+        super();
+        this.width = width;
+        this.height = height;
+        this.setBasicColorP(basicColor);
+    }
+
+    @Override
+    public void nextFrame() {
+    }
+
+    @Override
+    public void paintXY(final Graphics graphics, final int x, final int y) {
+        this.basicSetColorUtil.setBasicColorP3(graphics, this.getBasicColorP(), this.getColor());
+        //graphics.fillArc(x, y, width, height, 0, TOTAL_ANGLE);
+        graphics.fillRect(x, y, this.width, this.height);
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public BasicColor getBasicColorP() {
+        return super.getBasicColorP();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void setBasicColorP(final BasicColor basicColor) {
+        super.setBasicColorP(basicColor);
+    }
+
+}
+
+

@@ -1,0 +1,64 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai;
+
+import org.allbinary.game.input.GameInput;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.util.HashtableUtil;
+import org.allbinary.game.ai.BasicAI;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class KeyPressesAI extends BasicAI {
+    private boolean on = true;
+
+    protected Integer[] keys;
+
+    public KeyPressesAI(ABHashtable<Object, Object> hashtable, AllBinaryLayer ownerLayerInterface, GameInput gameInput) {
+        super(ownerLayerInterface, gameInput);
+        this.keys = new Integer[hashtable.size()];
+        Object[] objectArray = HashtableUtil.getInstance().getKeysAsArray(hashtable);
+        int size = objectArray.length;
+        for (int index = 0; index < size; index++) {
+            this.keys[index] = ((Integer) hashtable.get(((Object) objectArray[index])));
+        }
+    }
+
+    @Override
+    public void processAI(AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        if (this.on) {
+            //this.logUtil.putF(this.commonStrings.START, this, this.commonStrings.PROCESS);
+            for (int index = 0; index < this.keys.length; index++) {
+                super.processKeyAI(this.keys[index].intValue());
+            }
+        }
+    }
+
+    public void toggle() throws Exception {
+        if (this.isOn()) {
+            this.setOn(false);
+        } else {
+            this.setOn(true);
+        }
+    }
+
+    public void disable() throws Exception {
+        this.setOn(false);
+    }
+
+    public void enable() throws Exception {
+        this.setOn(true);
+    }
+
+    private void setOn(boolean on) {
+        this.on = on;
+    }
+
+    protected boolean isOn() {
+        return this.on;
+    }
+
+}
+
+

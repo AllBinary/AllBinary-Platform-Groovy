@@ -1,0 +1,58 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.os;
+
+import org.allbinary.logic.system.os.android.AndroidOperatingSystemFactory;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class OperatingSystemFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final OperatingSystemFactory instance = new OperatingSystemFactory();
+
+    public static OperatingSystemFactory getInstance() {
+        return OperatingSystemFactory.instance;
+    }
+
+    private GenericOperatingSystem genericOperatingSystem = NoOperatingSystem.NO_OPERATING_SYSTEM;
+
+    private boolean hasDetected = false;
+
+    private OperatingSystemFactory() {
+    }
+
+    public synchronized GenericOperatingSystem getOperatingSystemInstance() {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        try {
+            final SystemProperties systemProperties = SystemProperties.getInstance();
+            String osName = systemProperties.getName();
+            //String osVersion = SystemProperties.getVersion();
+            if (!this.hasDetected) {
+                this.hasDetected = true;
+                if (osName.indexOf(OperatingSystems.getInstance().@ANDROID) >= 0) {
+                    this.logUtil.putF('Found a Android OS', this, commonStrings.@GET_INSTANCE);
+                    this.genericOperatingSystem = AndroidOperatingSystemFactory.getInstance().getOperatingSystemInstance();
+                    //PreLogUtil.put(log.toString());
+                    this.logUtil.putF(new StringMaker().append('Operating System Info: ').append(this.genericOperatingSystem.toString()).toString(), this, commonStrings.@GET_INSTANCE);
+                } else if (osName.indexOf(OperatingSystems.getInstance().@HARMONY) >= 0) {
+                    this.logUtil.putF('Found a Harmony OS', this, commonStrings.@GET_INSTANCE);
+                    this.genericOperatingSystem = AndroidOperatingSystemFactory.getInstance().getOperatingSystemInstance();
+                    //PreLogUtil.put(log.toString());
+                    this.logUtil.putF(new StringMaker().append('Operating System Info: ').append(this.genericOperatingSystem.toString()).toString(), this, commonStrings.@GET_INSTANCE);
+                } else {
+                    throw new Exception(new StringMaker().append('OS Not Supported: ').append(osName).toString());
+                }
+            }
+        } catch (Exception e) {
+            this.genericOperatingSystem = NoOperatingSystem.NO_OPERATING_SYSTEM;
+            this.logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@GET_INSTANCE, e);
+        }
+        return this.genericOperatingSystem;
+    }
+
+}
+
+

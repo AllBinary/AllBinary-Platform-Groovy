@@ -1,0 +1,108 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image.search;
+
+import java.awt.image.BufferedImage;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.media.image.ImageUtil;
+import org.allbinary.media.image.comparison.pixel.PixelDelta;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class ImageComparisonSearch {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    public boolean isSameHeight;
+
+    public boolean isSameWidth;
+
+    public int pixelsThatMatch;
+
+    public int pixelsIgnored;
+
+    public int imageHeight;
+
+    public int imageWidth;
+
+    private int tolerance;
+
+    private BasicArrayList nonMatchingPixelVector;
+
+    private BufferedImage[] bufferedImages;
+
+    private float matchingPercent = -1;
+
+    public ImageComparisonSearch(BufferedImage bufferedImage, BufferedImage bufferedImage2, int tolerance) {
+        this.nonMatchingPixelVector = new BasicArrayListD();
+        this.setBufferedImages(new BufferedImage[2]);
+        this.getBufferedImages()[0] = bufferedImage;
+        this.getBufferedImages()[1] = bufferedImage2;
+        this.imageHeight = bufferedImage.getHeight();
+        this.imageWidth = bufferedImage.getWidth();
+        if (bufferedImage.getHeight() != bufferedImage2.getHeight()) {
+            this.isSameHeight = false;
+            if (this.imageHeight > bufferedImage2.getHeight()) {
+                this.imageHeight = bufferedImage2.getHeight();
+            }
+        } else {
+            this.isSameHeight = true;
+        }
+        if (bufferedImage.getWidth() != bufferedImage2.getWidth()) {
+            this.isSameWidth = false;
+            if (this.imageWidth > bufferedImage2.getWidth()) {
+                this.imageWidth = bufferedImage2.getWidth();
+            }
+        } else {
+            this.isSameWidth = true;
+        }
+        if (!this.isSameWidth || !this.isSameHeight) {
+            final ImageUtil imageUtil = ImageUtil.getInstance();
+            this.logUtil.putF('Images were not the same size? Most likely a resolution change.', this, this.commonStrings.@CONSTRUCTOR);
+            this.logUtil.putF('1: ' + imageUtil.toString(bufferedImage), this, this.commonStrings.@CONSTRUCTOR);
+            this.logUtil.putF('2: ' + imageUtil.toString(bufferedImage2), this, this.commonStrings.@CONSTRUCTOR);
+        }
+    }
+
+    private float getMatchingPercent() {
+        if (this.matchingPercent == -1) {
+            this.matchingPercent = ((float) (((float) this.pixelsThatMatch) / (this.imageWidth * this.imageHeight)));
+        }
+        return this.matchingPercent;
+    }
+
+    public void add(PixelDelta pixel) {
+        this.nonMatchingPixelVector.add(pixel);
+    }
+
+    public BasicArrayList getNonMatchingPixelVector() {
+        return this.nonMatchingPixelVector;
+    }
+
+    public String toString() {
+        return 'ImageComparisonInfo: ' + ' Number Of Matching Pixels: ' + this.pixelsThatMatch + '\nNumber Of Non-Matching Pixels: ' + this.getNonMatchingPixelVector().size() + '\nNumber Of Pixels Ignored: ' + this.pixelsIgnored + '\nMatching Percentage: ' + this.getMatchingPercent();
+    }
+
+    public BufferedImage[] getBufferedImages() {
+        return this.bufferedImages;
+    }
+
+    private void setBufferedImages(BufferedImage[] bufferedImages) {
+        this.bufferedImages = bufferedImages;
+    }
+
+    public int getTolerance() {
+        return this.tolerance;
+    }
+
+    public void setTolerance(int tolerance) {
+        this.tolerance = tolerance;
+    }
+
+}
+
+

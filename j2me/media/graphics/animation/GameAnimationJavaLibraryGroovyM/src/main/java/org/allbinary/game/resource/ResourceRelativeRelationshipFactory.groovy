@@ -1,0 +1,64 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.resource;
+
+import org.allbinary.graphics.RelativeRelationship;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.util.BasicArrayListUtil;
+
+@groovy.transform.CompileStatic
+public class ResourceRelativeRelationshipFactory implements ResourceRelativeRelationshipFactoryInterface {
+    private final BasicArrayListUtil basicArrayListUtil = BasicArrayListUtil.getInstance();
+
+    private final ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+
+    private boolean initialized;
+
+    @Override
+    public void init(int level) throws Exception {
+        this.setInitialized(true);
+    }
+
+    @Override
+    public BasicArrayList getResourceRelativeRelationshipList(String resource) throws Exception {
+        final Object listCanBeNull = this.hashtable.get(resource);
+        if (listCanBeNull == null) {
+            return this.basicArrayListUtil.getImmutableInstance();
+        }
+        return ((BasicArrayList) listCanBeNull);
+    }
+
+    @Override
+    public void addResourceRelativeRelationship(String resource, RelativeRelationship hardPoint) throws Exception {
+        BasicArrayList list = this.getResourceRelativeRelationshipList(resource);
+        if (list === this.basicArrayListUtil.getImmutableInstance()) {
+            list = new BasicArrayListD();
+        }
+        list.add(hardPoint);
+        this.hashtable.put(resource, list);
+    }
+
+    @Override
+    public boolean isLoadingLevel(int level) {
+        return false;
+    }
+
+    @Override
+    public boolean isFeature() {
+        return false;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
+    }
+
+}
+
+

@@ -1,0 +1,31 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import org.allbinary.game.input.event.GameKeyEvent;
+import org.allbinary.util.BasicArrayListD;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class NoPlayerGameInput extends PlayerGameInput {
+    private static final NoPlayerGameInput SINGLETON = new NoPlayerGameInput();
+
+    public static NoPlayerGameInput getInstance() {
+        return NoPlayerGameInput.SINGLETON;
+    }
+
+    private NoPlayerGameInput() {
+        super(new BasicArrayListD(), new BasicArrayListD(), -1);
+    }
+
+    @Override
+    public synchronized void onDownGameKeyEvent(GameKeyEvent gameKeyEvent) {
+    }
+
+    @Override
+    public synchronized void onUpGameKeyEvent(GameKeyEvent gameKeyEvent) {
+    }
+
+}
+
+

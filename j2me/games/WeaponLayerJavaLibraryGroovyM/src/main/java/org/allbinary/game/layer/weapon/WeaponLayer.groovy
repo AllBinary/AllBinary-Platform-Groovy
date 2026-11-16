@@ -1,0 +1,279 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.weapon;
+
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.IndexedAnimation;
+import org.allbinary.animation.NullAnimationFactory;
+import org.allbinary.game.collision.CollidableBaseBehavior;
+import org.allbinary.game.combat.destroy.DestroyedLayerProcessor;
+import org.allbinary.game.combat.weapon.WeaponProperties;
+import org.allbinary.game.configuration.GameConfigurationUtil;
+import org.allbinary.game.identification.BasicGroupFactory;
+import org.allbinary.game.multiplayer.layer.MultiPlayerGameLayer;
+import org.allbinary.game.multiplayer.layer.RemoteInfo;
+import org.allbinary.game.score.NoScoreable;
+import org.allbinary.game.score.ScoreableInterface;
+import org.allbinary.game.tick.TickableInterface;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.physics.movement.Movement;
+import org.allbinary.view.ViewPosition;
+import org.allbinary.view.ViewPositionBase;
+
+@groovy.transform.CompileStatic
+public class WeaponLayer extends MultiPlayerGameLayer implements TickableInterface {
+    // private static final int MIN = 200;
+    private Animation animationInterface = NullAnimationFactory.getFactoryInstance().getInstance(0);
+
+    protected Animation initAnimationInterface;
+
+    private Animation destroyedAnimationInterface;
+
+    private AllBinaryLayer sourceLayerInterface = AllBinaryLayer.NULL_ALLBINARY_LAYER;
+
+    // private int angle;
+    protected int totalDamage;
+
+    private int initDamage;
+
+    private boolean destroyed = true;
+
+    protected ScoreableInterface scoreableInterface = NoScoreable.getInstance();
+
+    private Movement movement;
+
+    private WeaponProperties weaponProperties = WeaponProperties.NULL_WEAPON_PROPERTIES;
+
+    private final int multiPlayerType;
+
+    //    }
+    protected WeaponLayer(final String name, final RemoteInfo remoteInfo, final int multiPlayerType, final Movement movement, final Animation animationInterface, final Animation destroyedAnimationInterface, final Rectangle rectangle, final ViewPositionBase viewPosition) throws Exception {
+        super(remoteInfo, BasicGroupFactory.getInstance().@NONE_ARRAY, name, rectangle, viewPosition);
+        // super(Group.NONE, rectangle, viewPosition, true);
+        this.initAnimationInterface = animationInterface;
+        this.setAnimationInterface(animationInterface);
+        this.destroyedAnimationInterface = destroyedAnimationInterface;
+        this.movement = movement;
+        this.multiPlayerType = multiPlayerType;
+    }
+
+    private CollidableWeaponBehavior collidableWeaponBehavior = CollidableWeaponBehavior.getNullInstance();
+
+    @Override
+    public void setCollidableInferface(CollidableBaseBehavior collidableInferface) {
+        super.setCollidableInferface(collidableInferface);
+        this.collidableWeaponBehavior = ((CollidableWeaponBehavior) this.getCollidableInferface());
+    }
+
+    public void initXYZ(int x, int y, int z) throws Exception {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public void init(AllBinaryLayer sourceLayerInterface, int angle, int otherAngle, WeaponProperties weaponProperties, ScoreableInterface scoreable) throws Exception {
+        /*         if (weaponProperties.getDamage() < MIN)         {            throw new Exception("Initializing below minimum damage of: " + MIN);         }          if(weaponProperties.getDamage() > MAX)         {             throw new Exception("Initializing above max damage with: " + weaponProperties.getDamage());         }         */
+        this.setWeaponPropertiesP(weaponProperties);
+        this.setReadyForExplosion(false);
+        this.setAnimationInterface(this.getInitAnimationInterfaceP());
+        this.setOwnerLayerInterface(sourceLayerInterface);
+        this.collidableWeaponBehavior.init(sourceLayerInterface);
+        this.setGroupInterfaces();
+        // this.angle = angle;
+        if (scoreable != null) {
+            this.scoreableInterface = scoreable;
+        }
+        // basicVelocityProperties.getVelocityYBasicDecimalP().set(0);
+        this.totalDamage = 0;
+        this.initDamage = weaponProperties.getDamage();
+        this.setDestroyed(false);
+        this.movement.init(weaponProperties.getSpeed(), angle, otherAngle);
+    }
+
+    // Subgroups are not taken if enemy is the base group.
+    protected void setGroupInterfaces() {
+        final BasicGroupFactory basicGroupFactory = BasicGroupFactory.getInstance();
+        if (this.sourceLayerInterface.getGroupInterface()[0] === basicGroupFactory.@ENEMY) {
+            this.setGroupInterface(basicGroupFactory.@ENEMY_ARRAY);
+        } else {
+            this.setGroupInterface(this.sourceLayerInterface.getGroupInterface());
+        }
+    }
+
+    @Override
+    public void processTick(AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        //this.logUtil.putF(this.commonStrings.START, this, gameStrings.PROCESS_TICK);
+        if (this.isExhausted() && !this.isDestroyed()) {
+            //PreLogUtil.put("Explosion - Processing", this, gameStrings.PROCESS_TICK);
+            if (this.isReadyForExplosion()) {
+                //PreLogUtil.put("Explosion - Ready Processing", this, gameStrings.PROCESS_TICK);
+                IndexedAnimation indexedAnimationInterface = ((IndexedAnimation) this.getAnimationInterface());
+                int currentFrame = indexedAnimationInterface.getFrame();
+                if (currentFrame < indexedAnimationInterface.getAnimationSize() - 1) {
+                    // show next frame in explosion
+                    indexedAnimationInterface.nextFrame();
+                } else {
+                    //PreLogUtil.put("Explosion - End", this, gameStrings.PROCESS_TICK);
+                    this.setDestroyed(true);
+                }
+            } else {
+                final CollidableWeaponBehavior collidableWeaponBehavior = ((CollidableWeaponBehavior) this.getCollidableInferface());
+                if (collidableWeaponBehavior.isCollided()) {
+                    //PreLogUtil.put("Explosion - Begin", this, gameStrings.PROCESS_TICK);
+                    this.setAnimationInterface(this.destroyedAnimationInterface);
+                    this.getMovement().stop();
+                    this.setReadyForExplosion(true);
+                } else {
+                    //PreLogUtil.put("Explosion - Begin and End", this, gameStrings.PROCESS_TICK);
+                    this.setDestroyed(true);
+                }
+            }
+        }
+        this.movement.process(this);
+        // decrease the beams power over a distance
+        this.totalDamage += this.weaponProperties.getDissipation();
+    }
+
+    /*     private void slow()     {         Movement movement = this.getMovement();          BasicVelocityProperties velocityProperties =              ((VelocityInterfaceCompositeInterface) movement).getVelocityProperties();          BasicDecimal xBasicDecimal = velocityProperties.getVelocityXBasicDecimalP();         BasicDecimal yBasicDecimal = velocityProperties.getVelocityYBasicDecimalP();           //xBasicDecimal.multiply(4);         xBasicDecimal.divide(2);          //yBasicDecimal.multiply(4);         yBasicDecimal.divide(2);     }     */
+    @Override
+    public boolean isDestroyed() {
+        return this.destroyed;
+    }
+
+    @Override
+    public void damage(int damage, int damageType) {
+        this.totalDamage += damage * damage;
+    }
+
+    protected void givePoints(int total) {
+        this.scoreableInterface.addPoints(GameConfigurationUtil.getInstance().getCompetitionValue() * total);
+    }
+
+    // Is damage value gone
+    protected boolean isExhausted() {
+        // as such it went beyond the positive max
+        if (this.totalDamage > this.getInitDamage() || this.totalDamage < 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int getDamage(int damageType) {
+        if (!this.isExhausted()) {
+            int total = this.getInitDamage() - this.totalDamage;
+            // + this.getInitDamage() + " totalDamage: " + totalDamage, this, // "damage");
+            this.givePoints(total);
+            return total;
+        }
+        return 0;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
+        if (this.isDestroyed()) {
+            this.scoreableInterface = NoScoreable.getInstance();
+            DestroyedLayerProcessor.getInstance().add(this);
+        }
+    }
+
+    /*     private void setInitDamage(int initDamage)     {         this.initDamage = initDamage;     }     */
+    protected int getInitDamage() {
+        return this.initDamage;
+    }
+
+    protected void setAnimationInterface(Animation animationInterface) {
+        this.animationInterface = animationInterface;
+    }
+
+    protected Animation getAnimationInterface() {
+        return this.animationInterface;
+    }
+
+    public Animation getInitAnimationInterfaceP() {
+        return this.initAnimationInterface;
+    }
+
+    public void setInitAnimationInterfaceP(Animation initAnimationInterface) {
+        this.initAnimationInterface = initAnimationInterface;
+    }
+
+    public Animation getDestroyedAnimationInterface() {
+        return this.destroyedAnimationInterface;
+    }
+
+    /**      * @return the sourceLayerInterface      */
+    public AllBinaryLayer getOwnerLayerInterface() {
+        return this.sourceLayerInterface;
+    }
+
+    /**      * @param sourceLayerInterface      *            the sourceLayerInterface to set      */
+    public void setOwnerLayerInterface(AllBinaryLayer sourceLayerInterface) {
+        this.sourceLayerInterface = sourceLayerInterface;
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        // this.logUtil.putF(this.commonStrings.START, this, canvasStrings.PAINT);
+        final ViewPositionBase viewPosition = this.getViewPosition();
+        //TWB - the offset does not make sense? is collision offset? 
+        this.animationInterface.paintXY(graphics, viewPosition.getX() - this.getHalfWidth(), viewPosition.getY() - this.getHalfHeight());
+    }
+
+    @Override
+    public void paintThreed(Graphics graphics) {
+        final ViewPositionBase viewPosition = this.getViewPosition();
+        this.animationInterface.paintThreedXYZ(graphics, viewPosition.getX() - this.getHalfWidth(), viewPosition.getY() - this.getHalfHeight(), viewPosition.getZ() - this.getHalfDepth());
+    }
+
+    /**      * @return the movement      */
+    public Movement getMovement() {
+        return this.movement;
+    }
+
+    /**      * @param movement      *            the movement to set      */
+    public void setMovement(Movement movement) {
+        this.movement = movement;
+    }
+
+    @Override
+    public int getType() {
+        return WeaponLayer.getStaticType();
+    }
+
+    public static int getStaticType() {
+        return 0;
+    }
+
+    @Override
+    public int getMultiPlayerType() {
+        return this.multiPlayerType;
+    }
+
+    public void setWeaponPropertiesP(WeaponProperties weaponProperties) {
+        this.weaponProperties = weaponProperties;
+    }
+
+    public WeaponProperties getWeaponPropertiesP() {
+        return this.weaponProperties;
+    }
+
+    @Override
+    public boolean implmentsTickableInterface() {
+        return true;
+    }
+
+    @Override
+    public void set(GL gl) throws Exception {
+        //OpenGLSurfaceChangedInterface openGLSurfaceChangedInterface = ;        
+        this.initAnimationInterface.set(gl);
+    }
+
+}
+
+

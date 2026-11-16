@@ -1,0 +1,83 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.math;
+
+
+@groovy.transform.CompileStatic
+public class SmallLongFactory {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static final SmallLongFactory instance = new SmallLongFactory();
+
+    public static SmallLongFactory getInstance() {
+        return SmallLongFactory.instance;
+    }
+
+    public final int NEGATIVE_MAX = 500;
+
+    //500;
+    public final int POSITIVE_MAX = 0x2D1;
+
+    private final Long[] INTEGER_ARRAY = new Long[this.NEGATIVE_MAX + this.POSITIVE_MAX];
+
+    private final String[] STRING_ARRAY = new String[this.NEGATIVE_MAX + this.POSITIVE_MAX];
+
+    public int MIN = 0;
+
+    public int lastMin = 0;
+
+    public int lastNegativeMin = 0;
+
+    public void initWithRange(int value, int negativeValue) {
+        for (int index = value - 1; index >= this.lastMin; index--) {
+            this.INTEGER_ARRAY[index + this.NEGATIVE_MAX] = new Long(index);
+        }
+        for (int index = negativeValue - 1; index >= this.lastNegativeMin; index--) {
+            this.INTEGER_ARRAY[index] = new Long(-index);
+        }
+        if (this.lastMin < value) {
+            this.lastMin = value;
+            this.MIN = value;
+        }
+        if (this.lastNegativeMin < negativeValue) {
+            this.lastNegativeMin = negativeValue;
+        }
+    }
+
+    public void init() {
+        if (this.INTEGER_ARRAY[0] == null) {
+            if (this.lastMin < this.POSITIVE_MAX || this.lastNegativeMin < this.NEGATIVE_MAX) {
+                for (int index = this.POSITIVE_MAX - 1; index >= this.lastMin; index--) {
+                    this.INTEGER_ARRAY[index + this.NEGATIVE_MAX] = new Long(index);
+                }
+                for (int index = this.NEGATIVE_MAX - 1; index >= this.lastNegativeMin; index--) {
+                    this.INTEGER_ARRAY[index] = new Long(-index);
+                }
+                //this.logUtil.putF("? " + NEGATIVE_INTEGER_ARRAY[5], CommonPhoneStrings.getInstance().TWO, "?????????");
+                this.lastMin = this.POSITIVE_MAX;
+                this.lastNegativeMin = this.NEGATIVE_MAX;
+            }
+        }
+    }
+
+    private SmallLongFactory() {
+    }
+
+    public Long getInstanceNoThrow(long index) {
+        //this.updateStats(index);
+        if (index + this.NEGATIVE_MAX > this.INTEGER_ARRAY.length - 1) {
+            return this.INTEGER_ARRAY[-1 + this.NEGATIVE_MAX];
+        }
+        return this.INTEGER_ARRAY[(((int) index)) + this.NEGATIVE_MAX];
+    }
+
+    public String getString(int index) {
+        final int i = index + this.NEGATIVE_MAX;
+        if (this.STRING_ARRAY[i] == null) {
+            this.STRING_ARRAY[i] = this.INTEGER_ARRAY[i].toString();
+        }
+        return this.STRING_ARRAY[i];
+    }
+
+}
+
+

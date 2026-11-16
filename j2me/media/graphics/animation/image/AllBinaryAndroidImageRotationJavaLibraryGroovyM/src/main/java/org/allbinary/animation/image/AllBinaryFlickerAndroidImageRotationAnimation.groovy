@@ -1,0 +1,111 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import android.graphics.Matrix;
+import javax.microedition.lcdui.Image;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.media.image.AndroidImageUtil;
+import org.allbinary.media.image.ImageModifierUtil;
+
+@groovy.transform.CompileStatic
+public class AllBinaryFlickerAndroidImageRotationAnimation extends ImageBaseRotationAnimation {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final ImageModifierUtil imageModifierUtil = ImageModifierUtil.getInstanceOrCreate();
+
+    private final AndroidImageUtil androidImageUtil = AndroidImageUtil.getInstance();
+
+    private final Matrix matrix = new Matrix();
+
+    //private final int height;
+    private final int halfWidth;
+
+    private final int halfHeight;
+
+    private final short increment;
+
+    private final Image originalImage;
+
+    //protected
+    public AllBinaryFlickerAndroidImageRotationAnimation(final Image originalImage, final Image image, final AngleInfo angleInfo, final short totalAngle, final AnimationBehavior animationBehavior) throws Exception {
+        super(image, angleInfo, totalAngle, animationBehavior);
+        this.originalImage = originalImage;
+        //this.height = image.getHeight();
+        this.halfWidth = (image.getWidth() >> 1);
+        this.halfHeight = (image.getHeight() >> 1);
+        this.increment = ((short) (this.angleInfo.getAngleIncrementInfo().getAngleIncrement()));
+    }
+
+    @Override
+    public void setBasicColorP(final BasicColor basicColor) {
+        boolean changed = false;
+        if (this.getBasicColorP() == null || this.getBasicColorP().intValue() != basicColor.intValue()) {
+            this.imageModifierUtil.setColor(this.originalImage, this.getImage(), 0, basicColor);
+            changed = true;
+        }
+        super.setBasicColorP(basicColor);
+        if (changed) {
+            this.matrix.setRotate(0.0f, ((float) this.halfWidth), ((float) this.halfHeight));
+            this.updateImage();
+        }
+    }
+
+    @Override
+    public void changeBasicColor(final BasicColor basicColor) {
+        this.setBasicColorP(basicColor);
+    }
+
+    @Override
+    public void setAlpha(final int alpha) {
+        boolean changed = false;
+        if (this.alphaP != alpha) {
+            changed = true;
+        }
+        super.setAlpha(alpha);
+        this.imageModifierUtil.setAlpha(this.originalImage, this.getImage(), 0, this.alphaP);
+        if (changed) {
+            this.matrix.setRotate(0.0f, ((float) this.halfWidth), ((float) this.halfHeight));
+            this.updateImage();
+        }
+    }
+
+    @Override
+    public void nextRotation() {
+        super.nextRotation();
+        //this.logUtil.putF("Frame: " + this.getFrame(), this, "nextRotation");
+        this.matrix.setRotate(((float) this.increment), ((float) this.halfWidth), ((float) this.halfHeight));
+        //matrix.setRotate(this.angleInfo.getAngle(), this.halfWidth, this.halfHeight);
+        this.updateImage();
+    }
+
+    @Override
+    public void previousRotation() {
+        super.previousRotation();
+        //this.logUtil.putF("Frame: " + this.getFrame(), this, "previousRotation");
+        this.matrix.setRotate(((float) -this.increment), ((float) this.halfWidth), ((float) this.halfHeight));
+        //matrix.setRotate(this.angleInfo.getAngle(), this.halfWidth, this.halfHeight);
+        this.updateImage();
+    }
+
+    private void updateImage() {
+        this.androidImageUtil.rotate(this.getImage(), originalImage, matrix, imageModifierUtil.@paint);
+    }
+
+    @Override
+    public void setFrame(final int index) {
+        //this.logUtil.putF(this.commonLabels.INDEX_LABEL + index, this, "setRotation");
+        final int currentFrame = this.circularIndexUtil.getIndex();
+        //this.logUtil.putF("currentFrame: " + currentFrame, this, "setRotation");
+        this.circularIndexUtil.setIndex(index);
+        final int newFrame = this.circularIndexUtil.getIndex();
+        //this.logUtil.putF("newFrame: " + newFrame, this, "setRotation");
+        this.angleInfo.adjustAngle(newFrame);
+        this.matrix.setRotate(((float) (((float) (newFrame - currentFrame)) * this.increment)), ((float) this.halfWidth), ((float) this.halfHeight));
+        this.updateImage();
+    }
+
+}
+
+

@@ -1,0 +1,89 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.score;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import javax.microedition.rms.RecordComparator;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class ScoreComparator implements RecordComparator {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final boolean isHighestBest;
+
+    //private String searchName;
+    public ScoreComparator(final boolean isHighestBest) {
+        this.isHighestBest = isHighestBest;
+    }
+
+    public long getBestScore() {
+        return this.isHighestBest ? Long.MAX_VALUE : 0;
+    }
+
+    //Although this imp of RecordComparator works
+    @Override
+    public int compare(final byte[] recordOne, final byte[] recordTwo) {
+        final ByteArrayInputStream byteArrayInputStreamOne = new ByteArrayInputStream(recordOne);
+        final DataInputStream inputStreamOne = new DataInputStream(byteArrayInputStreamOne);
+        final ByteArrayInputStream byteArrayInputStreamTwo = new ByteArrayInputStream(recordTwo);
+        final DataInputStream inputStreamTwo = new DataInputStream(byteArrayInputStreamTwo);
+        long scoreOne = 0;
+        long scoreTwo = 0;
+        try {
+            inputStreamOne.readUTF();
+            inputStreamTwo.readUTF();
+            scoreOne = inputStreamOne.readLong();
+            scoreTwo = inputStreamTwo.readLong();
+        } catch (EOFException e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'compare', e);
+        } catch (IOException e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'compare', e);
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'compare', e);
+        }
+        if (this.isHighestBest) {
+            return this.getHighTooLow(scoreOne, scoreTwo);
+        } else {
+            return this.getLowTooHigh(scoreOne, scoreTwo);
+        }
+    }
+
+    //high too low
+    public int getHighTooLow(final long scoreOne, final long scoreTwo) {
+        if (scoreOne > scoreTwo) {
+            //this.logUtil.putF(scoreOne + " Follows2 " + scoreTwo, this, "compare");
+            return RecordComparator.PRECEDES;
+        } else if (scoreOne < scoreTwo) {
+            //this.logUtil.putF(scoreOne + " Precedes2 " + scoreTwo, this, "compare");
+            return RecordComparator.FOLLOWS;
+        } else {
+            //this.logUtil.putF(scoreOne + " ==2 " + scoreTwo, this, "compare");
+            return RecordComparator.EQUIVALENT;
+        }
+    }
+
+    //low too high
+    public int getLowTooHigh(final long scoreOne, final long scoreTwo) {
+        if (scoreOne < scoreTwo) {
+            //this.logUtil.putF(scoreOne + " Precedes2 " + scoreTwo, this, "compare");
+            return RecordComparator.PRECEDES;
+        } else if (scoreOne > scoreTwo) {
+            //this.logUtil.putF(scoreOne + " Follows2 " + scoreTwo, this, "compare");
+            return RecordComparator.FOLLOWS;
+        } else {
+            //this.logUtil.putF(scoreOne + " ==2 " + scoreTwo, this, "compare");
+            return RecordComparator.EQUIVALENT;
+        }
+    }
+
+}
+
+

@@ -1,0 +1,128 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai.scroller;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.direction.Direction;
+import org.allbinary.direction.DirectionCompositeInterface;
+import org.allbinary.direction.DirectionFactory;
+import org.allbinary.game.input.GameInput;
+import org.allbinary.game.tracking.TrackingEvent;
+import org.allbinary.game.tracking.TrackingEventHandler;
+import org.allbinary.game.tracking.TrackingEventListenerInterface;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.layer.LayerInterface;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class PacePatrolAI extends BasePatrolAI implements TrackingEventListenerInterface {
+    private BasicArrayList trackingList;
+
+    // private final int MIN_DISTANCE = 0;
+    private int firingDistance;
+
+    protected boolean isFollowLimitedByTerrain = false;
+
+    public PacePatrolAI(final ABHashtable<Object, Object> hashtable, final AllBinaryLayer ownerLayerInterface, final GameInput gameInput) throws Exception {
+        super(hashtable, ownerLayerInterface, gameInput);
+        TrackingEventHandler.getInstance().addListenerInterface(this);
+        this.trackingList = new BasicArrayListD();
+    }
+
+    @Override
+    public void processAI(final AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        this.update();
+        final Direction direction = this.setFiringDirectionForTargetIfInRange();
+        final DirectionFactory directionFactory = DirectionFactory.getInstance();
+        // this.logUtil.putF("Key: " + this.keyDirection, this, this.commonStrings.PROCESS);
+        if (direction === directionFactory.@LEFT) {
+            //Turn around before firing or if in follow mode
+            if (this.lastKeyDirection != keyDirection || !this.isFollowLimitedByTerrain) {
+                super.processKeyAI(Canvas.LEFT);
+            }
+            keyDirection = Canvas.LEFT;
+            this.lastKeyDirection = keyDirection;
+            xTotalDistance = 0;
+            //
+            super.processKeyAI(Canvas.KEY_NUM1);
+        } else if (direction === directionFactory.@RIGHT) {
+            //Turn around before firing
+            if (this.lastKeyDirection != keyDirection || !this.isFollowLimitedByTerrain) {
+                super.processKeyAI(Canvas.RIGHT);
+            }
+            keyDirection = Canvas.RIGHT;
+            this.lastKeyDirection = keyDirection;
+            xTotalDistance = 0;
+            super.processKeyAI(Canvas.KEY_NUM1);
+        } else {
+            super.processKeyAI(this.keyDirection);
+        }
+    }
+
+    private Direction setFiringDirectionForTargetIfInRange() {
+        final DirectionFactory directionFactory = DirectionFactory.getInstance();
+        final AllBinaryLayer ownerLayerInterface = this.getOwnerLayerInterface();
+        Direction direction = directionFactory.@NOT_BORDERED_WITH;
+        TrackingEvent lastTrackingEvent;
+        LayerInterface lastTrackingLayerInterface;
+        DirectionCompositeInterface directionCompositeInterface;
+        final int size = this.trackingList.size();
+        for (int index = 0; index < size; index++) {
+            lastTrackingEvent = ((TrackingEvent) this.trackingList.get(0));
+            lastTrackingLayerInterface = lastTrackingEvent.getLayerInterface();
+            int x = lastTrackingLayerInterface.getXP();
+            int y = lastTrackingLayerInterface.getYP();
+            int yDistance = ownerLayerInterface.getYP() - y - ownerLayerInterface.getHeight();
+            int xDistance = ownerLayerInterface.getXP() - x - ownerLayerInterface.getWidth();
+            // this.logUtil.putF("x: " + x + " y: " + y + " xDistance: " + xDistance + " yDistance: " + yDistance, this, this.commonStrings.PROCESS);
+            int absXDistance = Math.abs(xDistance);
+            int absYDistance = Math.abs(yDistance);
+            //if (absYDistance <= absXDistance)
+            if (absYDistance <= 100) {
+                // Range is close enough
+                if (absXDistance < Math.divideExact(getFiringDistance(), 2)) {
+                    directionCompositeInterface = ((DirectionCompositeInterface) this.getOwnerLayerInterface());
+                    // if on the left side and pointing left
+                    if (xDistance < 0 && directionCompositeInterface.getDirection() === directionFactory.@RIGHT) {
+                        direction = directionFactory.@RIGHT;
+                    } else if (xDistance > 0 && directionCompositeInterface.getDirection() === directionFactory.@LEFT) {
+                        direction = directionFactory.@LEFT;
+                    }
+                }
+            }
+        }
+        return direction;
+    }
+
+    @Override
+    public void disable() {
+    }
+
+    @Override
+    public void onEvent(final AllBinaryEventObject eventObject) {
+        ForcedLogUtil.log(EventStrings.getInstance().@PERFORMANCE_MESSAGE, this);
+    }
+
+    @Override
+    public void onMovement(final TrackingEvent trackingEvent) {
+        this.trackingList.clear();
+        this.trackingList.add(trackingEvent);
+    }
+
+    public int getFiringDistance() {
+        return this.firingDistance;
+    }
+
+    public void setFiringDistance(final int firingDistance) {
+        this.firingDistance = firingDistance;
+    }
+
+}
+
+

@@ -1,0 +1,507 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.io.file;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory;
+import org.allbinary.logic.io.AbDataOutputStream;
+import org.allbinary.logic.io.AbFileInputStream;
+import org.allbinary.logic.io.AbFileLocalInputStream;
+import org.allbinary.logic.io.AbIOSystem;
+import org.allbinary.logic.io.DataOutputStreamFactory;
+import org.allbinary.logic.io.FileStreamFactory;
+import org.allbinary.logic.io.StreamUtil;
+import org.allbinary.logic.io.file.directory.Directory;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.io.path.AbPathData;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+
+//data/init/views/TestStore/template/type/genericTemplateObjectConfig.xml
+@groovy.transform.CompileStatic
+public class FileUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final FileUtil instance = new FileUtil();
+
+    /**      * @return the instance      */
+    public static FileUtil getInstance() {
+        return FileUtil.instance;
+    }
+
+    private final Directory directory = Directory.getInstance();
+
+    private final LogConfigTypeFactory logConfigTypeFactory = LogConfigTypeFactory.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final StreamUtil streamUtil = StreamUtil.getInstance();
+
+    private FileUtil() {
+    }
+
+    /*     }     catch(Exception e)     {     if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(logConfigTypeFactory.FILEERROR))     {     this.logUtil.put("Error Copying File from: " + from.toString() + " to: " +     to.toString(),instance,"copyFile", e);     }     throw e;     }     }      */
+    public void write(InputStream inputStream, AbFile file) throws Exception {
+        AbDataOutputStream dataOutputStream = DataOutputStreamFactory.getInstance().getInstanceForAbFile(file);
+        this.write(inputStream, dataOutputStream);
+    }
+
+    public void write(InputStream inputStream, AbDataOutputStream dataOutputStream) throws Exception {
+        try {
+            dataOutputStream = ((AbDataOutputStream) StreamUtil.getInstance().get(inputStream, dataOutputStream, new byte[16384]));
+            dataOutputStream.flush();
+        } finally {
+            StreamUtil.getInstance().close(dataOutputStream);
+        }
+    }
+
+    public void write(InputStream inputStream, AbDataOutputStream dataOutputStream, byte[] buffer) throws Exception {
+        try {
+            dataOutputStream = ((AbDataOutputStream) StreamUtil.getInstance().get(inputStream, dataOutputStream, buffer));
+            dataOutputStream.flush();
+        } finally {
+            StreamUtil.getInstance().close(dataOutputStream);
+        }
+    }
+
+    private void copy(AbFileInputStream dataInputStream, AbDataOutputStream dataOutputStream) throws Exception {
+        try {
+            dataOutputStream = ((AbDataOutputStream) StreamUtil.getInstance().get(dataInputStream, dataOutputStream, new byte[16384]));
+            dataOutputStream.flush();
+        } finally {
+            StreamUtil.getInstance().close(dataOutputStream);
+            StreamUtil.getInstance().close(dataInputStream);
+        }
+    }
+
+    /*     private final boolean isInCloud(AbFile file)     throws Exception     {     AbPath rootPath = new AbPath(URLGLOBALS.getWebappPath());      //if (file.getPath().indexOf(rootPath) != -1)     if (file.getPath().contains(rootPath.getPath()))     {     return false;     } else     {     return true;     }     }      */
+    private AbPath fixPath(AbFile file, AbPath path, AbPath realPath, String cloud) throws Exception {
+        int beginIndex = file.getPath().indexOf(cloud) + cloud.length();
+        //int beginIndex = path.getPath().length();
+        int endIndex = file.getPath().indexOf(file.getName());
+        String fixedPathString = realPath.toFileSystemString() + file.getPath().substring(beginIndex, endIndex);
+        AbPath fixedPath = new AbPath(fixedPathString, StringUtil.getInstance().@EMPTY_STRING);
+        this.directory.create(fixedPath);
+        final String string = fixedPath.toFileSystemString();
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+            this.logUtil.putF(string, this, 'fixPath');
+        }
+        AbPath outPath = new AbPath(string, file.getName());
+        return outPath;
+    }
+
+    public void copyToCloud(AbFile file, AbPath path, AbPath realPath, String cloud) throws Exception {
+        this.copyToCloud(file, path, realPath, cloud, false, false);
+    }
+
+    public void copyToCloud(AbFile file, AbPath path, AbPath realPath, String cloud, boolean overwriteNewer, boolean overwriteAll) throws Exception {
+        try {
+            AbPath outPath = this.fixPath(file, path, realPath, cloud);
+            AbFile outFile = AbFile.createAbFileFromAbPath(outPath);
+            //{
+            if (!this.copyPrepare(file, outFile, overwriteNewer, overwriteAll)) {
+                return;
+            } else {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                    StringMaker stringBuffer = new StringMaker();
+                    stringBuffer.append('Out File: ');
+                    stringBuffer.append(outFile.getPath());
+                    stringBuffer.append(' In File: ');
+                    stringBuffer.append(file.getPath());
+                    stringBuffer.append(' to cloud.');
+                    this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyToCloud');
+                }
+            }
+            AbDataOutputStream dataOutputStream = DataOutputStreamFactory.getInstance().getInstanceForAbFile(outFile);
+            AbFileInputStream fileInputStream = new AbFileLocalInputStream(file);
+            //  new AbDataInputStream(fileInputStream);
+            this.copy(fileInputStream, dataOutputStream);
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILEERROR)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Error Copying File File: ');
+                stringBuffer.append(file.toString());
+                stringBuffer.append(' to cloud.');
+                this.logUtil.put(stringBuffer.toString(), getInstance(), 'copyToCloud', e);
+            }
+            throw e;
+        }
+    }
+
+    public void copyToCloud(AbFile file, AbFile outFile) throws Exception {
+        this.copyToCloud(file, outFile, false, false);
+    }
+
+    public void copyToCloud(AbFile file, AbFile outFile, boolean overwriteNewer, boolean overwriteAll) throws Exception {
+        try {
+            StringMaker stringBuffer = new StringMaker();
+            //{
+            if (!this.copyPrepare(file, outFile, overwriteNewer, overwriteAll)) {
+                return;
+            } else {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append('Out File: ');
+                    stringBuffer.append(outFile.getPath());
+                    stringBuffer.append(' In File: ');
+                    stringBuffer.append(file.getPath());
+                    stringBuffer.append(' to cloud.');
+                    this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyToCloud');
+                }
+            }
+            AbDataOutputStream dataOutputStream = DataOutputStreamFactory.getInstance().getInstanceForAbFile(outFile);
+            AbFileInputStream fileInputStream = new AbFileLocalInputStream(file);
+            //  new AbDataInputStream(fileInputStream);
+            this.copy(fileInputStream, dataOutputStream);
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILEERROR)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Error Copying File File: ');
+                stringBuffer.append(file.toString());
+                stringBuffer.append(' to cloud.');
+                this.logUtil.put(stringBuffer.toString(), getInstance(), 'copyToCloud', e);
+            }
+            throw e;
+        }
+    }
+
+    private boolean copyPrepare(AbFile fromFile, AbFile toFile, boolean overwriteNewer, boolean overwriteAll) throws Exception {
+        if (toFile.exists()) {
+            StringMaker stringBuffer = new StringMaker();
+            //Overwrite existing
+            if (overwriteAll) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append('Overwriting File: ');
+                    stringBuffer.append(toFile.getPath());
+                    this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyFile');
+                }
+                toFile.delete();
+                toFile.createNewFile();
+            } else if (toFile.lastModified() < fromFile.lastModified() && overwriteNewer) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append('Newer by: ');
+                    stringBuffer.appendlong(fromFile.lastModified() - toFile.lastModified());
+                    stringBuffer.append('ms ');
+                    stringBuffer.append('Copying File: ');
+                    stringBuffer.append(toFile.getPath());
+                    this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyFile');
+                }
+                toFile.delete();
+                toFile.createNewFile();
+            } else {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append('File Already Exists');
+                    if (overwriteNewer) {
+                        stringBuffer.append(' And Is Not Older');
+                    } else {
+                        stringBuffer.append(' And Not A In Overwrite Mode');
+                    }
+                    stringBuffer.append(CommonLabels.getInstance().@COLON_SEP);
+                    stringBuffer.append(toFile.getPath());
+                    this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyFile');
+                }
+                return false;
+            }
+        } else {
+            toFile.createNewFile();
+        }
+        return true;
+    }
+
+    private void copyFile(AbFile fromFile, AbFile toFile) throws Exception {
+        this.copyFile(fromFile, toFile, false, false);
+    }
+
+    private void copyFile(AbFile fromFile, AbFile toFile, boolean overwriteNewer, boolean overwriteAll) throws Exception {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Copying ');
+                stringBuffer.appendlong(fromFile.length());
+                stringBuffer.append(' bytes from File: ');
+                stringBuffer.append(fromFile.getPath());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(toFile.getPath());
+                this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyFile');
+            }
+            if (!this.copyPrepare(fromFile, toFile, overwriteNewer, overwriteAll)) {
+                return;
+            }
+            AbDataOutputStream dataOutputStream = DataOutputStreamFactory.getInstance().getInstanceForAbFile(toFile);
+            AbFileInputStream fileInputStream = AbFileInputStream.createFromAbFile(fromFile);
+            //  new AbDataInputStream(fileInputStream);
+            this.copy(fileInputStream, dataOutputStream);
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILEERROR)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Error Copying File fromFile: ');
+                stringBuffer.append(fromFile.toString());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(toFile.toString());
+                this.logUtil.put(stringBuffer.toString(), getInstance(), 'copyFile', e);
+            }
+            throw e;
+        }
+    }
+
+    private static String getNewDirectory(final AbFile fromFile) {
+        String newDirectory = fromFile.getPath();
+        String separatorChar = FilePathData.getInstance().@PATH_START;
+        if (AbIOSystem.getInstance().isType('com.vobject.appengine.java.io')) {
+            separatorChar = AbPathData.getInstance().@SEPARATOR;
+        }
+        int lastIndex = newDirectory.lastIndexOf(separatorChar);
+        if (lastIndex >= newDirectory.length()) {
+            newDirectory = newDirectory.substring(0, newDirectory.length() - 1);
+            lastIndex = newDirectory.lastIndexOf(separatorChar);
+        }
+        return newDirectory.substring(lastIndex, newDirectory.length());
+    }
+
+    public void copyDirectoryPortion(final AbPath fromDirectoryAbPath, final AbPath toDirectoryAbPath, final boolean overwriteNewer, final boolean overwriteAll, final int current, final int total) throws Exception {
+        final AbFile file = AbFile.createAbFileFromAbPath(fromDirectoryAbPath);
+        if (!file.isDirectory()) {
+            throw new Exception('Not a directory: ' + file.getPath());
+        }
+        final BasicArrayList fileList = this.directory.search(file, true);
+        final int size = fileList.size();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('Searched: ');
+        stringBuffer.append(file.getPath());
+        stringBuffer.append(' Total: ');
+        stringBuffer.appendint(size);
+        //Add one to round up so files will not be missed
+        final int portion = Math.divideExact(size, total) + 1;
+        final int start = portion * current;
+        int end = start + portion;
+        if (end > size) {
+            end = size;
+        }
+        stringBuffer.append(' Section: ');
+        stringBuffer.appendint(start);
+        stringBuffer.append(' - ');
+        stringBuffer.appendint(end);
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+            this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copySomeFilesToDirectory()');
+        }
+        //PreLogUtil.put(stringBuffer.toString(), this, "copySomeFilesToDirectory()");
+        AbFile nextFile;
+        for (int index = start; index < end; index++) {
+            nextFile = ((AbFile) fileList.get(index));
+            if (nextFile.isDirectory()) {
+            } else {
+                String path = new AbPath(nextFile.getPath(), StringUtil.getInstance().@EMPTY_STRING).getPath();
+                //String temp = fromDirectoryAbPath.getPath();
+                int beginIndex = fromDirectoryAbPath.getPath().length();
+                //get webapp path may have schema that may not be in paths
+                if (path.indexOf(URLGLOBALS.getWebappPath()) < 0) {
+                    beginIndex -= new AbPath(URLGLOBALS.getWebappPath(), StringUtil.getInstance().@EMPTY_STRING).getPath().length();
+                }
+                //String newPath = toDirectoryAbPath.getPath() + path.substring(beginIndex);
+                String newPath = toDirectoryAbPath.toFileSystemString() + path.substring(beginIndex);
+                //this.logUtil.putF(stringBuffer.toString(), this, "copyDirectoryPortion");
+                AbFile toFile = AbFile.createAbFileFromAbPath(new AbPath(newPath, StringUtil.getInstance().@EMPTY_STRING));
+                this.copyFile(nextFile, toFile, overwriteNewer, overwriteAll);
+            }
+        }
+    }
+
+    //recursively copy files and create directories
+    private void copyDirectory(final AbFile fromFile, final AbFile to) throws Exception {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                final StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Copying Directory from: ');
+                stringBuffer.append(fromFile.getPath());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(to.getPath());
+                this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyDirectory');
+            }
+            //create new directory            
+            final String newDirectory = FileUtil.getNewDirectory(fromFile);
+            final AbPath newDirectoryAbPath = new AbPath(to.getPath() + AbPathData.getInstance().@SEPARATOR + newDirectory, StringUtil.getInstance().@EMPTY_STRING);
+            if (!this.directory.create(newDirectoryAbPath)) {
+                throw new Exception('Failed to create directory: ' + newDirectoryAbPath);
+            }
+            //copy all files and subdirectories
+            final AbFile[] fileArray = FileWrapperUtil.wrapFiles(fromFile.listFiles());
+            final int size = fileArray.length;
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                final StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Copying ');
+                stringBuffer.appendint(size);
+                stringBuffer.append(' files from: ');
+                stringBuffer.append(fromFile.getPath());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(to.getPath());
+                this.logUtil.putF(stringBuffer.toString(), getInstance(), 'copyDirectory');
+            }
+            AbFile file;
+            for (int index = 0; index < size; index++) {
+                file = fileArray[index];
+                if (file.isFile()) {
+                    this.copyFile(file, AbFile.createAbFilePathAndName(newDirectoryAbPath.toString(), file.getName()));
+                } else if (file.isDirectory()) {
+                    this.copyDirectory(file, AbFile.createAbFileFromAbPath(newDirectoryAbPath));
+                } else {
+                    throw new Exception('File Copy Error');
+                }
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILEERROR)) {
+                final StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Error Copying Directory fromFile: ');
+                stringBuffer.append(fromFile.toString());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(to.toString());
+                this.logUtil.put(stringBuffer.toString(), getInstance(), 'copyDirectory', e);
+            }
+            throw e;
+        }
+    }
+
+    //Example: fromFile = /home/dir/ to = /home/dest/ then the result will be /home/dest/(all subdirectories of /home/dir/)
+    public synchronized boolean copy(final AbPath fromAbPath, final AbPath to) throws Exception {
+        final String COPY = 'copy';
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                final StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Copying AbPaths from: ');
+                stringBuffer.append(fromAbPath.toString());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(to.toString());
+                this.logUtil.putF(stringBuffer.toString(), getInstance(), COPY);
+            }
+            if (fromAbPath == null) {
+                throw new Exception('Cannot Copy From A Null Location');
+            }
+            if (to == null) {
+                throw new Exception('Cannot Copy To A Null Location');
+            }
+            final AbFile fromLocationFile = AbFile.createAbFileFromAbPath(fromAbPath);
+            final AbFile toLocationFile = AbFile.createAbFileFromAbPath(to);
+            //copy single file
+            if (fromLocationFile.isFile()) {
+                if (toLocationFile.isDirectory()) {
+                    //keep the same file
+                    AbFile file = AbFile.createAbFileWithChild(toLocationFile, fromLocationFile.getName());
+                    this.copyFile(fromLocationFile, file);
+                    if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                        StringMaker stringBuffer = new StringMaker();
+                        stringBuffer.append('Copied file=');
+                        stringBuffer.append(fromLocationFile.getName());
+                        stringBuffer.append(' from: ');
+                        stringBuffer.append(fromLocationFile.getPath());
+                        stringBuffer.append(' to: ');
+                        stringBuffer.append(toLocationFile.getPath());
+                        this.logUtil.putF(stringBuffer.toString(), getInstance(), COPY);
+                    }
+                } else {
+                    //rename the file
+                    this.copyFile(fromLocationFile, toLocationFile);
+                    if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                        StringMaker stringBuffer = new StringMaker();
+                        stringBuffer.append('Copied file with new name ');
+                        stringBuffer.append(' from: ');
+                        stringBuffer.append(fromLocationFile.getPath());
+                        stringBuffer.append(' to: ');
+                        stringBuffer.append(toLocationFile.getPath());
+                        this.logUtil.putF(stringBuffer.toString(), getInstance(), COPY);
+                    }
+                }
+            } else if (fromLocationFile.isDirectory() && toLocationFile.isDirectory()) {
+                //check last character
+                if (fromAbPath.toFileSystemString().charAt(fromAbPath.toFileSystemString().length() - 1) == java.io.File.separatorChar) {
+                    if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                        this.logUtil.putF('Copying subdirectories', getInstance(), COPY);
+                    }
+                    AbFile[] fileArray = FileWrapperUtil.wrapFiles(fromLocationFile.listFiles());
+                    for (int index = 0; index < fileArray.length; index++) {
+                        AbFile file = fileArray[index];
+                        if (file.isFile()) {
+                            AbFile aFile = AbFile.createAbFileWithChild(toLocationFile, file.getName());
+                            this.copyFile(file, aFile);
+                        } else if (file.isDirectory()) {
+                            this.copyDirectory(file, toLocationFile);
+                        } else {
+                            throw new Exception('File Copy Error');
+                        }
+                    }
+                    if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                        this.logUtil.putF('Copied subdirectories', getInstance(), COPY);
+                    }
+                } else {
+                    if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                        this.logUtil.putF('Copyinhg directory', getInstance(), COPY);
+                    }
+                    this.copyDirectory(fromLocationFile, toLocationFile);
+                    if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILE)) {
+                        this.logUtil.putF('Copied directory', getInstance(), COPY);
+                    }
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(this.logConfigTypeFactory.@FILEERROR)) {
+                final StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Error Copying fromAbPath: ');
+                stringBuffer.append(fromAbPath.toString());
+                stringBuffer.append(' to: ');
+                stringBuffer.append(to.toString());
+                this.logUtil.put(stringBuffer.toString(), getInstance(), COPY, e);
+            }
+            throw e;
+        }
+    }
+
+    // CategoryData.ENCRYPTED_EXTENSION);
+    public boolean shouldSkip(final AbFile file, final String[] skipFiles) {
+        final int size = skipFiles.length;
+        String skipFile;
+        for (int index = 0; index < size; index++) {
+            skipFile = skipFiles[index];
+            if (file.getPath().compareTo(skipFile) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private final String WRITE_LABEL = 'Write file: ';
+
+    private final String DATA_LABEL = ' data: ';
+
+    private final String WRITE_METHOD = 'write';
+
+    public void write(final String filePath, final String string) throws Exception {
+        AbDataOutputStream dataOutputStream = null;
+        try {
+            //this.logUtil.putF("Write Configuration: " + this.toString(), this, "write");
+            PreLogUtil.put(new StringMaker().append(this.WRITE_LABEL).append(filePath).append(this.DATA_LABEL).append(string).toString(), this, this.WRITE_METHOD);
+            final FileStreamFactory fileInputStreamFactory = FileStreamFactory.getInstance();
+            final OutputStream fileOutputStream = fileInputStreamFactory.getFileOutputStreamInstance(StringUtil.getInstance().@EMPTY_STRING, filePath);
+            dataOutputStream = new AbDataOutputStream(fileOutputStream);
+            dataOutputStream.write(string.getBytes(), 0, string.length());
+            dataOutputStream.flush();
+        } finally {
+            StreamUtil.getInstance().close(dataOutputStream);
+        }
+    }
+
+    public BasicArrayList loadFileAsList(final AbFile file, final int max, final byte[] byteArray1) {
+        return FileUtil2.getInstance().loadFileAsList(file, max, byteArray1);
+    }
+
+}
+
+

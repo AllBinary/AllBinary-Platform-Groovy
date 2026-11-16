@@ -1,0 +1,49 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2006 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.unit;
+
+import org.allbinary.game.layer.resources.BasicGameResources;
+import org.allbinary.game.layer.resources.GameGraphicsResourceUtil;
+import org.allbinary.AndroidUtil;
+import org.allbinary.game.configuration.feature.GraphicsFeatureFactory;
+import org.allbinary.logic.NullUtil;
+
+@groovy.transform.CompileStatic
+public class Unit2DecalGameResources extends BasicGameResources {
+    private static Object instance = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static BasicGameResources getInstance() {
+        if (Unit2DecalGameResources.instance === NullUtil.getInstance().@NULL_OBJECT) {
+            Unit2DecalGameResources.instance = new Unit2DecalGameResources();
+        }
+        return ((Unit2DecalGameResources) Unit2DecalGameResources.instance);
+    }
+
+    private Unit2DecalGameResources() {
+        final String ROOT = '/unit_decal';
+        final String SMALL = '_30_by_30.png';
+        final String MEDIUM = SMALL;
+        final String SIZE_FOUR = SMALL;
+        final String SIZE_FIVE = SMALL;
+        final String SIZE_SIX = SMALL;
+        final String[] SIZE = new String[] {SMALL, MEDIUM, SIZE_FOUR, SIZE_FIVE, SIZE_SIX};
+        super.init(ROOT, SIZE);
+    }
+
+    @Override
+    protected void append(String ROOT, String sizeString) throws Exception {
+        super.append(ROOT, sizeString);
+    }
+
+    @Override
+    protected String getString() throws Exception {
+        if (AndroidUtil.isAndroid()) {
+            return GameGraphicsResourceUtil.getInstance().getStringForFeature(GraphicsFeatureFactory.getInstance().@SPRITE_QUARTER_ROTATION_GRAPHICS);
+        } else {
+            return super.getString();
+        }
+    }
+
+}
+
+

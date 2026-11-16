@@ -1,0 +1,168 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import javax.microedition.rms.RecordEnumeration;
+import javax.microedition.rms.RecordStore;
+import org.allbinary.TsUtil;
+import org.allbinary.game.configuration.persistance.BasicPersitance;
+import org.allbinary.game.configuration.persistance.NullRecordComparator;
+import org.allbinary.game.configuration.persistance.NullRecordFilter;
+import org.allbinary.game.configuration.persistance.NullRecordStore;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.HashtableUtil;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.util.ABHashtable;
+
+//GameInputPersistanceLibrary
+@groovy.transform.CompileStatic
+public class InputPersistance extends BasicPersitance {
+    private final TsUtil tsUtil = TsUtil.getInstance();
+
+    private final HashtableUtil hashtableUtil = HashtableUtil.getInstance();
+
+    public InputPersistance(final String name) {
+        super(name);
+    }
+
+    public void loadAll(final AbeClientInformationInterface abeClientInformation) throws Exception {
+        RecordStore recordStore = NullRecordStore.NULL_RECORD_STORE;
+        try {
+            recordStore = RecordStore.openRecordStore(this.getRecordId(abeClientInformation), true);
+            final RecordEnumeration recordEnum = recordStore.enumerateRecords(NullRecordFilter.NULL_RECORD_FILTER, NullRecordComparator.NULL_RECORD_COMPARATOR, true);
+            //PreLogUtil.put(METHOD_NAME, this, METHOD_NAME);
+            long gameActionInputId;
+            long inputId;
+            Input gameActionInput;
+            Input input;
+            ABHashtable<Object, Object> hashtable;
+            final GameKeyMappingFactory gameKeyFactory = GameKeyMappingFactory.getInstance();
+            final StringMaker stringBuffer = new StringMaker();
+            final InputFactory inputFactory = InputFactory.getInstance();
+            final SmallIntegerSingletonFactory smallIntegerSingletonFactory = SmallIntegerSingletonFactory.getInstance();
+            final StdUtil stdUtil = StdUtil.getInstance();
+            byte[] recordAsBytes;
+            ByteArrayInputStream byteArrayInputStream;
+            DataInputStream inputStream;
+            while (recordEnum.hasNextElement()) {
+                final int id = recordEnum.nextRecordId();
+                stringBuffer.delete(0, stringBuffer.length());
+                this.logUtil.putF(stringBuffer.append(this.persistanceStrings.@LOADING_ID).appendint(id).toString(), this, this.persistanceStrings.@LOAD_ALL);
+                recordAsBytes = this.tsUtil.getRecord(recordStore, id);
+                if (recordAsBytes != null) {
+                    //PreLogUtil.put("bytes in: " + ArrayUtil.getInstance().toString(recordAsBytes), this, METHOD_NAME);
+                    byteArrayInputStream = new ByteArrayInputStream(recordAsBytes);
+                    inputStream = new DataInputStream(byteArrayInputStream);
+                    hashtable = stdUtil.createHashtable();
+                    //PreLogUtil.put("inputStream.available(): " + inputStream.available(), this, METHOD_NAME);
+                    int value;
+                    while (inputStream.available() > 0) {
+                        final String gameActionInputIdAsString = inputStream.readUTF();
+                        //PreLogUtil.put("gameActionInputIdAsString: " + gameActionInputIdAsString, this, METHOD_NAME);
+                        value = Integer.parseInt(gameActionInputIdAsString);
+                        gameActionInputId = ((long) value);
+                        //PreLogUtil.put("gameActionInputId: " + gameActionInputId, this, METHOD_NAME);
+                        inputStream.readUTF();
+                        value = Integer.parseInt(inputStream.readUTF());
+                        inputId = ((long) value);
+                        //PreLogUtil.put("inputId: " + inputId, this, METHOD_NAME);
+                        gameActionInput = gameKeyFactory.getGameKey(((int) gameActionInputId));
+                        input = inputFactory.getInstanceById(((int) inputId));
+                        if (input === inputFactory.@NO_INPUT || gameActionInput == null) {
+                            stringBuffer.delete(0, stringBuffer.length());
+                            if (input === inputFactory.@NO_INPUT) {
+                                stringBuffer.append(this.persistanceStrings.@ERROR_LOADING_ID);
+                                stringBuffer.appendlong(inputId);
+                                stringBuffer.append(this.persistanceStrings.@GAME_ACTION_INPUT);
+                                stringBuffer.appendlong(gameActionInputId);
+                                //this.logUtil.putF(stringBuffer.toString(), this, persistanceStrings.LOAD_ALL);
+                                PreLogUtil.put(stringBuffer.toString(), this, this.persistanceStrings.@LOAD_ALL);
+                            }
+                            if (gameActionInput == null) {
+                                stringBuffer.delete(0, stringBuffer.length());
+                                stringBuffer.append(this.persistanceStrings.@ERROR_LOADING);
+                                stringBuffer.appendlong(gameActionInputId);
+                                stringBuffer.append(this.persistanceStrings.@ID);
+                                stringBuffer.appendlong(inputId);
+                                //this.logUtil.putF(stringBuffer.toString(), this, persistanceStrings.LOAD_ALL);
+                                PreLogUtil.put(stringBuffer.toString(), this, this.persistanceStrings.@LOAD_ALL);
+                            }
+                        } else {
+                        }
+                        hashtable.put(input, gameActionInput);
+                    }
+                    //this.logUtil.putF("Add mapping for id", this, METHOD_NAME);
+                    this.valueList.add(hashtable);
+                    this.idList.add(smallIntegerSingletonFactory.getAt(id));
+                } else {
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (recordStore != null) {
+                PreLogUtil.put(this.persistanceStrings.@CLOSING_RECORDSTORE, this, this.persistanceStrings.@LOAD_ALL);
+                recordStore.closeRecordStore();
+            }
+        }
+    }
+
+    public void save(final AbeClientInformationInterface abeClientInformation, final ABHashtable<Object, Object> hashtable) throws Exception {
+        RecordStore recordStore = NullRecordStore.NULL_RECORD_STORE;
+        try {
+            final StringMaker stringBuffer = new StringMaker();
+            PreLogUtil.put(stringBuffer.append(this.persistanceStrings.@SAVING).append(StringUtil.getInstance().toString(hashtable)).toString(), this, this.commonStrings.@SAVE);
+            //this.logUtil.putF("Saving: ").append(hashtable, this, this.commonStrings.SAVE);
+            recordStore = RecordStore.openRecordStore(this.getRecordId(abeClientInformation), true);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            DataOutputStream outputStream = new DataOutputStream(byteArrayOutputStream);
+            Input gameActionInput;
+            BasicArrayList list;
+            Input input;
+            byte[] savedGameBytes;
+            final CommonSeps commonSeps = CommonSeps.getInstance();
+            final SmallIntegerSingletonFactory smallIntegerSingletonFactory = SmallIntegerSingletonFactory.getInstance();
+            final Object[] inputObjectArray = this.hashtableUtil.getKeysAsArray(hashtable);
+            final int size = inputObjectArray.length;
+            for (int index = 0; index < size; index++) {
+                gameActionInput = ((Input) inputObjectArray[index]);
+                list = ((BasicArrayList) hashtable.get(((Object) inputObjectArray[index])));
+                for (int index2 = 0; index2 < list.size(); index2++) {
+                    final String gameActionInputIdAsString = smallIntegerSingletonFactory.getAt(gameActionInput.getId()).toString();
+                    //stringBuffer.append(gameActionInputIdAsString);
+                    outputStream.writeUTF(gameActionInputIdAsString);
+                    //stringBuffer.append(commonSeps.EQUALS);
+                    outputStream.writeUTF(commonSeps.@EQUALS);
+                    input = ((Input) list.@objectArray[index2]);
+                    final String inputIdAsString = smallIntegerSingletonFactory.getAt(input.getId()).toString();
+                    //stringBuffer.append(inputIdAsString);
+                    outputStream.writeUTF(inputIdAsString);
+                }
+            }
+            //savedGameBytes = byteArrayOutputStream.toString().getBytes();
+            savedGameBytes = byteArrayOutputStream.toByteArray();
+            //PreLogUtil.put("bytes out: " + ArrayUtil.getInstance().toString(savedGameBytes), this, this.commonStrings.SAVE);
+            recordStore.addRecord(savedGameBytes, 0, savedGameBytes.length);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (recordStore != null) {
+                PreLogUtil.put(this.persistanceStrings.@CLOSING_RECORDSTORE, this, this.commonStrings.@SAVE);
+                recordStore.closeRecordStore();
+            }
+        }
+    }
+
+}
+
+

@@ -1,0 +1,95 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input.event;
+
+import org.allbinary.game.input.PlayerGameInput;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.util.event.EventListenerInterface;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.logic.util.event.handler.BasicEventHandler;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class UpKeyEventHandlerBase extends BasicEventHandler {
+    private final BasicArrayList list = new BasicArrayListD();
+
+    UpKeyEventHandlerBase() {
+    }
+
+    public void addListener(PlayerGameInput playerGameInput) {
+        if (!this.list.contains(playerGameInput)) {
+            this.list.add(playerGameInput);
+        }
+    }
+
+    @Override
+    public void removeAllListeners() {
+        this.list.clear();
+        super.removeAllListeners();
+    }
+
+    @Override
+    public void removeListenerSingleThreaded(EventListenerInterface eventListenerInterface) {
+        this.list.remove(eventListenerInterface);
+        super.removeListenerSingleThreaded(eventListenerInterface);
+    }
+
+    @Override
+    public synchronized void removeListener(EventListenerInterface eventListenerInterface) {
+        this.list.remove(eventListenerInterface);
+        super.removeListener(eventListenerInterface);
+    }
+
+    public void fireEventForInteger(final Integer eventObject) throws Exception {
+        for (int index = this.list.size(); --index >= 0; ) {
+            try {
+                //Add deviceId
+                PlayerGameInput playerGameInput = ((PlayerGameInput) this.list.@objectArray[index]);
+                playerGameInput.onUpKeyEvent(eventObject);
+            } catch (Exception e) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, EventStrings.getInstance().@FIRE_EVENT, e);
+            }
+        }
+        int index = 0;
+        EventListenerInterface eventListenerInterface;
+        while (index < this.eventListenerInterfaceList.size()) {
+            try {
+                eventListenerInterface = ((EventListenerInterface) this.eventListenerInterfaceList.get(index));
+                this.processForInteger(eventObject, eventListenerInterface);
+            } catch (Exception e) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, EventStrings.getInstance().@FIRE_EVENT, e);
+            }
+            index++;
+        }
+    }
+
+    protected void processForInteger(final Integer eventObject, final EventListenerInterface eventListenerInterface) throws Exception {
+        final UpKeyEventListenerInterface upKeyEventListenerInterface = ((UpKeyEventListenerInterface) eventListenerInterface);
+        upKeyEventListenerInterface.onUpKeyEvent(eventObject);
+    }
+
+    private static final String TOTAL_LISTENERS = ' Total PlayerGameInput Listeners: ';
+
+    private static final String LISTENER_LABEL = ' PlayerGameInput Listener: ';
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(super.toString());
+        stringBuffer.append(UpKeyEventHandlerBase.TOTAL_LISTENERS);
+        stringBuffer.appendint(this.list.size());
+        for (int index = 0; index < this.list.size(); index++) {
+            try {
+                EventListenerInterface eventListenerInterface = ((EventListenerInterface) this.list.get(index));
+                stringBuffer.append(UpKeyEventHandlerBase.LISTENER_LABEL);
+                stringBuffer.append(eventListenerInterface.toString());
+            } catch (Exception e) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@TOSTRING, e);
+            }
+        }
+        return stringBuffer.toString();
+    }
+
+}
+
+

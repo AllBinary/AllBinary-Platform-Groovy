@@ -1,0 +1,51 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.canvas;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.game.configuration.feature.Features;
+import org.allbinary.game.configuration.feature.MainFeatureFactory;
+import javax.microedition.lcdui.CommandListener;
+
+@groovy.transform.CompileStatic
+public class FullScreenUtil {
+    private static final FullScreenUtil instance = new FullScreenUtil();
+
+    /**      * @return the instance      */
+    public static FullScreenUtil getInstance() {
+        return FullScreenUtil.instance;
+    }
+
+    public final void initOnRun(final Canvas fullScreenInterface, final CommandListener commandListener) throws Exception {
+        (((RunnableCanvas) fullScreenInterface)).waitOnNotify(0);
+        if (commandListener != null) {
+            this.init(fullScreenInterface);
+        }
+    }
+
+    public final void init(final Canvas fullScreenInterface) {
+        final MainFeatureFactory mainFeatureFactory = MainFeatureFactory.getInstance();
+        Features features = Features.getInstance();
+        if (features.isFeature(mainFeatureFactory.@FULL_SCREEN)) {
+            fullScreenInterface.setFullScreenMode(true);
+        } else {
+            fullScreenInterface.setFullScreenMode(false);
+        }
+    }
+
+    public final boolean isScreenChange(boolean isFullScreen) {
+        MainFeatureFactory mainFeatureFactory = MainFeatureFactory.getInstance();
+        Features features = Features.getInstance();
+        if (features.isFeature(mainFeatureFactory.@FULL_SCREEN) != isFullScreen) {
+            return true;
+        }
+        return false;
+    }
+
+    public final boolean isScreenChangeCanvas(final Canvas fullScreenInterface) {
+        return this.isScreenChange(fullScreenInterface.isFullScreenMode());
+    }
+
+}
+
+

@@ -1,0 +1,68 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package views.generic.basket.mini;
+
+import org.allbinary.business.user.commerce.inventory.basket.BasketData;
+import org.allbinary.business.user.commerce.inventory.basket.BasketInterface;
+import org.allbinary.data.tree.dom.DomNodeInterface;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.control.search.SearchData;
+import org.allbinary.logic.visual.transform.info.TransformInfoInterface;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import views.business.context.modules.storefront.HttpStoreComponentView;
+
+@groovy.transform.CompileStatic
+public class MiniBasketView extends HttpStoreComponentView implements DomNodeInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    //   private HttpServletRequest request;
+    public MiniBasketView(TransformInfoInterface transformInfoInterface) throws Exception {
+        super(transformInfoInterface);
+    }
+
+    public Node toXmlNode(Document document) throws Exception {
+        try {
+            BasketInterface basketInterface = this.getWeblisketSession().getOrder().getBasket();
+            Node basketNode = document.createElement(BasketData.BASKET);
+            //Set items = itemsAndNumberInBasket.keySet();
+            Node totalNumberNode = document.createElement(SearchData.TOTAL_NUMBER_ITEMS);
+            Node totalNumberTextNode = document.createTextNode(basketInterface.getNumberOfItems().toString());
+            totalNumberNode.appendChild(totalNumberTextNode);
+            Node totalWeightNode = document.createElement(BasketData.TOTALWEIGHT);
+            Node totalWeightTextNode = document.createTextNode(basketInterface.getTotalWeight().toString());
+            totalWeightNode.appendChild(totalWeightTextNode);
+            Node subTotalNode = document.createElement(BasketData.SUBTOTAL);
+            Node subTotalTextNode = document.createTextNode(basketInterface.getSubTotal().toString());
+            subTotalNode.appendChild(subTotalTextNode);
+            basketNode.appendChild(totalNumberNode);
+            basketNode.appendChild(totalWeightNode);
+            basketNode.appendChild(subTotalNode);
+            return basketNode;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@XSLLOGGINGERROR)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, 'toXmlNode', e);
+            }
+            throw e;
+        }
+    }
+
+    public void addDomNodeInterfaces() {
+        this.addDomNodeInterface(((DomNodeInterface) this));
+    }
+
+    public String view() throws Exception {
+        try {
+            this.addDomNodeInterfaces();
+            return super.view();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@TAGHELPERERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'view()', e);
+            }
+            throw e;
+        }
+    }
+
+}
+
+

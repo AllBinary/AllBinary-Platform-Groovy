@@ -1,0 +1,105 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import org.allbinary.game.input.analog.AnalogLocationInputFactory;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class LocalPlayerInputIdFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final LocalPlayerInputIdFactory instance = new LocalPlayerInputIdFactory();
+
+    public final int MAX_NUMBER_OF_PLAYERS = 6;
+
+    private final int MAX_FAST_DEVICEID = 65;
+
+    private final int[] deviceIdToplayerId = new int[this.MAX_FAST_DEVICEID];
+
+    private final int[] playerIdToDeviceId = new int[this.MAX_NUMBER_OF_PLAYERS];
+
+    private final boolean[] playersInPlay = new boolean[this.MAX_NUMBER_OF_PLAYERS];
+
+    private int totalDevicesMapped = 0;
+
+    private LocalPlayerInputIdFactory() {
+        for (int index = this.deviceIdToplayerId.length - 1; index >= 0; index--) {
+            this.deviceIdToplayerId[index] = -1;
+        }
+    }
+
+    public static LocalPlayerInputIdFactory getInstance() {
+        return LocalPlayerInputIdFactory.instance;
+    }
+
+    public int getDeviceId(int playerInputId) {
+        return this.playerIdToDeviceId[playerInputId];
+    }
+
+    public int getPlayerForDevice(int deviceId) {
+        int index;
+        if (deviceId < this.MAX_FAST_DEVICEID) {
+            int playerInputId = this.deviceIdToplayerId[deviceId];
+            if (playerInputId != -1) {
+                //this.logUtil.putF("Fast Find DeviceId: ").append(deviceId).append(" at playerInputId: ").append(playerInputId, this, "getPlayerForDevice");
+                return playerInputId;
+            }
+        } else {
+            for (index = this.totalDevicesMapped - 1; index >= 0; index--) {
+                if (this.playerIdToDeviceId[index] == deviceId) {
+                    //this.logUtil.putF("Found DeviceId: ").append(deviceId).append(" at playerInputId: ").append(index, this, "getPlayerForDevice");
+                    return index;
+                }
+            }
+        }
+        index = this.totalDevicesMapped;
+        //Add New Player for device
+        if (deviceId < this.MAX_FAST_DEVICEID) {
+            this.deviceIdToplayerId[deviceId] = index;
+        } else {
+            this.logUtil.putF(new StringMaker().append('Added DeviceId: ').appendint(deviceId).append(' beyond fast Id list').toString(), this, 'getPlayerForDevice');
+        }
+        this.playerIdToDeviceId[index] = deviceId;
+        AnalogLocationInputFactory.getInstance().addPlayer(this.totalDevicesMapped);
+        this.totalDevicesMapped++;
+        this.logUtil.putF(new StringMaker().append('Added DeviceId: ').appendint(deviceId).append(' at: ').appendint(index).append(' Total: ').appendint(this.totalDevicesMapped).toString(), this, 'getPlayerForDevice');
+        //int playerNum = OuyaController.getPlayerNumByDeviceId(deviceId);
+        return index;
+    }
+
+    /**      * @return the currentNumberOfPlayers      */
+    public int getTotalDevicesInPlay() {
+        int total = 0;
+        for (int index = this.totalDevicesMapped - 1; index >= 0; index--) {
+            if (this.playersInPlay[index] == true) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    /*     public boolean isDeviceInPlay(int deviceId)     {         return playersInPlay[this.getPlayerForDevice(deviceId)];     }      public void setDeviceInPlay(int deviceId)     {         int playerInputId = this.getPlayerForDevice(deviceId);         this.logUtil.putF("Setting DeviceInPlay with DEVICE_ID_LABEL: ").append(deviceId).append(" playerInputId: ").append(playerInputId, this, "setDeviceInPlay");         this.playersInPlay[playerInputId] = true;     }      public void setDeviceOutOfPlay(int deviceId)     {         int playerInputId = this.getPlayerForDevice(deviceId);         this.logUtil.putF("Setting DeviceOutOfPlay with DEVICE_ID_LABEL: ").append(deviceId).append(" playerInputId: ").append(playerInputId, this, "setDeviceInPlay");         this.playersInPlay[playerInputId] = false;     }     */
+    public boolean isPlayerInPlay(int playerInputId) {
+        return this.playersInPlay[playerInputId];
+    }
+
+    public void setPlayerInPlay(int playerInputId) {
+        this.logUtil.putF(new StringMaker().append('Setting PlayerInPlay with playerInputId: ').appendint(playerInputId).toString(), this, 'setPlayerInPlay');
+        this.playersInPlay[playerInputId] = true;
+    }
+
+    public void setPlayerOutOfPlay(int playerInputId) {
+        this.logUtil.putF(new StringMaker().append('Setting PlayerOutOfPlay with playerInputId: ').appendint(playerInputId).toString(), this, 'setPlayerOutOfPlay');
+        this.playersInPlay[playerInputId] = false;
+    }
+
+    /**      * @return the inPlayToDeviceId      */
+    public boolean[] getPlayersInPlay() {
+        return this.playersInPlay;
+    }
+
+}
+
+

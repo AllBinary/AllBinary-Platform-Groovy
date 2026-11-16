@@ -1,0 +1,40 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import java.awt.image.BufferedImage;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringUtil;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class CanvasExpandUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final CanvasExpandUtil instance = new CanvasExpandUtil();
+
+    /**      * @return the instance      */
+    public static CanvasExpandUtil getInstance() {
+        return CanvasExpandUtil.instance;
+    }
+
+    //private final CommonSeps commonSeps = CommonSeps.getInstance();
+    private final StringUtil stringUtil = StringUtil.getInstance();
+
+    public void process(final ImageProcessorInput imageProcessorInput, final int increaseX, final int increaseY, final ImageProcessedVisitor visitor) throws Exception {
+        final ImageUtil imageUtil = ImageUtil.getInstance();
+        final BufferedImage[] bufferedImageArray = imageProcessorInput.getBufferedImageArray();
+        final BufferedImage[] subBufferedImageArray = new BufferedImage[bufferedImageArray.length];
+        final int size = bufferedImageArray.length;
+        BufferedImage bufferedImage;
+        for (int index = 0; index < size; index++) {
+            bufferedImage = bufferedImageArray[index];
+            //this.logUtil.putF(spriteType, this, this.commonStrings.RUN);
+            subBufferedImageArray[index] = imageUtil.createBufferedImage(bufferedImage, bufferedImage.getWidth() + increaseX, bufferedImage.getHeight() + increaseY, false);
+            visitor.visit(subBufferedImageArray[index], this.stringUtil.@EMPTY_STRING, index);
+        }
+    }
+
+}
+
+

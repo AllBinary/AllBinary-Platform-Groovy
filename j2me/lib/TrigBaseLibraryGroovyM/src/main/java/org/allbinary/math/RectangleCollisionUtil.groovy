@@ -1,0 +1,44 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.math;
+
+import jsinterop.annotations.JsType;
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsConstructor;
+
+@JsType
+@groovy.transform.CompileStatic
+public class RectangleCollisionUtil {
+    private static final RectangleCollisionUtil instance = new RectangleCollisionUtil();
+
+    /**      * @return the instance      */
+    @JsMethod
+    public static RectangleCollisionUtil getInstance() {
+        return RectangleCollisionUtil.instance;
+    }
+
+    @JsConstructor
+    private RectangleCollisionUtil() {
+    }
+
+    @JsMethod
+    public boolean isCollision(final int rectX1, final int rectY1, final int rectX2, final int rectY2, final int rect2X1, final int rect2Y1, final int rect2X2, final int rect2Y2) {
+        if (rect2X1 >= rectX2 || rect2Y1 >= rectY2 || rect2X2 <= rectX1 || rect2Y2 <= rectY1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @JsMethod
+    public boolean isInside(final int rectX1, final int rectY1, final int rectX2, final int rectY2, final int x, final int y) {
+        if (x >= rectX2 || y >= rectY2 || x <= rectX1 || y <= rectY1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+}
+
+

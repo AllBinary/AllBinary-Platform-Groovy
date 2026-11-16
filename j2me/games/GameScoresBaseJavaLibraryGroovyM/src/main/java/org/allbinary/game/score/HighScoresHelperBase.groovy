@@ -1,0 +1,55 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.score;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonStrings;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class HighScoresHelperBase implements HighScoresHelperBaseInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected HighScores[] highScoresArrayP = LastFetchHighScoresFactory.getInstance().@highScoresArray;
+
+    @Override
+    public void setHighScoresArray(final HighScores[] highScoresArrayP) {
+        if (highScoresArrayP != null) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.putF(new StringMaker().append(commonStrings.@START).appendint(highScoresArrayP.length).toString(), this, 'setHighScoresArray');
+        } else {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.putF(commonStrings.@START, this, 'setHighScoresArray');
+        }
+        this.highScoresArrayP = highScoresArrayP;
+    }
+
+    public HighScores getNextHighScores() {
+        return NullHighScoresSingletonFactory.getInstance();
+    }
+
+    public boolean isAnyHighScores() {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void setSelectedHighScores(final HighScores selectedHighScores) {
+    }
+
+    @Override
+    public HighScores getSelectedHighScores() {
+        return NullHighScoresSingletonFactory.getInstance();
+    }
+
+    @Override
+    public HighScores[] getHighScoresArray() {
+        return this.highScoresArrayP;
+    }
+
+    public void selectHighScores() {
+    }
+
+}
+
+

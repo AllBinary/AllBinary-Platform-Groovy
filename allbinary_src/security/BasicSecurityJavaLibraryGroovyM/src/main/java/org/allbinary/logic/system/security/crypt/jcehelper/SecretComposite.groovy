@@ -1,0 +1,51 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2025 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.crypt.jcehelper;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import org.allbinary.logic.java.byteutil.ByteUtil;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class SecretComposite extends BaseSecretComposite {
+    private final ByteUtil byteUtil = ByteUtil.getInstance();
+
+    private final Cipher cipher;
+
+    private final SecretKey secretKey;
+
+    private byte[] key;
+
+    public SecretComposite(final SecretKey secretKey, final Cipher cipher, final byte[] key) {
+        this.secretKey = secretKey;
+        this.cipher = cipher;
+        this.key = key;
+    }
+
+    @Override
+    public byte[] encrypt(byte[] array) throws Exception {
+        array = this.mutilate(array);
+        this.cipher.init(Cipher.ENCRYPT_MODE, this.secretKey);
+        return this.cipher.doFinal(array);
+    }
+
+    @Override
+    public byte[] decrypt(byte[] array) throws Exception {
+        this.cipher.init(Cipher.DECRYPT_MODE, this.secretKey);
+        return this.mutilate(this.cipher.doFinal(array));
+    }
+
+    private byte[] mutilate(byte[] array) {
+        for (int index = 0; index < this.key.length; index++) {
+            byte value = this.key[index];
+            if (value < 8 && value > 0) {
+                array = this.byteUtil.xorByte(array, ((int) value));
+            }
+        }
+        return array;
+    }
+
+}
+
+

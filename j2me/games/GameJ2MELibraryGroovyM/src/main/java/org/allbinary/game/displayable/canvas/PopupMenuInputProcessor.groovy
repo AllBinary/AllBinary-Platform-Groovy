@@ -1,0 +1,115 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.displayable.canvas;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.game.input.GameInputStrings;
+import org.allbinary.game.input.event.GameKeyEvent;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.graphics.displayable.MyCanvas;
+import org.allbinary.input.motion.gesture.MotionGestureInput;
+import org.allbinary.input.motion.gesture.TouchMotionGestureFactory;
+import org.allbinary.input.motion.gesture.observer.MotionGestureEvent;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.math.RectangleCollisionUtil;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.time.TimeDelayHelper;
+import org.allbinary.util.BasicArrayList;
+
+@groovy.transform.CompileStatic
+public class PopupMenuInputProcessor extends BasicMenuInputProcessor {
+    private final RectangleCollisionUtil rectangleCollisionUtil = RectangleCollisionUtil.getInstance();
+
+    private final int CLICK_DELAY = 120;
+
+    private final TimeDelayHelper clickTimeHelper = new TimeDelayHelper(this.CLICK_DELAY);
+
+    private Rectangle rectangle;
+
+    public PopupMenuInputProcessor(final BasicArrayList gameKeyEventList, final int playerInputId, final MyCanvas gameCanvas, final Rectangle rectangle) {
+        super(gameKeyEventList, playerInputId, gameCanvas);
+        this.rectangle = rectangle;
+    }
+
+    public void init(final Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
+
+    public int processInput(final int key) throws Exception {
+        //4,8,KEY_STAR
+        if (key == Canvas.KEY_STAR) {
+            //PreLogUtil.put("Key: ").append(key, this, GameInputStrings.getInstance());
+            final AllBinaryGameCanvas gameCanvas = ((AllBinaryGameCanvas) this.getCanvas());
+            gameCanvas.toggleMenu();
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public int processInputList() throws Exception {
+        try {
+            final int motionInputsIndex = this.processMotionInputs();
+            final BasicArrayList list = this.getGameKeyEventList();
+            final int size = list.size();
+            int key = 0;
+            GameKeyEvent gameKeyEvent;
+            for (int index = 0; index < size; index++) {
+                gameKeyEvent = ((GameKeyEvent) list.@objectArray[index]);
+                if (gameKeyEvent != null) {
+                    key = gameKeyEvent.getKey();
+                    if (this.processInput(key) == 1) {
+                        break;
+                    }
+                }
+            }
+            this.clear();
+            if (size > 0 || motionInputsIndex >= 0) {
+                return 1;
+            } else {
+                return -1;
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, GameInputStrings.getInstance().@PROCESS_INPUT, e);
+            return -1;
+        }
+    }
+
+    //AllBinaryLayerManager layerManager
+    public int processMotionInputs() throws Exception {
+        final int lastIndex = this.motionGestureEventList.size() - 1;
+        if (lastIndex >= 0) {
+            final MotionGestureEvent motionGestureEvent = ((MotionGestureEvent) this.motionGestureEventList.@objectArray[lastIndex]);
+            this.processMotionInput(motionGestureEvent);
+        }
+        this.motionGestureEventList.clear();
+        return lastIndex;
+    }
+
+    protected void processMotionInput(final MotionGestureEvent motionGestureEvent) throws Exception {
+        //this.logUtil.putF(this.commonStrings.START, this, gameInputStrings.PROCESS_MOTION_INPUT);
+        if (motionGestureEvent == null) {
+            this.logUtil.putF('Exception: Bug', this, this.gameInputStrings.@PROCESS_MOTION_INPUT);
+            return;
+        }
+        final TouchMotionGestureFactory touchMotionGestureFactory = TouchMotionGestureFactory.getInstance();
+        final MotionGestureInput motionGestureInput = motionGestureEvent.getMotionGesture();
+        if (motionGestureInput === touchMotionGestureFactory.@RELEASED) {
+            GPoint point = motionGestureEvent.getCurrentPoint();
+            //PreLogUtil.put(new StringMaker().append("Rect: ").append(rectangle.toString()).append(CommonSeps.getInstance().SPACE).append(point.toString()).toString(), this, this.gameInputStrings.PROCESS_MOTION_INPUT);
+            GPoint rectPoint = this.rectangle.getPoint();
+            if (this.rectangleCollisionUtil.isInside(rectPoint.getX(), rectPoint.getY(), this.rectangle.getMaxX() + 20, this.rectangle.getMaxY(), point.getX(), point.getY())) {
+                if (this.clickTimeHelper.isTimeTNT()) {
+                    //PreLogUtil.put("Toggle Menu: ").append(motionGestureInput.toString(), this, this.gameInputStrings.PROCESS_MOTION_INPUT);
+                    final AllBinaryGameCanvas gameCanvas = ((AllBinaryGameCanvas) this.getCanvas());
+                    gameCanvas.toggleMenu();
+                }
+            }
+        }
+    }
+
+}
+
+

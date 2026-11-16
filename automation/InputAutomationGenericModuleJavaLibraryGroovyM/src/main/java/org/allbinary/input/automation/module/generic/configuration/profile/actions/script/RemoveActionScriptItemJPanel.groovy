@@ -1,0 +1,57 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.generic.configuration.profile.actions.script;
+
+import org.allbinary.input.automation.actions.script.condition.ProfileActionScriptConditionInterface;
+import org.allbinary.input.automation.module.generic.configuration.profile.actions.GenericProfileAction;
+import org.allbinary.input.automation.module.generic.configuration.profile.actions.GenericProfileActionJPanel;
+import org.allbinary.logic.communication.log.LogUtil;
+
+/**  *  * @author  USER  */
+@groovy.transform.CompileStatic
+public class RemoveActionScriptItemJPanel extends java.awt.Panel {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private GenericProfileActionJPanel genericProfileActionJPanel;
+
+    private ProfileActionScriptConditionInterface profileActionScriptConditionInterface;
+
+    /** Creates new form RemoveActionScriptItemJPanel */
+    public RemoveActionScriptItemJPanel(GenericProfileActionJPanel genericProfileActionJPanel, ProfileActionScriptConditionInterface profileActionScriptConditionInterface) {
+        this.initComponents();
+        this.genericProfileActionJPanel = genericProfileActionJPanel;
+        this.profileActionScriptConditionInterface = profileActionScriptConditionInterface;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        this.removeJButton = new javax.swing.JButton();
+        setLayout(new java.awt.GridLayout());
+        this.removeJButton.setText('Remove');
+        this.removeJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    removeJButtonActionPerformed(evt);
+                }
+
+            });
+        add(this.removeJButton);
+    }
+
+    // </editor-fold>//GEN-END:initComponents
+    private void removeJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_removeJButtonActionPerformed
+        final GenericProfileAction genericProfileAction = this.genericProfileActionJPanel.getGenericProfileAction();
+        if (genericProfileAction == null) {
+            this.logUtil.putF('GenericProfileAction was null', this, 'removeJButtonActionPerformed');
+            return;
+        }
+        genericProfileAction.getGenericProfileActionScript().removeCondition(this.profileActionScriptConditionInterface);
+        this.genericProfileActionJPanel.updateProfileActionUI();
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton removeJButton;
+
+}
+
+

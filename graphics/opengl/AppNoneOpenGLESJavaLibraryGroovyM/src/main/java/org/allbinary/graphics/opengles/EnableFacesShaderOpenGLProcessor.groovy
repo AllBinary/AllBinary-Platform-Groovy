@@ -1,0 +1,26 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.opengles;
+
+import javax.microedition.khronos.opengles.GL10;
+import org.allbinary.graphics.threed.min3d.renderer.processor.ObjectThreedOpenGLProcessor;
+
+@groovy.transform.CompileStatic
+public class EnableFacesShaderOpenGLProcessor extends ObjectThreedOpenGLProcessor {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static final EnableFacesShaderOpenGLProcessor instance = new EnableFacesShaderOpenGLProcessor();
+
+    /**      * @return the instance      */
+    public static EnableFacesShaderOpenGLProcessor getInstance() {
+        return EnableFacesShaderOpenGLProcessor.instance;
+    }
+
+    public EnableFacesShaderOpenGLProcessor() {
+    }
+
+    @Override
+    public void process(final GL10 gl, final Object anyType) {
+    }
+
+}
+
+

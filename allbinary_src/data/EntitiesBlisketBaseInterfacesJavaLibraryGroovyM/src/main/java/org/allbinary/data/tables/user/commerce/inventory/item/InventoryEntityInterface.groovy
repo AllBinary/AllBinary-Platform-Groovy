@@ -1,0 +1,30 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.data.tables.user.commerce.inventory.item;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.business.context.modules.storefront.StoreFrontInterface;
+import org.allbinary.business.user.commerce.inventory.item.ItemInterface;
+import org.allbinary.business.user.commerce.money.MoneyException;
+import org.allbinary.data.tables.BasicDataTableInterface;
+
+@groovy.transform.CompileStatic
+public interface InventoryEntityInterface extends BasicDataTableInterface {
+    ItemInterface getItem(String id) throws MoneyException;
+
+    BasicArrayList getItems(StoreFrontInterface storeFrontInterface) throws Exception;
+
+    String getWeight(String id);
+
+    //public BasicArrayList getColumnWhereLike(String columnName,String key,String value);
+    void deleteWhere(String key, String value);
+
+    void insert(BasicArrayList values);
+
+    void update(HashMap updatedValues);
+
+}
+
+

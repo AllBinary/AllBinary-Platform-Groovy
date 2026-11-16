@@ -1,0 +1,49 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.special;
+
+import org.allbinary.game.collision.CollidableBaseBehavior;
+import org.allbinary.game.collision.CollidableInterfaceCompositeInterface;
+import org.allbinary.game.combat.damage.DamageUtil;
+import org.allbinary.game.layer.CollidableCompositeLayer;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+
+@groovy.transform.CompileStatic
+public class CollidableDestroyableDamageableBehavior extends CollidableBaseBehavior {
+    protected final DamageUtil damageUtil = DamageUtil.getInstance();
+
+    public CollidableDestroyableDamageableBehavior(final boolean collidable) {
+        super(collidable);
+    }
+
+    // TODO TWB Special Super Efficient Collision Processing
+    @Override
+    public boolean isCollision(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collisionLayer) {
+        if (ownerLayer.getGroupInterface()[0] !== collisionLayer.getGroupInterface()[0]) {
+            return super.isCollision(ownerLayer, collisionLayer);
+        }
+        return false;
+    }
+
+    //public void collide(CollidableDestroyableDamageableTeamLayer collisionLayer)
+    @Override
+    public void collide(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterfaceCompositeInterface) throws Exception {
+        final CollidableDestroyableDamageableLayer ownerCollidableDestroyableDamageableLayer = ((CollidableDestroyableDamageableLayer) ownerLayer);
+        final CollidableDestroyableDamageableLayer collidableDestroyableDamageableLayer = ((CollidableDestroyableDamageableLayer) collidableInterfaceCompositeInterface);
+        ownerCollidableDestroyableDamageableLayer.damage(collidableDestroyableDamageableLayer.getDamage(0), 0);
+    }
+
+    @Override
+    public boolean isCollisionInterface(final CollidableCompositeLayer ownerLayer, final CollidableInterfaceCompositeInterface collidableInterfaceCompositeInterface) {
+        ForcedLogUtil.log('No Longer Used', this);
+        return false;
+    }
+
+    @Override
+    public void collideInterface(final CollidableCompositeLayer ownerLayer, final CollidableInterfaceCompositeInterface collidableInterfaceCompositeInterface) throws Exception {
+        ForcedLogUtil.log('No Longer Used', this);
+    }
+
+}
+
+

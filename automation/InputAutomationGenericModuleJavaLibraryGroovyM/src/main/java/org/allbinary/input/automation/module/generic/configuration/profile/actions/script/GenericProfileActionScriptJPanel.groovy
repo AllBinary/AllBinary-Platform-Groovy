@@ -1,0 +1,103 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.generic.configuration.profile.actions.script;
+
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import org.allbinary.input.automation.actions.script.JTreeInterface;
+import org.allbinary.input.automation.actions.script.condition.CustomTreeNodeInterface;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+/**  *  * @author  USER  */
+@groovy.transform.CompileStatic
+public class GenericProfileActionScriptJPanel extends javax.swing.JPanel implements JTreeInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode('Root');
+
+    private GenericProfileActionScript genericProfileActionScript;
+
+    /** Creates new form GenericProfileActionScriptJPanel */
+    public GenericProfileActionScriptJPanel() {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        this.initComponents();
+    }
+
+    public void updateJTree() {
+        DefaultTreeModel defaultTreeModel = new DefaultTreeModel(this.getGenericProfileActionScript());
+        this.getActionScriptJTree().setModel(defaultTreeModel);
+        this.repaint();
+        this.logUtil.putF('Updated UI', this, 'updateJTree');
+    }
+
+    public GenericProfileActionScript getGenericProfileActionScript() {
+        return this.genericProfileActionScript;
+    }
+
+    public void setGenericProfileActionScript(GenericProfileActionScript genericProfileActionScript) {
+        this.genericProfileActionScript = genericProfileActionScript;
+    }
+
+    public javax.swing.JTree getActionScriptJTree() {
+        return this.actionScriptJTree;
+    }
+
+    public void setActionScriptJTree(javax.swing.JTree actionScriptJTree) {
+        this.actionScriptJTree = actionScriptJTree;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        this.jScrollPane1 = new javax.swing.JScrollPane();
+        this.actionScriptJTree = new javax.swing.JTree();
+        setLayout(new java.awt.GridLayout(1, 0));
+        this.actionScriptJTree.setPreferredSize(new java.awt.Dimension(500, 500));
+        this.actionScriptJTree.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    actionScriptJTreeMouseClicked(evt);
+                }
+
+                public void mouseReleased(java.awt.event.MouseEvent evt) {
+                    actionScriptJTreeMouseReleased(evt);
+                }
+
+            });
+        this.jScrollPane1.setViewportView(this.actionScriptJTree);
+        add(this.jScrollPane1);
+    }
+
+    // </editor-fold>//GEN-END:initComponents
+    private void actionScriptJTreeMouseReleased(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_actionScriptJTreeMouseReleased
+        int button = evt.getButton();
+        if (button == MouseEvent.BUTTON3) {
+            TreePath treePath = this.getActionScriptJTree().getSelectionPath();
+            if (treePath != null) {
+                Object anyType = treePath.getLastPathComponent();
+                if (anyType instanceof CustomTreeNodeInterface) {
+                    CustomTreeNodeInterface customTreeNodeInterface = ((CustomTreeNodeInterface) anyType);
+                    JPopupMenu jPopupMenu = customTreeNodeInterface.getJPopupMenu();
+                    jPopupMenu.show(((JComponent) evt.getSource()), evt.getX(), evt.getY());
+                }
+            }
+        }
+    }
+
+    //GEN-LAST:event_actionScriptJTreeMouseReleased
+    private void actionScriptJTreeMouseClicked(java.awt.event.MouseEvent evt) {
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTree actionScriptJTree;
+
+    private javax.swing.JScrollPane jScrollPane1;
+
+}
+
+

@@ -1,0 +1,306 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.animation.IndexedAnimation;
+import org.allbinary.animation.NullRotationAnimationFactory;
+import org.allbinary.animation.RotationAnimation;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.image.ImageCache;
+import org.allbinary.image.ImageCacheFactory;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.media.ScaleProperties;
+import org.allbinary.util.CircularIndexUtil;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class LazyImageRotationAnimation extends RotationAnimation {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public final int layoutIndex;
+
+    public final int instanceId;
+
+    public final BaseImageAnimationFactory animationInterfaceFactoryInterface;
+
+    private final IndexedAnimation NULL_INDEX_ANIMATION;
+
+    private IndexedAnimation animation;
+
+    public ScaleProperties scaleProperties = ScaleProperties.instance;
+
+    //private float scaleY;
+    public LazyImageRotationAnimation(final int layoutIndex, final int instanceId, final ScaleProperties scaleProperties, final BaseImageAnimationFactory animationInterfaceFactoryInterface, final AnimationBehavior animationBehavior) {
+        super(AngleInfo.getInstance(AngleFactory.getInstance().@QUARTER_TOTAL_ANGLE), CircularIndexUtil.createInstance(4), animationBehavior);
+        this.layoutIndex = layoutIndex;
+        this.instanceId = instanceId;
+        this.animationInterfaceFactoryInterface = animationInterfaceFactoryInterface;
+        final ImageCache imageCache = ImageCacheFactory.getInstance();
+        imageCache.add(this);
+        this.scaleProperties = scaleProperties;
+        this.NULL_INDEX_ANIMATION = ((IndexedAnimation) NullRotationAnimationFactory.getFactoryInstance().getInstance(0));
+        //this.logUtil.putF(this.NULL_INDEX_ANIMATION.toString(), this, this.commonStrings.PROCESS);
+        //local class ActualRotationAnimation is a member class
+        ;
+        this.animation = new ActualRotationAnimation(this);
+    }
+
+    private static final String SET_REAL_ANIMATION = 'setRealAnimation';
+
+    public void setRealAnimation() {
+        try {
+            final IndexedAnimation animation = this.animation;
+            this.animationInterfaceFactoryInterface.setInitialScale(this.scaleProperties);
+            this.animation = ((IndexedAnimation) this.animationInterfaceFactoryInterface.getInstance(this.instanceId));
+            this.animation.setState(animation);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, LazyImageRotationAnimation.SET_REAL_ANIMATION, e);
+        }
+    }
+
+    @Override
+    public void setScale(final float scaleX, final float scaleY) {
+        //this.scaleY = scaleY;
+        this.animation.setScale(scaleX, scaleY);
+    }
+
+    @Override
+    public AnimationBehavior getAnimationBehavior() {
+        return this.animation.getAnimationBehavior();
+    }
+
+    @Override
+    public void set(final GL gl) throws Exception {
+        this.animation.set(gl);
+    }
+
+    @Override
+    public void setAlpha(final int alpha) {
+        this.animation.setAlpha(alpha);
+    }
+
+    @Override
+    public void setDx(final int dx) {
+        this.animation.setDx(dx);
+    }
+
+    @Override
+    public void setDy(final int dy) {
+        this.animation.setDy(dy);
+    }
+
+    @Override
+    public void setMaxScale(final float maxScaleX, final float maxScaleY) {
+        this.animation.setMaxScale(maxScaleX, maxScaleY);
+    }
+
+    @Override
+    public void nextRotation() {
+        final RotationAnimation rotationAnimation = (((RotationAnimation) this.animation));
+        rotationAnimation.nextRotation();
+    }
+
+    @Override
+    public void previousRotation() {
+        final RotationAnimation rotationAnimation = (((RotationAnimation) this.animation));
+        rotationAnimation.previousRotation();
+    }
+
+    @Override
+    public void nextRotationX() {
+        final RotationAnimation rotationAnimation = (((RotationAnimation) this.animation));
+        rotationAnimation.nextRotationX();
+    }
+
+    @Override
+    public void previousRotationX() {
+        final RotationAnimation rotationAnimation = (((RotationAnimation) this.animation));
+        rotationAnimation.previousRotationX();
+    }
+
+    @Override
+    public void nextRotationZ() {
+        final RotationAnimation rotationAnimation = (((RotationAnimation) this.animation));
+        rotationAnimation.nextRotationZ();
+    }
+
+    @Override
+    public void previousRotationZ() {
+        final RotationAnimation rotationAnimation = (((RotationAnimation) this.animation));
+        rotationAnimation.previousRotationZ();
+    }
+
+    @Override
+    public void changeBasicColor(final BasicColor basicColor) {
+        this.animation.changeBasicColor(basicColor);
+    }
+
+    @Override
+    public BasicColor getBasicColorP() {
+        return this.animation.getBasicColorP();
+    }
+
+    @Override
+    public BasicColor getChangeBasicColor() {
+        return this.animation.getChangeBasicColor();
+    }
+
+    @Override
+    public int getChangeColor() {
+        return this.animation.getChangeColor();
+    }
+
+    @Override
+    public int getColor() {
+        return this.animation.getColor();
+    }
+
+    @Override
+    public int getDx() {
+        return this.animation.getDx();
+    }
+
+    @Override
+    public int getDy() {
+        return this.animation.getDy();
+    }
+
+    @Override
+    public boolean isThreed() {
+        return this.animation.isThreed();
+    }
+
+    @Override
+    public void nextFrame() throws Exception {
+        this.animation.nextFrame();
+    }
+
+    @Override
+    public void reset() {
+        this.animation.reset();
+    }
+
+    @Override
+    public void setFrame(final int index) {
+        this.animation.setFrame(index);
+    }
+
+    @Override
+    public int getFrame() {
+        return this.animation.getFrame();
+    }
+
+    @Override
+    public int getAnimationSize() throws Exception {
+        return this.animation.getAnimationSize();
+    }
+
+    @Override
+    public int getSize() {
+        return this.animation.getSize();
+    }
+
+    @Override
+    public void previousFrame() {
+        this.animation.previousFrame();
+    }
+
+    @Override
+    public boolean isLastFrame() {
+        return this.animation.isLastFrame();
+    }
+
+    @Override
+    public void setSequence(final int[] sequence) {
+        this.animation.setSequence(sequence);
+    }
+
+    @Override
+    public int[] getSequence() {
+        return this.animation.getSequence();
+    }
+
+    @Override
+    public int getWidth() {
+        return this.animation.getWidth();
+    }
+
+    @Override
+    public void paintXY(final Graphics graphics, final int x, final int y) {
+        try {
+            this.animation.paintXY(graphics, x, y);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@PROCESS, e);
+        }
+    }
+
+    @Override
+    public void paintThreedXYZ(final Graphics graphics, final int x, final int y, final int z) {
+        try {
+            this.animation.paintThreedXYZ(graphics, x, y, z);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@PROCESS, e);
+        }
+    }
+
+    public String toString() {
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final Image image = this.animationInterfaceFactoryInterface.getImage();
+        return new StringMaker().append(super.toString()).append(commonSeps.@SPACE).append(image.getName()).append(commonSeps.@SPACE).appendint(image.getWidth()).append(commonSeps.@SPACE).appendint(image.getHeight()).toString();
+    }
+
+
+    class ActualRotationAnimation extends RotationAnimation {
+        private final LazyImageRotationAnimation lazyImageRotationAnimation;
+
+        private int index;
+
+        public ActualRotationAnimation(LazyImageRotationAnimation lazyImageRotationAnimation) {
+            super(AngleInfo.getInstance(AngleFactory.getInstance().@QUARTER_TOTAL_ANGLE), CircularIndexUtil.createInstance(4), animationBehavior);
+            this.lazyImageRotationAnimation = lazyImageRotationAnimation;
+        }
+
+        @Override
+        public void setFrame(final int index) {
+            this.index = index;
+        }
+
+        @Override
+        public int getFrame() {
+            return this.index;
+        }
+
+        @Override
+        public void paintXY(final Graphics graphics, final int x, final int y) {
+            try {
+                ImageCacheFactory.getInstance().insertFirst(LazyImageRotationAnimation.this);
+                this.lazyImageRotationAnimation.@animation = this.lazyImageRotationAnimation.@NULL_INDEX_ANIMATION;
+            } catch (Exception e) {
+                final LogUtil logUtil = LogUtil.getInstance();
+                logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@PROCESS, e);
+            }
+        }
+
+        @Override
+        public void paintThreedXYZ(final Graphics graphics, final int x, final int y, final int z) {
+            try {
+                ImageCacheFactory.getInstance().insertFirst(LazyImageRotationAnimation.this);
+                this.lazyImageRotationAnimation.@animation = this.lazyImageRotationAnimation.@NULL_INDEX_ANIMATION;
+            } catch (Exception e) {
+                final LogUtil logUtil = LogUtil.getInstance();
+                logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@PROCESS, e);
+            }
+        }
+
+    }
+}
+
+

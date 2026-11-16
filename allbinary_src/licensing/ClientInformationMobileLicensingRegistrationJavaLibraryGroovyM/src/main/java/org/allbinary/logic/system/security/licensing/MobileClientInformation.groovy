@@ -1,0 +1,42 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.licensing;
+
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.system.security.licensing.registration.RegistrationConfiguration;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class MobileClientInformation extends AbeClientInformation {
+    protected static final String DESC = 'Mobile';
+
+    protected static final String ANDROID_DESC = 'Android' + MobileClientInformation.DESC;
+
+    public MobileClientInformation(final String name, final String version, final String specialName, final String shortName) {
+        super(name, version, new StringMaker().append(specialName).append(CommonSeps.getInstance().@SPACE).append(PartnerIdentifierFileUtil.getInstance().get()).toString(), shortName);
+        final String string = this.getSpecialName();
+        final String number = string.substring(string.length() - 1);
+        if (Integer.getInteger(number) == null) {
+            this.setHardSale(false);
+        }
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        if (this.isHardSale()) {
+            this.logUtil.putF('Use Hard Coded Selling', this, commonStrings.@CONSTRUCTOR);
+        } else {
+            this.logUtil.putF('Don\'t Use Hard Coded Selling', this, commonStrings.@CONSTRUCTOR);
+        }
+    }
+
+    @Override
+    public ABHashtable<Object, Object> toHashtable() {
+        final ABHashtable<Object, Object> hashtable = super.toHashtable();
+        final RegistrationConfiguration registrationConfiguration = RegistrationConfiguration.getInstance();
+        hashtable.put(registrationConfiguration.@NAME, registrationConfiguration.getRegistrationCode());
+        return hashtable;
+    }
+
+}
+
+

@@ -1,0 +1,42 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.drop;
+
+import org.allbinary.layer.AllBinaryLayerFactoryInterface;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.util.BasicArrayListUtil;
+
+@groovy.transform.CompileStatic
+public class PlacedLayerFactory {
+    private static final PlacedLayerFactory instance = new PlacedLayerFactory();
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private PlacedLayerFactory() {
+    }
+
+    public void clear() {
+        this.list.clear();
+    }
+
+    public static PlacedLayerFactory getInstance() {
+        return PlacedLayerFactory.instance;
+    }
+
+    public int getSize() {
+        return this.list.size();
+    }
+
+    private final BasicArrayListUtil basicArrayListUtil = BasicArrayListUtil.getInstance();
+
+    public AllBinaryLayerFactoryInterface getRandomInstance() {
+        return ((AllBinaryLayerFactoryInterface) this.basicArrayListUtil.getRandom(this.list));
+    }
+
+    public void add(AllBinaryLayerFactoryInterface layerInterfaceFactoryInterface) {
+        this.list.add(layerInterfaceFactoryInterface);
+    }
+
+}
+
+

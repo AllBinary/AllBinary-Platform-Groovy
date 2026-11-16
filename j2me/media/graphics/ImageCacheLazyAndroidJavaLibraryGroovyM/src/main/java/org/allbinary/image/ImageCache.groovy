@@ -1,0 +1,107 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.image;
+
+import java.io.InputStream;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.data.resource.ResourceUtil;
+import org.allbinary.game.gd.resource.GDResources;
+import org.allbinary.logic.ABSystemWrapper;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.system.Memory;
+
+@groovy.transform.CompileStatic
+public class ImageCache extends ImageCacheBase {
+    public static final ImageCache NULL_IMAGE_CACHE = new ImageCache();
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final ABSystemWrapper systemWrapper = ABSystemWrapper.getInstance();
+
+    private final TsUtil tsUtil = TsUtil.getInstance();
+
+    public ImageCache() {
+    }
+
+    @Override
+    public Image get(final String caller, final int width, final int height) throws Exception {
+        int foundIndex = this.getIndexWH(width, height);
+        Image image = this.getFromAvailable(foundIndex, width, height);
+        if (image === NullImage.NULL_IMAGE) {
+            this.volume += width * height;
+            if (this.volume > 32000) {
+                //this.logUtil.putF(new StringMaker().append("Image for: ").append(caller).toString(), this, this.commonStrings.GET);
+                this.tsUtil.gc();
+                //System.gc();
+                this.volume = 0;
+            }
+            image = this.createImage(caller, width, height);
+            //this.logUtil.putF(new StringMaker().append("Image: ").append(image).toString(), this, this.commonStrings.GET);
+            if (foundIndex == -1) {
+                foundIndex = this.nextIndex;
+                this.widths[this.nextIndex] = width;
+                this.heights[this.nextIndex] = height;
+                this.nextIndex++;
+            }
+            this.listOfList[foundIndex].add(image);
+        }
+        return image;
+    }
+
+    public Image get(final Object key) throws Exception {
+        final ResourceUtil resourceUtil = ResourceUtil.getInstance();
+        final Integer resourceId = resourceUtil.getResourceId(((String) key));
+        Image image = this.getImage(resourceId);
+        if (image === NullImage.NULL_IMAGE) {
+            //final InputStream inputStream = resourceUtil.getResourceAsStream((String) key);
+            final InputStream inputStream = null;
+            try {
+                this.logUtil.putF(Memory.getInfo(), this, this.commonStrings.@GET);
+                image = this.createImage(key, inputStream);
+            } catch (Exception e) {
+                this.logUtil.put('Exception: Trying Again After GC', this, this.commonStrings.@GET, e);
+                this.logUtil.putF(new StringMaker().append('InputStream: ').append(inputStream.toString()).toString(), this, this.commonStrings.@GET);
+                this.tsUtil.gc();
+                this.tsUtil.gc();
+                this.logUtil.putF(Memory.getInfo(), this, this.commonStrings.@GET);
+                Thread.sleep(100);
+                image = this.createImage(key, inputStream);
+            }
+            //            }
+            this.hashtable.put(resourceId, image);
+        }
+        return image;
+    }
+
+    public int getIndex(final Object key) {
+        final GDResources gdResources = GDResources.getInstance();
+        final String[] resourceStringArray = gdResources.@resourceStringArray;
+        final int size = resourceStringArray.length;
+        for (int index = 0; index < size; index++) {
+            if (resourceStringArray[index] === key) {
+                return index;
+            }
+        }
+        this.logUtil.putF(new StringMaker().append('unable to find key: ').append(StringUtil.getInstance().toString(key)).toString(), this, this.commonStrings.@RUN);
+        throw new RuntimeException();
+    }
+
+    protected Image createImage(final Object key, final InputStream inputStream) throws Exception {
+        return Image.createImageLater(((String) key), -1, -1);
+    }
+
+    public boolean isLazy() {
+        //This impl is not used
+        throw new RuntimeException();
+    }
+
+}
+
+

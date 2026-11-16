@@ -1,0 +1,114 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.configuration.persistance;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import javax.microedition.rms.RecordEnumeration;
+import javax.microedition.rms.RecordStore;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.HashtableUtil;
+
+@groovy.transform.CompileStatic
+public class KeyValuePersistance extends BasicPersitance {
+    private final TsUtil tsUtil = TsUtil.getInstance();
+
+    protected KeyValuePersistance(final String recordId) {
+        super(recordId);
+    }
+
+    public void loadAll(final AbeClientInformationInterface abeClientInformation) throws Exception {
+        this.loadAllSize(abeClientInformation, 1);
+    }
+
+    public void loadAllSize(final AbeClientInformationInterface abeClientInformation, int size) throws Exception {
+        RecordStore recordStore = NullRecordStore.NULL_RECORD_STORE;
+        try {
+            recordStore = RecordStore.openRecordStore(this.getRecordId(abeClientInformation), true);
+            final RecordEnumeration recordEnum = recordStore.enumerateRecords(NullRecordFilter.NULL_RECORD_FILTER, NullRecordComparator.NULL_RECORD_COMPARATOR, true);
+            ABHashtable<String, String> hashtable;
+            String name;
+            String value;
+            final SmallIntegerSingletonFactory smallIntegerSingletonFactory = SmallIntegerSingletonFactory.getInstance();
+            final StringMaker stringBuffer = new StringMaker();
+            byte[] recordAsBytes;
+            ByteArrayInputStream byteArrayInputStream;
+            DataInputStream inputStream;
+            while (recordEnum.hasNextElement()) {
+                final int id = recordEnum.nextRecordId();
+                stringBuffer.delete(0, stringBuffer.length());
+                this.logUtil.putF(stringBuffer.append(this.persistanceStrings.@LOADING_ID).appendint(id).toString(), this, this.persistanceStrings.@LOAD_ALL);
+                recordAsBytes = this.tsUtil.getRecord(recordStore, id);
+                if (recordAsBytes != null) {
+                    byteArrayInputStream = new ByteArrayInputStream(recordAsBytes);
+                    inputStream = new DataInputStream(byteArrayInputStream);
+                    hashtable = new ABHashtable<String, String>();
+                    for (int index = 0; index < size; index++) {
+                        name = inputStream.readUTF();
+                        inputStream.readUTF();
+                        value = inputStream.readUTF();
+                        hashtable.put(name, value);
+                    }
+                    this.valueList.add(hashtable);
+                    this.idList.add(smallIntegerSingletonFactory.getAt(id));
+                }
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (recordStore != null) {
+                PreLogUtil.put(this.persistanceStrings.@CLOSING_RECORDSTORE, this, this.persistanceStrings.@LOAD_ALL);
+                recordStore.closeRecordStore();
+            }
+        }
+    }
+
+    public void save(final AbeClientInformationInterface abeClientInformation, final ABHashtable<Object, Object> hashtable) throws Exception {
+        RecordStore recordStore = NullRecordStore.NULL_RECORD_STORE;
+        try {
+            this.logUtil.putF(new StringMaker().append(this.persistanceStrings.@SAVING).append(StringUtil.getInstance().toString(hashtable)).toString(), this, this.commonStrings.@SAVE);
+            recordStore = RecordStore.openRecordStore(this.getRecordId(abeClientInformation), true);
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            final DataOutputStream outputStream = new DataOutputStream(byteArrayOutputStream);
+            String value;
+            final CommonSeps commonSeps = CommonSeps.getInstance();
+            final Object[] objectArray = HashtableUtil.getInstance().getKeysAsArray(hashtable);
+            Object anyType;
+            final int size = objectArray.length;
+            for (int index = 0; index < size; index++) {
+                outputStream.writeUTF(((String) objectArray[index]));
+                outputStream.writeUTF(commonSeps.@EQUALS);
+                anyType = ((Object) objectArray[index]);
+                value = ((String) hashtable.get(anyType));
+                outputStream.writeUTF(value);
+            }
+            final TsUtil tsUtil = TsUtil.getInstance();
+            final byte[] savedGameBytes = tsUtil.getByteArray(byteArrayOutputStream.toString());
+            recordStore.addRecord(savedGameBytes, 0, savedGameBytes.length);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (recordStore != null) {
+                PreLogUtil.put(this.persistanceStrings.@CLOSING_RECORDSTORE, this, this.commonStrings.@SAVE);
+                recordStore.closeRecordStore();
+            }
+        }
+    }
+
+    public ABHashtable<Object, Object> get(int index) {
+        final ABHashtable<Object, Object> hashtable = ((ABHashtable<Object, Object>) this.valueList.@objectArray[index]);
+        return hashtable;
+    }
+
+}
+
+

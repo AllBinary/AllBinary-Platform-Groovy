@@ -1,0 +1,45 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.math.permutations;
+
+import org.allbinary.TsUtil;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.util.visitor.Visitor;
+import org.allbinary.string.CommonSeps;
+
+@groovy.transform.CompileStatic
+public class ObjectPermutationVisitor extends Visitor {
+    protected final Object[] data;
+
+    public ObjectPermutationVisitor(final Object[] data) {
+        this.data = data;
+    }
+
+    private StringMaker stringBuilder = new StringMaker();
+
+    @Override
+    public Object visit(final Object anyType) {
+        this.stringBuilder.delete(0, stringBuilder.length());
+        this.print(this.data, stringBuilder);
+        return NullUtil.getInstance().@NULL_OBJECT;
+    }
+
+    public void print(final Object[] data) {
+        final StringMaker stringBuilder = new StringMaker();
+        this.print(data, stringBuilder);
+    }
+
+    public void print(final Object[] data, final StringMaker stringBuilder) {
+        final TsUtil tsUtil = TsUtil.getInstance();
+        final int size = data.length;
+        for (int i = 0; i < size; i++) {
+            stringBuilder.appendint(tsUtil.hashCode(data[i]));
+            stringBuilder.append(CommonSeps.getInstance().@SPACE);
+        }
+        //stringBuilder.append(CommonSeps.getInstance().NEW_LINE);
+        System.out.println(stringBuilder.toString());
+    }
+
+}
+
+

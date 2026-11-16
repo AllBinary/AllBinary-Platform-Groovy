@@ -1,0 +1,73 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai;
+
+import org.allbinary.bounds.BoundsVisitorInterface;
+import org.allbinary.game.physics.velocity.VelocityInterface;
+import org.allbinary.game.physics.velocity.VelocityInterfaceCompositeInterface;
+import org.allbinary.layer.LayerInterface;
+import org.allbinary.logic.communication.log.LogUtil;
+
+@groovy.transform.CompileStatic
+public class ReverseVelocityBoundsVisitor implements BoundsVisitorInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    //private GPoint point;
+    protected VelocityInterface velocityInterface;
+
+    //private RotationAnimationInterface rotationAnimationInterface;
+    private LayerInterface layerInterface;
+
+    //GPoint point,
+    public ReverseVelocityBoundsVisitor(LayerInterface layerInterface) {
+        this.layerInterface = layerInterface;
+        //this.rotationAnimationInterface = rotationAnimationInterfaceCompositeInterface.getRotationAnimationInterface();
+        VelocityInterfaceCompositeInterface velocityInterfaceCompositeInterface = ((VelocityInterfaceCompositeInterface) layerInterface);
+        this.velocityInterface = ((VelocityInterface) velocityInterfaceCompositeInterface.getVelocityProperties());
+    }
+
+    @Override
+    public int getX() {
+        return this.layerInterface.getXP();
+    }
+
+    @Override
+    public int getY() {
+        return this.layerInterface.getYP();
+    }
+
+    @Override
+    public void minX() {
+        //this.refract();
+        if (this.velocityInterface.getVelocityXBasicDecimalP().getUnscaled() < 0) {
+            this.velocityInterface.getVelocityXBasicDecimalP().multiplyint(-1);
+        }
+    }
+
+    @Override
+    public void maxX() {
+        //this.refract();
+        if (this.velocityInterface.getVelocityXBasicDecimalP().getUnscaled() > 0) {
+            this.velocityInterface.getVelocityXBasicDecimalP().multiplyint(-1);
+        }
+    }
+
+    @Override
+    public void minY() {
+        //this.refract();
+        if (this.velocityInterface.getVelocityYBasicDecimalP().getUnscaled() < 0) {
+            this.velocityInterface.getVelocityYBasicDecimalP().multiplyint(-1);
+        }
+    }
+
+    @Override
+    public void maxY() {
+        //this.refract();
+        if (this.velocityInterface.getVelocityYBasicDecimalP().getUnscaled() > 0) {
+            this.velocityInterface.getVelocityYBasicDecimalP().multiplyint(-1);
+        }
+    }
+
+}
+
+

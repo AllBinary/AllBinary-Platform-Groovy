@@ -1,0 +1,50 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.content;
+
+import javax.microedition.lcdui.Command;
+import android.content.Intent;
+import android.net.Uri;
+import org.allbinary.data.resource.ResourceUtil;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class CommandUriAction {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final CommandUriAction instance = new CommandUriAction();
+
+    public static CommandUriAction getInstance() {
+        return CommandUriAction.instance;
+    }
+
+    private ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+
+    public void add(Command command, String url) {
+        this.hashtable.put(command, url);
+    }
+
+    public void process(Command command) {
+        try {
+            /*              * Intent intent = new Intent();              *               * ComponentName comp = new ComponentName(              * "com.google.android.browser",              * "com.google.android.browser.BrowserActivity");              * intent.setComponent(comp);              * intent.setAction("android.intent.action.VIEW");              * intent.addCategory("android.intent.category.BROWSABLE"); Uri uri =              * Uri.parse(BrowserLoader.url); intent.setData(uri);              */
+            Intent intent = this.getIntent(command);
+            ResourceUtil.getInstance().getContext().startActivity(intent);
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@PROCESS, e);
+        }
+    }
+
+    public Intent getIntent(Command command) {
+        String url = ((String) this.hashtable.get(command));
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        return intent;
+    }
+
+}
+
+

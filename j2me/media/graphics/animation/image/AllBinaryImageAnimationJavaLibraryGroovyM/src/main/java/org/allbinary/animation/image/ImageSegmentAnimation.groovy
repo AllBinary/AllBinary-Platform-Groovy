@@ -1,0 +1,118 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.util.CircularIndexUtil;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class ImageSegmentAnimation extends ImageAnimation {
+    private int startX;
+
+    private int startY;
+
+    private int drawWidth;
+
+    private int drawHeight;
+
+    private CircularIndexUtil circularIndexUtil;
+
+    //private int diff;
+    private int[] sequenceArray;
+
+    protected ImageSegmentAnimation(final Image image, final int[] sequenceArray, final AnimationBehavior animationBehavior) throws Exception {
+        super(image, animationBehavior);
+        this.startX = 0;
+        this.startY = 0;
+        this.drawWidth = this.getImage().getWidth();
+        this.drawHeight = this.getImage().getHeight();
+        //this.circularIndexUtil = CircularIndexUtil.getInstance(this.diff);
+        this.circularIndexUtil = CircularIndexUtil.createInstance(this.drawHeight);
+        this.sequenceArray = sequenceArray;
+    }
+
+    @Override
+    public void nextFrame() {
+        this.circularIndexUtil.next();
+    }
+
+    @Override
+    public void previousFrame() {
+        this.circularIndexUtil.previous();
+    }
+
+    @Override
+    public void setFrame(int index) {
+        this.circularIndexUtil.setIndex(index);
+    }
+
+    @Override
+    public int getFrame() {
+        return this.circularIndexUtil.getIndex();
+    }
+
+    @Override
+    public int getSize() {
+        return this.circularIndexUtil.getSize();
+    }
+
+    @Override
+    public void setSequence(int[] sequenceArray) {
+        this.sequenceArray = sequenceArray;
+    }
+
+    @Override
+    public int[] getSequence() {
+        return this.sequenceArray;
+    }
+
+    @Override
+    public void paintXY(Graphics graphics, int x, int y) {
+    }
+
+    /**      * @return the startX      */
+    public int getStartX() {
+        return this.startX;
+    }
+
+    /**      * @param startX the startX to set      */
+    public void setStartX(int startX) {
+        this.startX = startX;
+    }
+
+    /**      * @return the startY      */
+    public int getStartY() {
+        return this.startY;
+    }
+
+    /**      * @param startY the startY to set      */
+    public void setStartY(int startY) {
+        this.startY = startY;
+    }
+
+    /**      * @return the drawWidth      */
+    public int getDrawWidth() {
+        return this.drawWidth;
+    }
+
+    /**      * @param drawWidth the drawWidth to set      */
+    public void setDrawWidth(int drawWidth) {
+        this.drawWidth = drawWidth;
+    }
+
+    /**      * @return the drawHeight      */
+    public int getDrawHeight() {
+        return this.drawHeight;
+    }
+
+    /**      * @param drawHeight the drawHeight to set      */
+    public void setDrawHeight(int drawHeight) {
+        this.drawHeight = drawHeight;
+    }
+
+}
+
+

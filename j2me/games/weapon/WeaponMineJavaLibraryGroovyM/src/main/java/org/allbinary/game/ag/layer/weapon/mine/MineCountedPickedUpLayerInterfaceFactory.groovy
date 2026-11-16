@@ -1,0 +1,54 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.layer.weapon.mine;
+
+import org.allbinary.animation.FeaturedAnimationInterfaceFactoryInterfaceFactory;
+import org.allbinary.game.combat.weapon.WeaponProperties;
+import org.allbinary.game.layer.pickup.CountedPickedUpLayerInterfaceFactory;
+import org.allbinary.game.layer.pickup.IconLayerFactory;
+import org.allbinary.game.layer.pickup.PickedUpLayerInterfaceFactoryInterface;
+import org.allbinary.game.layer.pickup.PickedUpLayerTypeFactory;
+import org.allbinary.game.layer.weapon.WeaponLayerCircularPool;
+import org.allbinary.game.score.ScoreableInterface;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class MineCountedPickedUpLayerInterfaceFactory extends CountedPickedUpLayerInterfaceFactory {
+    private final WeaponLayerCircularPool weaponLayerCircularStaticPool = MineLayerCircularStaticPool.getInstance();
+
+    private static PickedUpLayerInterfaceFactoryInterface pickedUpLayerInterfaceFactoryInterface = CountedPickedUpLayerInterfaceFactory.NULL_COUNTED_PICKUP_LAYER_FACTORY;
+
+    public static void init() throws Exception {
+        MineCountedPickedUpLayerInterfaceFactory.pickedUpLayerInterfaceFactoryInterface = new MineCountedPickedUpLayerInterfaceFactory();
+    }
+
+    private MineCountedPickedUpLayerInterfaceFactory() throws Exception {
+        super(PickedUpLayerTypeFactory.getInstance().@MINE, IconLayerFactory.getInstance(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().get(MineWeaponResources.getInstance().@DROP_ICON_RESOURCE).getInstance(0), 10, 10), FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().get(MineWeaponResources.getInstance().@DROP_RESOURCE).getInstance(0));
+    }
+
+    public static PickedUpLayerInterfaceFactoryInterface getInstance() {
+        return MineCountedPickedUpLayerInterfaceFactory.pickedUpLayerInterfaceFactoryInterface;
+    }
+
+    @Override
+    public int getTotal() {
+        return 3;
+    }
+
+    private final WeaponProperties weaponProperties = new WeaponProperties(-1L, -1L, 0, 8000, ((short) 10));
+
+    private final SmallIntegerSingletonFactory smallIntegerSingletonFactory = SmallIntegerSingletonFactory.getInstance();
+
+    @Override
+    public AllBinaryLayer getNextInstance(final ABHashtable<Object, Object> hashtable, final int x, final int y, final int z) throws Exception {
+        final AllBinaryLayer sourceLayerInterface = ((AllBinaryLayer) hashtable.get(((Object) this.smallIntegerSingletonFactory.getAt(0))));
+        final Integer angle = ((Integer) hashtable.get(((Object) this.smallIntegerSingletonFactory.getAt(1))));
+        final ScoreableInterface scoreableInterface = ((ScoreableInterface) sourceLayerInterface);
+        return this.weaponLayerCircularStaticPool.getInstanceWeaponLayer(sourceLayerInterface, x, y, z, ((int) angle.intValue()), 0, this.weaponProperties, scoreableInterface);
+    }
+
+}
+
+

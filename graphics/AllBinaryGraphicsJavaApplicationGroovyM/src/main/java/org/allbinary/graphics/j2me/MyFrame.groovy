@@ -1,0 +1,716 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.j2me;
+
+import java.awt.*;
+import java.io.File;
+import java.util.HashMap;
+import javax.swing.*;
+import org.allbinary.data.tree.dom.XslHelper;
+import org.allbinary.dom.DomHelper;
+import org.allbinary.graphics.j2me.dialog.NewWorkAreaJDialog;
+import org.allbinary.graphics.j2me.dialog.RotateJDialog;
+import org.allbinary.graphics.j2me.workarea.WorkAreaDom;
+import org.allbinary.graphics.j2me.workarea.WorkAreaJPanel;
+import org.allbinary.graphics.j2me.workarea.WorkAreaJPanelInterface;
+import org.allbinary.graphics.j2me.workarea.canvas.event.MyCanvasEvent;
+import org.allbinary.graphics.j2me.workarea.canvas.event.MyCanvasEventService;
+import org.allbinary.graphics.j2me.workarea.canvas.event.MyCanvasEventSource;
+import org.allbinary.gui.dialog.FileJDialog;
+import org.allbinary.gui.dialog.FileJDialogListenerInterface;
+import org.allbinary.gui.dialog.HashMapJDialogListenerInterface;
+import org.allbinary.log.LOGGING;
+import org.allbinary.logic.communication.log.GuiLog;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.w3c.dom.Document;
+
+@groovy.transform.CompileStatic
+public class MyFrame extends javax.swing.JFrame implements FileJDialogListenerInterface, HashMapJDialogListenerInterface, java.awt.event.KeyListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final GuiLog guiLog = GuiLog.getInstance();
+
+    private final XslHelper xslHelper = XslHelper.getInstance();
+
+    private static final int MAXWORKAREAS = 10;
+
+    private static int numberOfWorkAreas = 0;
+
+    //private final String JAVA_TEMPLATE = "javaExport.xsl";
+    private final String JAVA_TEMPLATE = 'svgExport.xsl';
+
+    private final String SAVEEXTENSION = '.gxml';
+
+    private final String JAVAEXTENSION = '.javax';
+
+    private static final String PATH = 'G:/mnt/bc/mydev/work/graphics/AllBinaryGraphicsJavaApplication';
+
+    private static final String SAVE_PATH = MyFrame.PATH + '/save';
+
+    private static final String TEMPLATE_EXPORT_PATH = MyFrame.PATH + '/templates/export';
+
+    private FileJDialog fileJDialog;
+
+    private RotateJDialog rotateJDialog;
+
+    public MyFrame() {
+        this.initComponents();
+        this.setSize(new Dimension(550, 400));
+        this.mainJPanel.setSize(new Dimension(550, 400));
+        this.jTabbedPane.setSize(new Dimension(550, 400));
+        this.fileJDialog = new FileJDialog();
+        this.fileJDialog.addFinishedListener(this);
+        this.rotateJDialog = new RotateJDialog(this, false);
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        jToolBar1 = new javax.swing.JToolBar();
+        this.jButton2 = new javax.swing.JButton();
+        this.saveJButton = new javax.swing.JButton();
+        this.jButton1 = new javax.swing.JButton();
+        this.openJButton = new javax.swing.JButton();
+        this.jButton3 = new javax.swing.JButton();
+        this.jButton4 = new javax.swing.JButton();
+        this.jButton41 = new javax.swing.JButton();
+        this.jButton5 = new javax.swing.JButton();
+        this.animateJButton = new javax.swing.JButton();
+        this.playJButton = new javax.swing.JButton();
+        this.stopJjButton = new javax.swing.JButton();
+        this.jPanel1 = new javax.swing.JPanel();
+        this.mainJPanel = new javax.swing.JPanel();
+        this.jTabbedPane = new javax.swing.JTabbedPane();
+        this.statusJPanel = new javax.swing.JPanel();
+        MyFrame.statusJLabel = new javax.swing.JLabel();
+        this.menuJMenuBar = new javax.swing.JMenuBar();
+        this.fileJMenu = new javax.swing.JMenu();
+        this.newJMenuItem = new javax.swing.JMenuItem();
+        this.openJMenuItem = new javax.swing.JMenuItem();
+        this.saveJMenuItem = new javax.swing.JMenuItem();
+        this.saveAsJMenuItem = new javax.swing.JMenuItem();
+        this.exportJMenuItem1 = new javax.swing.JMenuItem();
+        this.exitJMenuItem = new javax.swing.JMenuItem();
+        this.viewJMenu = new javax.swing.JMenu();
+        this.zoomInJMenuItem = new javax.swing.JMenuItem();
+        this.zoomOutJMenuItem = new javax.swing.JMenuItem();
+        this.objectJMenu = new javax.swing.JMenu();
+        this.explodeAllJMenuItem = new javax.swing.JMenuItem();
+        this.frameJMenu = new javax.swing.JMenu();
+        this.previousFrameJMenuItem = new javax.swing.JMenuItem();
+        this.nextFrameJMenuItem = new javax.swing.JMenuItem();
+        this.removeJMenuItem = new javax.swing.JMenuItem();
+        this.copyJMenuItem1 = new javax.swing.JMenuItem();
+        this.insertAfterJMenuItem = new javax.swing.JMenuItem();
+        this.insertBeforeJMenuItem = new javax.swing.JMenuItem();
+        this.generateJMenu = new javax.swing.JMenu();
+        this.centerJMenuItem = new javax.swing.JMenuItem();
+        this.autoDamageJMenuItem = new javax.swing.JMenuItem();
+        this.autoExplodeJMenuItem = new javax.swing.JMenuItem();
+        this.autoGrowJMenuItem = new javax.swing.JMenuItem();
+        this.jMenuItem1 = new javax.swing.JMenuItem();
+        this.autoRotateGenerationJMenuItem = new javax.swing.JMenuItem();
+        this.autoSheildMenuItem = new javax.swing.JMenuItem();
+        this.autoShrinkJMenuItem = new javax.swing.JMenuItem();
+        this.jMenu1 = new javax.swing.JMenu();
+        addWindowListener(new java.awt.event.WindowAdapter() {
+                public void windowClosing(java.awt.event.WindowEvent evt) {
+                    exitForm(evt);
+                }
+
+            });
+        this.jButton2.setText('New');
+        this.jButton2.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jButton2ActionPerformed(evt);
+                }
+
+            });
+        this.jToolBar1.add(this.jButton2);
+        this.saveJButton.setText('Save');
+        this.saveJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    saveJButtonActionPerformed(evt);
+                }
+
+            });
+        this.jToolBar1.add(this.saveJButton);
+        this.jButton1.setText('Export');
+        this.jButton1.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jButton1ActionPerformed(evt);
+                }
+
+            });
+        this.jToolBar1.add(this.jButton1);
+        this.openJButton.setText('Open');
+        this.openJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    openJButtonActionPerformed(evt);
+                }
+
+            });
+        this.jToolBar1.add(this.openJButton);
+        this.jButton3.setText('Copy');
+        this.jToolBar1.add(this.jButton3);
+        this.jButton4.setText('Insert Before');
+        this.jToolBar1.add(this.jButton4);
+        this.jButton41.setText('Insert After');
+        this.jToolBar1.add(this.jButton41);
+        this.jButton5.setText('Delete');
+        this.jToolBar1.add(this.jButton5);
+        this.animateJButton.setText('AnimateEdit');
+        this.jToolBar1.add(this.animateJButton);
+        this.playJButton.setText('Play');
+        this.playJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    playJButtonMousePressed(evt);
+                }
+
+            });
+        this.jToolBar1.add(this.playJButton);
+        this.stopJjButton.setText('Stop');
+        this.stopJjButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    stopJjButtonMousePressed(evt);
+                }
+
+            });
+        this.jToolBar1.add(this.stopJjButton);
+        getContentPane().add(this.jToolBar1, java.awt.BorderLayout.NORTH);
+        this.jPanel1.setLayout(new java.awt.GridLayout(1, 0));
+        this.mainJPanel.setLayout(new java.awt.GridLayout(1, 0));
+        this.jTabbedPane.setMinimumSize(new java.awt.Dimension(550, 400));
+        this.jTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+                public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                    jTabbedPaneStateChanged(evt);
+                }
+
+            });
+        this.mainJPanel.add(this.jTabbedPane);
+        this.jPanel1.add(this.mainJPanel);
+        getContentPane().add(this.jPanel1, java.awt.BorderLayout.CENTER);
+        this.statusJPanel.setLayout(new java.awt.GridLayout(1, 0));
+        MyFrame.statusJLabel.setText('Status Bar');
+        this.statusJPanel.add(MyFrame.statusJLabel);
+        getContentPane().add(this.statusJPanel, java.awt.BorderLayout.SOUTH);
+        this.fileJMenu.setText('File');
+        this.fileJMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    fileJMenuActionPerformed(evt);
+                }
+
+            });
+        this.newJMenuItem.setText('New');
+        this.newJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    newJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.fileJMenu.add(this.newJMenuItem);
+        this.openJMenuItem.setText('Open');
+        this.openJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    openJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.fileJMenu.add(this.openJMenuItem);
+        this.saveJMenuItem.setText('Save');
+        this.saveJMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    saveJMenuItemMousePressed(evt);
+                }
+
+            });
+        this.fileJMenu.add(this.saveJMenuItem);
+        this.saveAsJMenuItem.setText('SaveAs');
+        this.fileJMenu.add(this.saveAsJMenuItem);
+        this.exportJMenuItem1.setText('Export');
+        this.exportJMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    exportJMenuItem1ActionPerformed(evt);
+                }
+
+            });
+        this.fileJMenu.add(this.exportJMenuItem1);
+        this.exitJMenuItem.setText('Exit');
+        this.exitJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    exitJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.fileJMenu.add(this.exitJMenuItem);
+        this.menuJMenuBar.add(this.fileJMenu);
+        this.viewJMenu.setText('View');
+        this.zoomInJMenuItem.setText('Zoom In');
+        this.zoomInJMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    zoomInJMenuItemMousePressed(evt);
+                }
+
+            });
+        this.viewJMenu.add(this.zoomInJMenuItem);
+        this.zoomOutJMenuItem.setText('Zoom Out');
+        this.zoomOutJMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    zoomOutJMenuItemMousePressed(evt);
+                }
+
+            });
+        this.viewJMenu.add(this.zoomOutJMenuItem);
+        this.menuJMenuBar.add(this.viewJMenu);
+        this.objectJMenu.setText('Objects');
+        this.explodeAllJMenuItem.setText('Explode All');
+        this.explodeAllJMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    explodeAllJMenuItemMousePressed(evt);
+                }
+
+            });
+        this.objectJMenu.add(this.explodeAllJMenuItem);
+        this.menuJMenuBar.add(this.objectJMenu);
+        this.frameJMenu.setText('Frame');
+        this.frameJMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    frameJMenuActionPerformed(evt);
+                }
+
+            });
+        this.previousFrameJMenuItem.setText('Previous');
+        this.frameJMenu.add(this.previousFrameJMenuItem);
+        this.nextFrameJMenuItem.setText(CommonLabels.getInstance().@NEXT);
+        this.frameJMenu.add(this.nextFrameJMenuItem);
+        this.removeJMenuItem.setText('Remove');
+        this.frameJMenu.add(this.removeJMenuItem);
+        this.copyJMenuItem1.setText('Copy');
+        this.frameJMenu.add(this.copyJMenuItem1);
+        this.insertAfterJMenuItem.setText('Ins After');
+        this.frameJMenu.add(this.insertAfterJMenuItem);
+        this.insertBeforeJMenuItem.setText('Ins Before');
+        this.frameJMenu.add(this.insertBeforeJMenuItem);
+        this.menuJMenuBar.add(this.frameJMenu);
+        this.generateJMenu.setText('Generate');
+        this.centerJMenuItem.setText('Center');
+        this.centerJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    centerJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.generateJMenu.add(this.centerJMenuItem);
+        this.autoDamageJMenuItem.setText('Damage');
+        this.generateJMenu.add(this.autoDamageJMenuItem);
+        this.autoExplodeJMenuItem.setText('Explode');
+        this.autoExplodeJMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    autoExplodeJMenuItemMousePressed(evt);
+                }
+
+            });
+        this.generateJMenu.add(this.autoExplodeJMenuItem);
+        this.autoGrowJMenuItem.setText('Grow');
+        this.generateJMenu.add(this.autoGrowJMenuItem);
+        this.jMenuItem1.setText('Mirror');
+        this.jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jMenuItem1ActionPerformed(evt);
+                }
+
+            });
+        this.generateJMenu.add(this.jMenuItem1);
+        this.autoRotateGenerationJMenuItem.setText('Rotate');
+        this.autoRotateGenerationJMenuItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mousePressed(java.awt.event.MouseEvent evt) {
+                    autoRotateGenerationJMenuItemMousePressed(evt);
+                }
+
+            });
+        this.generateJMenu.add(this.autoRotateGenerationJMenuItem);
+        this.autoSheildMenuItem.setText('Shield');
+        this.generateJMenu.add(this.autoSheildMenuItem);
+        this.autoShrinkJMenuItem.setText('Shrink');
+        this.generateJMenu.add(this.autoShrinkJMenuItem);
+        this.menuJMenuBar.add(this.generateJMenu);
+        this.jMenu1.setText('Help');
+        this.menuJMenuBar.add(this.jMenu1);
+        setJMenuBar(this.menuJMenuBar);
+        pack();
+    }
+
+    // </editor-fold>//GEN-END:initComponents
+    private void explodeAllJMenuItemMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_explodeAllJMenuItemMousePressed
+        try {
+            MyCanvasEventService.fire(new MyCanvasEvent(((Object) new MyCanvasEventSource(MyCanvasEventService.EXPLODE, null))));
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'explodeAllJMenuItemMousePressed', e);
+        }
+    }
+
+    //GEN-LAST:event_explodeAllJMenuItemMousePressed
+    private void autoExplodeJMenuItemMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_autoExplodeJMenuItemMousePressed
+        try {
+            MyCanvasEventService.fire(new MyCanvasEvent(((Object) new MyCanvasEventSource(MyCanvasEventService.AUTOEXPLODE, null))));
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'autoExplodeJMenuItemMousePressed', e);
+        }
+    }
+
+    //GEN-LAST:event_autoExplodeJMenuItemMousePressed
+    private void stopJjButtonMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_stopJjButtonMousePressed
+        this.getSelectedWorkArea().stop();
+    }
+
+    //GEN-LAST:event_stopJjButtonMousePressed
+    private void playJButtonMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_playJButtonMousePressed
+        this.getSelectedWorkArea().play();
+    }
+
+    //GEN-LAST:event_playJButtonMousePressed
+    private void autoRotateGenerationJMenuItemMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_autoRotateGenerationJMenuItemMousePressed
+        this.rotateJDialog.setVisible(true);
+    }
+
+    //GEN-LAST:event_autoRotateGenerationJMenuItemMousePressed
+    private void zoomOutJMenuItemMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_zoomOutJMenuItemMousePressed
+        this.getSelectedWorkArea().changeZoom(-1);
+    }
+
+    //GEN-LAST:event_zoomOutJMenuItemMousePressed
+    private void zoomInJMenuItemMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_zoomInJMenuItemMousePressed
+        this.getSelectedWorkArea().changeZoom(1);
+    }
+
+    //GEN-LAST:event_zoomInJMenuItemMousePressed
+    private void openJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_openJMenuItemActionPerformed
+        this.openGraphics();
+    }
+
+    //GEN-LAST:event_openJMenuItemActionPerformed
+    private void exportJMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_exportJMenuItem1ActionPerformed
+        this.export();
+    }
+
+    //GEN-LAST:event_exportJMenuItem1ActionPerformed
+    private void saveJMenuItemMousePressed(java.awt.event.MouseEvent evt) {
+        //GEN-HEADEREND:event_saveJMenuItemMousePressed
+        this.save();
+    }
+
+    //GEN-LAST:event_saveJMenuItemMousePressed
+    private void jTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {
+        //GEN-HEADEREND:event_jTabbedPaneStateChanged
+        this.updateSelectedWorkArea();
+    }
+
+    //GEN-LAST:event_jTabbedPaneStateChanged
+    private void frameJMenuActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    //GEN-LAST:event_frameJMenuActionPerformed
+    private void exitJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        // Add your handling code here:
+        System.exit(0);
+    }
+
+    //GEN-LAST:event_exitJMenuItemActionPerformed
+    private void newJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_newJMenuItemActionPerformed
+        this.newGraphics();
+    }
+
+    //GEN-LAST:event_newJMenuItemActionPerformed
+    private void fileJMenuActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    /** Exit the Application */
+    private void exitForm(java.awt.event.WindowEvent evt) {
+        //GEN-FIRST:event_exitForm
+        System.exit(0);
+    }
+
+    //GEN-LAST:event_exitForm
+    private void openJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_openJButtonActionPerformed
+        this.openGraphics();
+    }
+
+    //GEN-LAST:event_openJButtonActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_jButton2ActionPerformed
+        this.newGraphics();
+    }
+
+    //GEN-LAST:event_jButton2ActionPerformed
+    private void centerJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_centerJMenuItemActionPerformed
+        try {
+            MyCanvasEventService.fire(new MyCanvasEvent(((Object) new MyCanvasEventSource(MyCanvasEventService.CENTER, null))));
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'centerJMenuItemActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_centerJMenuItemActionPerformed
+    private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_saveJButtonActionPerformed
+        this.save();
+    }
+
+    //GEN-LAST:event_saveJButtonActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_jButton1ActionPerformed
+        this.export();
+    }
+
+    //GEN-LAST:event_jButton1ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-FIRST:event_jMenuItem1ActionPerformed
+        try {
+            this.getSelectedWorkArea().autoMirror();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'centerJMenuItemActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_jMenuItem1ActionPerformed
+    public void onFiles(File[] files) {
+        try {
+            this.logUtil.putF('Reading: ' + files, this, 'onFiles');
+            for (int index = 0; index < files.length; index++) {
+                Document document = DomHelper.getInstance().createDocument(files[index]);
+                WorkAreaJPanel workAreaJPanel = new WorkAreaJPanel(new WorkAreaDom(document), this.getSize());
+                workAreaJPanel.setLayout(new GridLayout(1, 1));
+                this.add(((WorkAreaJPanelInterface) workAreaJPanel));
+            }
+            this.fileJDialog.setVisible(false);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'onFiles', e);
+        }
+    }
+
+    private void newGraphics() {
+        try {
+            String newName = 'graphic' + MyFrame.numberOfWorkAreas;
+            Dimension dim = this.getSize();
+            NewWorkAreaJDialog newDialog = new NewWorkAreaJDialog(this, false, dim, newName);
+        } catch (Exception e) {
+            if (LOGGING.contains(LOGGING.MENUEVENT)) {
+                this.guiLog.put(this.commonStrings.@EXCEPTION, this, 'newJMenuItemActionPerformed', e);
+            }
+        }
+    }
+
+    private void openGraphics() {
+        try {
+            this.logUtil.putF('Starting', this, 'openImageJMenuItemActionPerformed');
+            this.fileJDialog.setVisible(true);
+        } catch (Exception e) {
+            if (LOGGING.contains(LOGGING.MENUEVENT)) {
+                this.guiLog.put(this.commonStrings.@EXCEPTION, this, 'open', e);
+            }
+        }
+    }
+
+    private void export() {
+        try {
+            WorkAreaJPanelInterface workAreaJPanel = ((WorkAreaJPanelInterface) this.jTabbedPane.getSelectedComponent());
+            File file = new File(this.SAVE_PATH + '/' + workAreaJPanel.getName() + this.JAVAEXTENSION);
+            Document document = workAreaJPanel.toDocument();
+            this.logUtil.putF('Export: ' + DomHelper.getInstance().toString(document), this, 'exportJMenuItem1ActionPerformed');
+            this.xslHelper.export(file, MyFrame.TEMPLATE_EXPORT_PATH + '/' + this.JAVA_TEMPLATE, document);
+        } catch (Exception e) {
+            if (LOGGING.contains(LOGGING.MENUEVENT)) {
+                this.guiLog.put(this.commonStrings.@EXCEPTION, this, 'export', e);
+            }
+        }
+    }
+
+    private void save() {
+        try {
+            WorkAreaJPanelInterface workAreaJPanel = ((WorkAreaJPanelInterface) this.jTabbedPane.getSelectedComponent());
+            DomHelper.getInstance().save(new File(this.SAVE_PATH + '/' + workAreaJPanel.getName() + this.SAVEEXTENSION), workAreaJPanel.toDocument());
+        } catch (Exception e) {
+            if (LOGGING.contains(LOGGING.MENUEVENT)) {
+                this.guiLog.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@SAVE, e);
+            }
+        }
+    }
+
+    public void onHashMap(HashMap hashMap) throws Exception {
+        Integer angleIncrementInteger = ((Integer) hashMap.get(Integer.valueOf(0)));
+        Integer totalRotationInteger = ((Integer) hashMap.get(Integer.valueOf(1)));
+        this.getSelectedWorkArea().autoRotate(angleIncrementInteger.intValue(), totalRotationInteger.intValue());
+    }
+
+    private WorkAreaJPanelInterface getSelectedWorkArea() {
+        return ((WorkAreaJPanelInterface) this.jTabbedPane.getSelectedComponent());
+    }
+
+    public void updateSelectedWorkArea() {
+        int numberOfTabs = this.jTabbedPane.getTabCount();
+        for (int index = 0; index < numberOfTabs; index++) {
+            WorkAreaJPanelInterface workAreaJPanel = ((WorkAreaJPanelInterface) this.jTabbedPane.getComponentAt(index));
+            workAreaJPanel.deselect();
+        }
+        WorkAreaJPanelInterface workAreaJPanel = ((WorkAreaJPanelInterface) this.jTabbedPane.getSelectedComponent());
+        if (workAreaJPanel != null) {
+            workAreaJPanel.select();
+        }
+    }
+
+    public void add(WorkAreaJPanelInterface newCanvasInterface) throws Exception {
+        try {
+            this.numberOfWorkAreas++;
+            if (this.numberOfWorkAreas == MyFrame.MAXWORKAREAS) {
+                throw new Exception();
+            }
+            this.jTabbedPane.addTab(newCanvasInterface.getName(), ((JPanel) newCanvasInterface));
+            this.jTabbedPane.setSelectedComponent(((JPanel) newCanvasInterface));
+            //WorkAreaJPanel newCanvas = (WorkAreaJPanelInterface) newCanvasInterface;
+            Thread animationThread = new Thread(((Runnable) newCanvasInterface));
+            animationThread.start();
+            this.updateSelectedWorkArea();
+        } catch (Exception e) {
+            if (LOGGING.contains(LOGGING.GRAPHICSCREATION)) {
+                this.guiLog.put(this.commonStrings.@EXCEPTION, this, 'addNewCanvas', e);
+            }
+        }
+    }
+
+    public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+        this.getSelectedWorkArea().keyPressed(keyEvent);
+    }
+
+    public void keyReleased(java.awt.event.KeyEvent keyEvent) {
+    }
+
+    public void keyTyped(java.awt.event.KeyEvent keyEvent) {
+    }
+
+    public static void main(String[] args) {
+        try {
+            //.init();
+            AngleFactory.getInstance();
+            SmallIntegerSingletonFactory.getInstance().init();
+            new MyFrame().show();
+        } catch (Exception e) {
+            final LogUtil logUtil = LogUtil.getInstance();
+            logUtil.put(CommonStrings.getInstance().@EXCEPTION, null, 'main', e);
+        }
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton animateJButton;
+
+    private javax.swing.JMenuItem autoDamageJMenuItem;
+
+    private javax.swing.JMenuItem autoExplodeJMenuItem;
+
+    private javax.swing.JMenuItem autoGrowJMenuItem;
+
+    private javax.swing.JMenuItem autoRotateGenerationJMenuItem;
+
+    private javax.swing.JMenuItem autoSheildMenuItem;
+
+    private javax.swing.JMenuItem autoShrinkJMenuItem;
+
+    private javax.swing.JMenuItem centerJMenuItem;
+
+    private javax.swing.JMenuItem copyJMenuItem1;
+
+    private javax.swing.JMenuItem exitJMenuItem;
+
+    private javax.swing.JMenuItem explodeAllJMenuItem;
+
+    private javax.swing.JMenuItem exportJMenuItem1;
+
+    private javax.swing.JMenu fileJMenu;
+
+    private javax.swing.JMenu frameJMenu;
+
+    private javax.swing.JMenu generateJMenu;
+
+    private javax.swing.JMenuItem insertAfterJMenuItem;
+
+    private javax.swing.JMenuItem insertBeforeJMenuItem;
+
+    private javax.swing.JButton jButton1;
+
+    private javax.swing.JButton jButton2;
+
+    private javax.swing.JButton jButton3;
+
+    private javax.swing.JButton jButton4;
+
+    private javax.swing.JButton jButton41;
+
+    private javax.swing.JButton jButton5;
+
+    private javax.swing.JMenu jMenu1;
+
+    private javax.swing.JMenuItem jMenuItem1;
+
+    private javax.swing.JPanel jPanel1;
+
+    private javax.swing.JTabbedPane jTabbedPane;
+
+    private javax.swing.JToolBar jToolBar1;
+
+    private javax.swing.JPanel mainJPanel;
+
+    private javax.swing.JMenuBar menuJMenuBar;
+
+    private javax.swing.JMenuItem newJMenuItem;
+
+    private javax.swing.JMenuItem nextFrameJMenuItem;
+
+    private javax.swing.JMenu objectJMenu;
+
+    private javax.swing.JButton openJButton;
+
+    private javax.swing.JMenuItem openJMenuItem;
+
+    private javax.swing.JButton playJButton;
+
+    private javax.swing.JMenuItem previousFrameJMenuItem;
+
+    private javax.swing.JMenuItem removeJMenuItem;
+
+    private javax.swing.JMenuItem saveAsJMenuItem;
+
+    private javax.swing.JButton saveJButton;
+
+    private javax.swing.JMenuItem saveJMenuItem;
+
+    protected static javax.swing.JLabel statusJLabel;
+
+    private javax.swing.JPanel statusJPanel;
+
+    private javax.swing.JButton stopJjButton;
+
+    private javax.swing.JMenu viewJMenu;
+
+    private javax.swing.JMenuItem zoomInJMenuItem;
+
+    private javax.swing.JMenuItem zoomOutJMenuItem;
+
+}
+
+

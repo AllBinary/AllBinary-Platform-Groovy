@@ -1,0 +1,25 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai.scroller;
+
+import org.allbinary.ai.ArtificialIntelligenceInterface;
+import org.allbinary.game.ag.ai.ArrayAI;
+import org.allbinary.game.ai.ArtificialIntelligenceInterfaceFactoryInterface;
+import org.allbinary.game.input.GameInput;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class RandomPatrolFlockingFiringAIFactory implements ArtificialIntelligenceInterfaceFactoryInterface {
+    @Override
+    public ArtificialIntelligenceInterface getInstance(final ABHashtable<Object, Object> hashtable, final AllBinaryLayer ownerLayerInterface, final GameInput gameInput) throws Exception {
+        final ArtificialIntelligenceInterface[] artificialIntelligenceInterface = new ArtificialIntelligenceInterface[2];
+        artificialIntelligenceInterface[0] = new RandomPatrolAI(hashtable, ownerLayerInterface, gameInput);
+        artificialIntelligenceInterface[1] = new TimedFireAI(1800, ownerLayerInterface, gameInput);
+        //  new FlockingAI(hashtable, ownerLayerInterface, gameInput);
+        return new ArrayAI(artificialIntelligenceInterface, ownerLayerInterface, gameInput);
+    }
+
+}
+
+

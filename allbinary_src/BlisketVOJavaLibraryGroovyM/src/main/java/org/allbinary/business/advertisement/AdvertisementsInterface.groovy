@@ -1,0 +1,45 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.advertisement;
+
+
+@groovy.transform.CompileStatic
+public interface AdvertisementsInterface {
+    void add(AdvertisementInterface advertisementInterface);
+
+    AdvertisementInterface get(int index);
+
+    int getCurrentPageNum();
+
+    String getErrorDescription();
+
+    String getErrorNum();
+
+    int getNumberOfPosters();
+
+    int getNumberOfProductsInPage();
+
+    int getStatusCode();
+
+    int getTotalNumberOfProducts();
+
+    boolean isSearchValid();
+
+    //If status code = 0 search is valid, if statuscode is 1 search is invalid.
+    void setCurrentPageNum(int currentPageNum);
+
+    void setErrorDescription(String errorDescription);
+
+    void setErrorNum(String errorNum);
+
+    void setNumberOfProductsInPage(int numberOfProductsInPage);
+
+    void setStatusCode(int statusCode);
+
+    void setTotalNumberOfProducts(int totalNumberOfProducts);
+
+    String toString();
+
+}
+
+

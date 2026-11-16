@@ -1,0 +1,34 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.log;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+
+@groovy.transform.CompileStatic
+public class LogBuffer {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    @groovy.transform.PackageScope BasicArrayList logEntryVector;
+
+    public LogBuffer() {
+        this.logEntryVector = new BasicArrayListD();
+    }
+
+    public void add(Log log) {
+        this.logEntryVector.add(log);
+    }
+
+    /*    public void add(          String specialMessage,          Object object,          String functionName,          Exception exception)    {       this.logEntryVector.add(          LogFactory.getInstance(specialMessage, object, functionName, exception));    }     public void add(          String specialMessage,          String className,          String functionName,          Exception exception)    {       this.logEntryVector.add(          LogFactory.getInstance(specialMessage, className, functionName, exception));    }     */
+    public void logAll() {
+        final int size = this.logEntryVector.size();
+        for (int index = 0; index < size; index++) {
+            Log log = ((Log) this.logEntryVector.get(index));
+            this.logUtil.putL(log);
+        }
+    }
+
+}
+
+

@@ -1,0 +1,45 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.configuration;
+
+import org.allbinary.logic.StdUtil;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class GameConfigurationSingleton {
+    private static GameConfigurationSingleton SINGLETON = new GameConfigurationSingleton();
+
+    private BasicArrayList list;
+
+    private ABHashtable<Object, Object> hashtable;
+
+    public static GameConfigurationSingleton getInstance() {
+        return GameConfigurationSingleton.SINGLETON;
+    }
+
+    private GameConfigurationSingleton() {
+        this.list = new BasicArrayListD();
+        this.hashtable = StdUtil.getInstance().createHashtable();
+    }
+
+    public GameConfiguration getInstanceByName(String name) {
+        return ((GameConfiguration) this.hashtable.get(name));
+    }
+
+    public BasicArrayList getOptionsBasicArrayList() {
+        return this.list;
+    }
+
+    public void add(GameConfiguration gameConfiguration) {
+        this.list.add(gameConfiguration);
+    }
+
+    public ABHashtable<Object, Object> getHashtable() {
+        return this.hashtable;
+    }
+
+}
+
+

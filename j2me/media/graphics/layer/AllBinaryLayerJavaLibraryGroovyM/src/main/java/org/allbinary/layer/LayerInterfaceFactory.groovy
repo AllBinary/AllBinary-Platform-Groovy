@@ -1,0 +1,48 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.layer;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.util.BasicArrayListUtil;
+
+@groovy.transform.CompileStatic
+public class LayerInterfaceFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final LayerInterfaceFactory SINGLETON = new LayerInterfaceFactory();
+
+    private BasicArrayList list = BasicArrayListUtil.getInstance().getImmutableInstance();
+
+    public static LayerInterfaceFactory getInstance() {
+        return LayerInterfaceFactory.SINGLETON;
+    }
+
+    public void init() {
+        this.list = new BasicArrayListD();
+    }
+
+    private final String HASHTABLE_LABEL = 'Hashtable: ';
+
+    public AllBinaryLayer getNexInstance(final ABHashtable<Object, Object> hashtable, final int x, final int y, int z) throws Exception {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        this.logUtil.putF(new StringMaker().append(this.HASHTABLE_LABEL).append(StringUtil.getInstance().toString(hashtable)).toString(), this, commonStrings.@GET_INSTANCE);
+        final Integer typeInteger = ((Integer) hashtable.get(((Object) Layer.ID)));
+        /*       if(this.list.objectArray.length <= typeInteger.intValue() - 1)       {        PrelogUtil.putF("Layer ID: ").append(typeInteger.toString(), this, commonStrings.GET_INSTANCE);       }       */
+        final LayerInterfaceFactoryInterface layerInterfaceFactoryInterface = ((LayerInterfaceFactoryInterface) this.list.@objectArray[typeInteger.intValue() - 1]);
+        /*       if(layerInterfaceFactoryInterface == null)       {        PrelogUtil.putF("Layer ID: ").append(typeInteger.toString(), this, commonStrings.GET_INSTANCE);       }       */
+        return layerInterfaceFactoryInterface.getNextInstance(hashtable, x, y, z);
+    }
+
+    public void add(final LayerInterfaceFactoryInterface layerInterfaceFactoryInterface) {
+        this.list.add(layerInterfaceFactoryInterface);
+    }
+
+}
+
+

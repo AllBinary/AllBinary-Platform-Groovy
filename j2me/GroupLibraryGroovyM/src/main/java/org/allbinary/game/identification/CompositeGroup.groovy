@@ -1,0 +1,54 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.identification;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class CompositeGroup {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final Group groupInterface;
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    public CompositeGroup(final Group groupInterface) {
+        this.groupInterface = groupInterface;
+    }
+
+    public void clear() {
+        this.list.clear();
+    }
+
+    public void add(final Group groupInterface) {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        final GroupCommonFactory groupCommonFactory = GroupCommonFactory.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(groupCommonFactory.@ADDING_LABEL);
+        stringBuffer.append(groupInterface.toString());
+        stringBuffer.append(groupCommonFactory.@TO_LABEL);
+        stringBuffer.append(StringUtil.getInstance().toString(this.groupInterface));
+        this.logUtil.putF(stringBuffer.toString(), this, commonStrings.@ADD);
+        this.list.add(groupInterface);
+    }
+
+    public boolean isInGroup(final Group groupInterface) {
+        if (this.list.contains(groupInterface)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Group getGroup() {
+        return this.groupInterface;
+    }
+
+}
+
+

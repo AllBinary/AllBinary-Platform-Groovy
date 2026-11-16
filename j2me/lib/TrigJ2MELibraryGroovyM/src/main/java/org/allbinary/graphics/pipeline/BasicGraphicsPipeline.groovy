@@ -1,0 +1,116 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.pipeline;
+
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.PointFactory;
+import org.allbinary.math.Angle;
+import org.allbinary.math.NoDecimalTrigTable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class BasicGraphicsPipeline {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    protected BasicArrayList pointBasicArrayList;
+
+    public BasicGraphicsPipeline(BasicArrayList points) {
+        this.pointBasicArrayList = points;
+    }
+
+    public void setInitMatrix(BasicArrayList points) {
+        this.pointBasicArrayList = points;
+    }
+
+    public void createMatrix() {
+    }
+
+    public void translate(int x, int y) throws Exception {
+        BasicArrayList newBasicArrayList = new BasicArrayListD();
+        int size = this.pointBasicArrayList.size();
+        PointFactory pointFactory = PointFactory.getInstance();
+        GPoint secondPoint;
+        for (int index = 0; index < size; index++) {
+            secondPoint = ((GPoint) this.pointBasicArrayList.@objectArray[index]);
+            //Ignore end of lines
+            if (secondPoint.getX() != 1000) {
+                newBasicArrayList.add(pointFactory.createXY(secondPoint.getX() + x, secondPoint.getY() + y));
+            } else {
+                newBasicArrayList.add(secondPoint);
+            }
+        }
+        this.pointBasicArrayList = newBasicArrayList;
+    }
+
+    public void rotateToAngle(Angle angle) throws Exception {
+        this.rotate(((int) angle.getValue()));
+    }
+
+    private final NoDecimalTrigTable noDecimalTrigTable = NoDecimalTrigTable.getInstance();
+
+    private void rotate(int angle) throws Exception {
+        BasicArrayList newBasicArrayList = new BasicArrayListD();
+        GPoint secondPoint;
+        long y;
+        long secondX;
+        long secondY;
+        GPoint point;
+        PointFactory pointFactory = PointFactory.getInstance();
+        int size = this.pointBasicArrayList.size();
+        long sin;
+        long cos;
+        for (int index = 0; index < size; index++) {
+            secondPoint = ((GPoint) this.pointBasicArrayList.@objectArray[index]);
+            //Ignore end of lines
+            if (secondPoint.getX() != 1000) {
+                sin = this.noDecimalTrigTable.sin(angle);
+                cos = this.noDecimalTrigTable.cos(angle);
+                y = secondPoint.getY() * sin;
+                secondX = (secondPoint.getX() * cos) - y;
+                secondY = (secondPoint.getX() * sin) + (secondPoint.getY() * cos);
+                //LogUtil.put("Calculated: X: " + secondX + " Y: " + secondY, this, "rotate");
+                point = pointFactory.createXY(Math.divideExact(((int) secondX), 10000), Math.divideExact(((int) secondY), 10000));
+                //LogUtil.put("New: " + point.toString(), this, "rotate");
+                newBasicArrayList.add(point);
+            } else {
+                newBasicArrayList.add(secondPoint);
+            }
+        }
+        this.pointBasicArrayList = newBasicArrayList;
+    }
+
+    public void mirror(int width) throws Exception {
+        final PointFactory pointFactory = PointFactory.getInstance();
+        final int halfWidth = (width >> 1);
+        final BasicArrayList newBasicArrayList = new BasicArrayListD();
+        GPoint secondPoint;
+        int newX;
+        GPoint point;
+        final int size = this.pointBasicArrayList.size();
+        for (int index = 0; index < size; index++) {
+            secondPoint = ((GPoint) this.pointBasicArrayList.@objectArray[index]);
+            //Ignore end of lines
+            if (secondPoint.getX() != 1000) {
+                newX = 0;
+                if (secondPoint.getX() > halfWidth) {
+                    newX = halfWidth - (secondPoint.getX() - halfWidth);
+                } else {
+                    newX = halfWidth + (halfWidth - secondPoint.getX());
+                }
+                point = pointFactory.createXY(newX, secondPoint.getY());
+                //LogUtil.put("New: " + point.toString(), this, "rotate");
+                newBasicArrayList.add(point);
+            } else {
+                newBasicArrayList.add(secondPoint);
+            }
+        }
+        this.pointBasicArrayList = newBasicArrayList;
+    }
+
+    public BasicArrayList getMatrix() {
+        return this.pointBasicArrayList;
+    }
+
+}
+
+

@@ -1,0 +1,74 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class RTSLayer2SelectedLogHelper extends RTSLayer2LogHelper {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final RTSLayer2SelectedLogHelper instanceC = new RTSLayer2SelectedLogHelper();
+
+    /**      * @return the instance      */
+    public static RTSLayer2SelectedLogHelper getInstance() {
+        return RTSLayer2SelectedLogHelper.instanceC;
+    }
+
+    private final String TRACK_TO_FIRE_OR_MOVE = 'trackTo:fireOrMove';
+
+    private final String BUILDING_CHASE = 'buildingChase';
+
+    @Override
+    public void steeringUp(final PathFindingLayerInterface pathFindingLayerInterface) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' steering - Up').toString(), this, this.TRACK_TO_FIRE_OR_MOVE);
+    }
+
+    @Override
+    public void steeringFireOrStop(final PathFindingLayerInterface pathFindingLayerInterface) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' steering - Fire/All Stop').toString(), this, this.TRACK_TO_FIRE_OR_MOVE);
+    }
+
+    @Override
+    public void buildingAbove(final PathFindingLayerInterface pathFindingLayerInterface) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' Building Above').toString(), this, this.BUILDING_CHASE);
+    }
+
+    @Override
+    public void buildingChaseLeft(final PathFindingLayerInterface pathFindingLayerInterface, final int angle) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' steering - Going Left: ').appendint(angle).toString(), this, this.BUILDING_CHASE);
+    }
+
+    @Override
+    public void buildingChaseRight(final PathFindingLayerInterface pathFindingLayerInterface, final int angle) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' steering - Going Right: ').appendint(angle).toString(), this, this.BUILDING_CHASE);
+    }
+
+    @Override
+    public void buildingDown(final PathFindingLayerInterface pathFindingLayerInterface) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' Building Below').toString(), this, this.BUILDING_CHASE);
+    }
+
+    @Override
+    public void buildingChaseDown(final PathFindingLayerInterface pathFindingLayerInterface, final int angle) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' steering - Going Down: ').appendint(angle).toString(), this, this.BUILDING_CHASE);
+    }
+
+    @Override
+    public void buildingChaseUp(final PathFindingLayerInterface pathFindingLayerInterface, final int angle) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' steering - Going Up: ').appendint(angle).toString(), this, this.BUILDING_CHASE);
+    }
+
+    public void buildingLeft(final PathFindingLayerInterface pathFindingLayerInterface) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' Building Left').toString(), this, this.BUILDING_CHASE);
+    }
+
+    public void buildingRight(final PathFindingLayerInterface pathFindingLayerInterface) {
+        this.logUtil.putF(new StringMaker().append(pathFindingLayerInterface.getName()).append(' Building Right').toString(), this, this.BUILDING_CHASE);
+    }
+
+}
+
+

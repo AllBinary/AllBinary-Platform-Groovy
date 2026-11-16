@@ -1,0 +1,34 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.dhtml.html.input;
+
+
+@groovy.transform.CompileStatic
+public class HtmlInputData {
+    private static final HtmlInputData instance = new HtmlInputData();
+
+    public static HtmlInputData getInstance() {
+        return HtmlInputData.instance;
+    }
+
+    public final String TEXT = 'text';
+
+    public final String RADIO = 'radio';
+
+    public final String CHECKBOX = 'checkbox';
+
+    public final String HIDDEN = 'hidden';
+
+    public final String IMAGE = 'image';
+
+    public final String PASSWORD = 'password';
+
+    public final String RESET = 'reset';
+
+    public final String SUBMIT = 'submit';
+
+    public final String[] TYPES = new String[] {this.TEXT, this.RADIO, this.CHECKBOX, this.HIDDEN, this.IMAGE, this.PASSWORD, this.RADIO, this.RESET, this.SUBMIT};
+
+}
+
+

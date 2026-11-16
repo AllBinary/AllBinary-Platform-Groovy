@@ -1,0 +1,75 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.terrain;
+
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.logic.util.event.EventListenerInterface;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.logic.util.event.handler.BasicEventHandler;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class TerrainEventHandler extends BasicEventHandler {
+    private static ABHashtable<Object, Object> hashtable = StdUtil.getInstance().@NULL_TABLE;
+
+    public static void init() {
+        TerrainEventHandler.hashtable = StdUtil.getInstance().createHashtable();
+    }
+
+    public static TerrainEventHandler getInstance(final Object anyType) {
+        Object eventHandlerCanBeNull = TerrainEventHandler.hashtable.get(anyType);
+        if (eventHandlerCanBeNull == null) {
+            eventHandlerCanBeNull = new TerrainEventHandler();
+            TerrainEventHandler.hashtable.put(anyType, eventHandlerCanBeNull);
+        }
+        return ((TerrainEventHandler) eventHandlerCanBeNull);
+    }
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private TerrainEventHandler() {
+    }
+
+    public void addListener(final TerrainEventListener terrainEventListener) {
+        if (!this.list.contains(terrainEventListener)) {
+            this.list.add(terrainEventListener);
+        }
+    }
+
+    @Override
+    public void removeAllListeners() {
+        this.list.clear();
+        super.removeAllListeners();
+    }
+
+    @Override
+    public void removeListener(final EventListenerInterface eventListenerInterface) {
+        this.list.remove(eventListenerInterface);
+        super.removeListener(eventListenerInterface);
+    }
+
+    @Override
+    public void fireEvent(final AllBinaryEventObject eventObject) throws Exception {
+        for (int index = this.list.size(); --index >= 0; ) {
+            try {
+                final TerrainEventListener terrainEventListener = ((TerrainEventListener) this.list.get(index));
+                terrainEventListener.onTerrainEvent(((TerrainEvent) eventObject));
+            } catch (Exception e) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, EventStrings.getInstance().@FIRE_EVENT, e);
+            }
+        }
+        super.fireEvent(eventObject);
+    }
+
+    @Override
+    protected void process(final AllBinaryEventObject eventObject, final EventListenerInterface eventListenerInterface) throws Exception {
+        final TerrainEventListenerInterface terrainEventListenerInterface = ((TerrainEventListenerInterface) eventListenerInterface);
+        terrainEventListenerInterface.onTerrainEvent(((TerrainEvent) eventObject));
+    }
+
+}
+
+

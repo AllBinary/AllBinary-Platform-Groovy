@@ -1,0 +1,39 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.java.bool;
+
+
+@groovy.transform.CompileStatic
+public class BooleanFactory {
+    private static final BooleanFactory instance = new BooleanFactory();
+
+    public static BooleanFactory getInstance() {
+        return BooleanFactory.instance;
+    }
+
+    //Boolean.TRUE;
+    public final Boolean TRUE = new Boolean(true);
+
+    //Boolean.FALSE;
+    public final Boolean FALSE = new Boolean(false);
+
+    //public final Boolean FALSE = Boolean.FALSE;    
+    public final String TRUE_STRING = this.TRUE.toString();
+
+    public final String FALSE_STRING = this.FALSE.toString();
+
+    public final String YES = 'yes';
+
+    public final String NO = 'no';
+
+    public String toStringb(boolean bool) {
+        if (bool) {
+            return this.TRUE_STRING;
+        } else {
+            return this.FALSE_STRING;
+        }
+    }
+
+}
+
+

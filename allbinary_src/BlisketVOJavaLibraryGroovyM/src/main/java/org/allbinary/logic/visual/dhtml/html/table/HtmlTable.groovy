@@ -1,0 +1,117 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.dhtml.html.table;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.visual.dhtml.html.HtmlTag;
+import org.allbinary.string.CommonPhoneStrings;
+
+@groovy.transform.CompileStatic
+public class HtmlTable extends HtmlTag {
+    private final String END = '>';
+
+    private final String START = '<table ';
+
+    private final String ENDTAG = '</table>';
+
+    private final String CLASS = 'class';
+
+    private final String DIRECTION = 'dir';
+
+    private final String ID = 'id';
+
+    private final String LANG = 'lang';
+
+    private final String UNITS = 'units';
+
+    private final String BORDER = 'border';
+
+    private final String CELLPADDING = 'cellpadding';
+
+    private final String CELLSPACING = 'cellspacing';
+
+    private final String COLS = 'cols';
+
+    private final String FLOAT = 'float';
+
+    private final String FRAME = 'frame';
+
+    private final String RULES = 'rules';
+
+    private final String STYLE = 'style';
+
+    public final String BORDERCOLLAPSE = 'border-collapse: collapse';
+
+    private int numberOfColumns = 0;
+
+    private String before;
+
+    private String border;
+
+    private String cellpadding;
+
+    private String cellspacing;
+
+    private String style;
+
+    private String name;
+
+    private String after;
+
+    private BasicArrayList htmlRowsVector;
+
+    public HtmlTable(String before, String cellpadding, String cellspacing, String after) {
+        this.before = before;
+        //this.border = new String(border);
+        this.cellpadding = cellpadding;
+        this.cellspacing = cellspacing;
+        //this.style = new String(style);  
+        this.after = after;
+        this.htmlRowsVector = new BasicArrayListD();
+        addAttribute(this.BORDER, CommonPhoneStrings.getInstance().@ZERO);
+        addAttribute(this.CELLPADDING, this.cellpadding);
+        addAttribute(this.CELLSPACING, this.cellspacing);
+        addAttribute(this.STYLE, this.BORDERCOLLAPSE);
+    }
+
+    public void addRow(HtmlRow htmlRow) {
+        if (this.numberOfColumns < htmlRow.getNumberOfColumns()) {
+            this.numberOfColumns = htmlRow.getNumberOfColumns();
+        }
+        this.htmlRowsVector.add(htmlRow);
+    }
+
+    public String toString() {
+        final StringUtil stringUtil = StringUtil.getInstance();
+        String result = stringUtil.@EMPTY_STRING;
+        Object[] attributeKeys = this.otherAttributes.keySet().toArray();
+        result = this.before;
+        result += this.START;
+        result += ' ';
+        for (int i = 0; i < attributeKeys.length; i++) {
+            String key = ((String) attributeKeys[i]);
+            String value = ((String) otherAttributes.get(key));
+            if (value != null && value.compareTo(stringUtil.@EMPTY_STRING) != 0) {
+                result += key;
+                result += '=\"';
+                result += value;
+                result += '\" ';
+            }
+        }
+        result += this.END;
+        final int size = this.htmlRowsVector.size();
+        for (int i = 0; i < size; i++) {
+            result += this.htmlRowsVector.get(i).toString();
+            result += ' ';
+        }
+        result += this.ENDTAG;
+        result += this.after;
+        return result;
+    }
+
+}
+
+

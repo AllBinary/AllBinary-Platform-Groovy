@@ -1,0 +1,37 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.color;
+
+import org.allbinary.logic.StdUtil;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class BasicColorCacheFactory {
+    private static final BasicColorCacheFactory instance = new BasicColorCacheFactory();
+
+    public static BasicColorCacheFactory getInstance() {
+        return BasicColorCacheFactory.instance;
+    }
+
+    private final ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+
+    private BasicColorCacheFactory() {
+    }
+
+    public void add(final BasicColor basicDefaultColor) {
+        // hashtable.put(Integer.valueOf(value), this);
+        this.hashtable.put(new Integer(basicDefaultColor.intValue()), basicDefaultColor);
+    }
+
+    public synchronized BasicColor getAndOrCreate(final Integer integer) {
+        BasicColor basicColor = ((BasicColor) this.hashtable.get(integer));
+        if (basicColor == null) {
+            basicColor = BasicColorFactory.getInstance().createInstance(integer.intValue());
+            this.hashtable.put(integer, basicColor);
+        }
+        return basicColor;
+    }
+
+}
+
+

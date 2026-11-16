@@ -1,0 +1,129 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2006 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.game.TiledLayer;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class AllBinaryJ2METiledLayer extends AllBinaryTiledLayer {
+    //private final StringMaker stringMaker = new StringMaker();
+    protected final TiledLayer tiledLayerP;
+
+    protected final int debugColor;
+
+    public AllBinaryJ2METiledLayer(final Integer dataId, final TiledLayer tiledLayer, final int[][] mapTwoDArray, final int debugColor) {
+        //super(tiledLayer.getWidth(), tiledLayer.getHeight());
+        super(dataId, tiledLayer.getWidth(), tiledLayer.getHeight(), tiledLayer.getCellWidth(), tiledLayer.getCellHeight());
+        this.tiledLayerP = tiledLayer;
+        this.debugColor = debugColor;
+        this.setCells(mapTwoDArray);
+    }
+
+    /*        public int getHeight()     {     return this.tiledLayer.getHeight();     }      //TWB LayerInterface to Layer     public int getWidth()     {     return this.tiledLayer.getWidth();     }      //TWB LayerInterface to Layer     public int getX()     {     return this.tiledLayer.getXP();     }      //TWB LayerInterface to Layer     public int getY()     {     return this.tiledLayer.getYP();     }      public int getZ()     {     return this.tiledLayer.getZP();     }      //TWB LayerInterface to Layer     public boolean isVisible()     {     return this.tiledLayer.isVisible();     }      */
+    @Override
+    public void paint(final Graphics graphics) {
+        this.tiledLayerP.paint(graphics);
+    }
+
+    @groovy.transform.PackageScope final Font font2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, 4);
+
+    public void paintDebug(final Graphics graphics) {
+        //this.logUtil.putF(this.commonStrings.START, this, CanvasStrings.getInstance().PAINT);
+        final Font font = graphics.getFont();
+        graphics.setFont(this.font2);
+        graphics.setColor(this.debugColor);
+        //graphics.drawString("TiledLayer: (" + this.getX() + ", " + this.getY() + ")", this.getX(), this.getY(), 0);
+        int x = this.tiledLayerP.getX();
+        int y = this.tiledLayerP.getY();
+        int firstColumn = 0;
+        int firstRow = 0;
+        final int totalColumns = this.tiledLayerP.getColumns();
+        final int totalRows = this.tiledLayerP.getRows();
+        int x0 = x;
+        //int imgRows = img.getHeight() / tileHeight;
+        int tile = 0;
+        final int tileHeight = this.tiledLayerP.getCellHeight();
+        final int tileWidth = this.tiledLayerP.getCellWidth();
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final StringMaker stringMaker = new StringMaker();
+        for (int rowIndex = firstRow; rowIndex < totalRows; rowIndex++, y += tileHeight) {
+            x = x0;
+            for (int columnIndex = firstColumn; columnIndex < totalColumns; columnIndex++, x += tileWidth) {
+                tile = this.tiledLayerP.getCell(columnIndex, rowIndex);
+                if (tile < 0) {
+                    tile = this.tiledLayerP.getAnimatedTile(tile);
+                }
+                if (tile == 0) {
+                    continue;
+                }
+                tile--;
+                stringMaker.delete(0, stringMaker.length());
+                graphics.drawString(stringMaker.appendint(columnIndex).append(commonSeps.@COMMA).appendint(rowIndex).append(commonSeps.@COLON).appendint(tile).toString(), x + 5, y + 10, 0);
+            }
+        }
+        graphics.setFont(font);
+    }
+
+    @Override
+    public void moveDXY(final int dx, final int dy) {
+        //this.logUtil.putF(new StringMaker().append("TiledLayer: ").append(PositionStrings.getInstance().X_LABEL).append(dx).append(PositionStrings.getInstance().Y_LABEL).append(dy).toString(), this, "move");
+        this.tiledLayerP.move(dx, dy);
+        //TWB LayerInterface to Layer
+        super.moveDXY(-dx, -dy);
+    }
+
+    @Override
+    public void setPosition(final int x, final int y, final int z) {
+        //this.logUtil.putF(new StringMaker().append("TiledLayer: x: ").append(x).append(" y: ").append(y).append(" z: ").append(z).toString(), this, "setPosition");
+        this.tiledLayerP.setPosition(x, y);
+        super.setPosition(-x, -y, z);
+    }
+
+    //}
+    public TiledLayer getTiledLayer() {
+        return this.tiledLayerP;
+    }
+
+    @Override
+    public int getCellWidth() {
+        return this.tiledLayerP.getCellWidth();
+    }
+
+    @Override
+    public int getCellHeight() {
+        return this.tiledLayerP.getCellHeight();
+    }
+
+    @Override
+    public int getCell(final int col, final int row) {
+        return this.tiledLayerP.getCell(col, row);
+    }
+
+    @Override
+    public int getColumns() {
+        return this.tiledLayerP.getColumns();
+    }
+
+    @Override
+    public int getRows() {
+        return this.tiledLayerP.getRows();
+    }
+
+    @Override
+    public void setCell(final int col, final int row, final int index) {
+        //stringMaker.append(index).append(',');
+        this.tiledLayerP.setCell(col, row, index);
+    }
+
+    @Override
+    public int getAnimatedTile(final int animationTileIndex) {
+        return this.tiledLayerP.getAnimatedTile(animationTileIndex);
+    }
+
+}
+
+

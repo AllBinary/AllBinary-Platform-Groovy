@@ -1,0 +1,28 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.canvas.transition.progress;
+
+import android.app.Activity;
+import org.allbinary.android.activity.MidletActivityBase;
+import org.allbinary.android.activity.SimpleProgressActivityInterface;
+import org.allbinary.thread.ARunnable;
+
+@groovy.transform.CompileStatic
+public class ProgressRunnable extends ARunnable {
+    protected final SimpleProgressActivityInterface midletActivity;
+
+    protected final ProgressCanvas progressCanvas;
+
+    public ProgressRunnable(final Activity midletActivity, final ProgressCanvas progressCanvas) {
+        final MidletActivityBase midletActivity2 = ((MidletActivityBase) midletActivity);
+        this.midletActivity = ((SimpleProgressActivityInterface) midletActivity2);
+        this.progressCanvas = progressCanvas;
+    }
+
+    @Override
+    public void run() {
+    }
+
+}
+
+

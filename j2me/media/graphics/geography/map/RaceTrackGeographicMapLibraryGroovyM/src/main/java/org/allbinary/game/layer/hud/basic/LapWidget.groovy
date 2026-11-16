@@ -1,0 +1,42 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.hud.basic;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.game.graphics.hud.BasicHud;
+import org.allbinary.game.layer.hud.LapInfo;
+import org.allbinary.graphics.color.BasicColor;
+
+@groovy.transform.CompileStatic
+public class LapWidget extends BasicHud {
+    private final String LAP_STR = 'Lap ';
+
+    private final String OF_STR = ' of ';
+
+    private String string = StringUtil.getInstance().@EMPTY_STRING;
+
+    public LapWidget(int location, int direction, BasicColor basicColor) throws Exception {
+        super(location, direction, 2, basicColor);
+        this.updateMaxHeight = 15;
+        this.updateMaxWidth = 40;
+    }
+
+    public void update(LapInfo lapInfo) {
+        StringMaker stringBuffer = new StringMaker();
+        stringBuffer.delete(0, stringBuffer.length());
+        stringBuffer.append(this.LAP_STR);
+        stringBuffer.appendint(lapInfo.getCurrentLap());
+        stringBuffer.append(this.OF_STR);
+        stringBuffer.appendint(lapInfo.getTotalLaps());
+        this.string = stringBuffer.toString();
+    }
+
+    public void paint(Graphics graphics) {
+        super.paintString(graphics, this.string);
+    }
+
+}
+
+

@@ -1,0 +1,82 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.midlet;
+
+import org.allbinary.game.displayable.canvas.GameCanvasRunnableInterface;
+import org.allbinary.game.layer.AllBinaryGameLayerManager;
+import org.allbinary.graphics.canvas.transition.progress.ProgressCanvas;
+import org.allbinary.graphics.canvas.transition.progress.ProgressCanvasFactory;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.system.security.licensing.ClientInformationFactory;
+import org.allbinary.thread.PrimaryThreadPool;
+import org.allbinary.game.displayable.canvas.NullGameCanvasRunnable;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class DemoGameMidlet extends GameMidlet {
+    public DemoGameMidlet(final ClientInformationFactory clientInformationFactory) {
+        super(clientInformationFactory);
+    }
+
+    protected boolean isContinue() throws Exception {
+        ABHashtable<Object, Object> hashtable = this.getStartStateHashtable();
+        if (hashtable != null && hashtable.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int getHighestLevel() {
+        return 1;
+    }
+
+    public GameCanvasRunnableInterface createDemoGameCanvasRunnableInterface() throws Exception {
+        this.logUtil.putF(this.commonStrings.@NOT_IMPLEMENTED, this, this.commonStrings.@CREATE);
+        return NullGameCanvasRunnable.NULL_GAME_CANVAS_RUNNABLE;
+    }
+
+    protected GameCanvasRunnableInterface createGameCanvasRunnable(AllBinaryGameLayerManager allBinaryGameLayerManager) throws Exception {
+        throw new Exception(this.commonStrings.@NOT_IMPLEMENTED);
+    }
+
+    protected GameCanvasRunnableInterface createGameCanvasRunnableInterface() throws Exception {
+        return this.createGameCanvasRunnable(this.createGameLayerManager());
+    }
+
+    /*      * protected void mediaInit() throws Exception { throw new Exception("Not      * Implemented"); }      */
+    public void demoSetup() {
+    }
+
+    public void postDemoSetup() {
+    }
+
+    @Override
+    public synchronized void setDemo() throws Exception {
+        this.logUtil.putF(this.commonStrings.@START, this, 'setDemo');
+        ////TWB - Loading Feature Change - Can remove remark after testing
+        final ProgressCanvas progressCanvas = ProgressCanvasFactory.getInstance();
+        progressCanvas.start();
+        PrimaryThreadPool.getInstance().runTask(new DemoRunnable(this));
+    }
+
+    @Override
+    public synchronized void createGame() throws Exception {
+        final String CREATE_GAME = 'createGame';
+        this.logUtil.putF(this.commonStrings.@START, this, CREATE_GAME);
+        ////TWB - Loading Feature Change - Can remove remark after testing
+        final ProgressCanvas progressCanvas = ProgressCanvasFactory.getInstance();
+        progressCanvas.start();
+        ABHashtable<Object, Object> hashtable = this.getStartStateHashtable();
+        this.setStartStateHashtable(StdUtil.getInstance().@NULL_TABLE);
+        PrimaryThreadPool.getInstance().runTask(new CreateGameRunnable(this, hashtable));
+        this.logUtil.putF(this.commonStrings.@END, this, CREATE_GAME);
+    }
+
+    public boolean isReady() {
+        return true;
+    }
+
+}
+
+

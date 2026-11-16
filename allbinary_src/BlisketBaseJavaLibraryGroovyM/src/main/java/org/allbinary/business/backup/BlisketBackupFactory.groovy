@@ -1,0 +1,183 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.backup;
+
+import org.allbinary.business.context.modules.storefront.StoreFrontInterface;
+import org.allbinary.data.tables.context.module.storefronts.StoreFrontsEntity;
+import org.allbinary.data.tables.context.module.storefronts.StoreFrontsEntityFactory;
+import org.allbinary.globals.PATH_GLOBALS;
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.io.file.AbFile;
+import org.allbinary.logic.io.file.directory.Directory;
+import org.allbinary.logic.io.file.zip.ZipFileUtil;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class BlisketBackupFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final BlisketBackupFactory instance = new BlisketBackupFactory();
+
+    public static BlisketBackupFactory getInstance() {
+        return BlisketBackupFactory.instance;
+    }
+
+    private final StringUtil stringUtil = StringUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final Directory directory = Directory.getInstance();
+
+    private BasicArrayList getFileBasicArrayList(String pathString) throws Exception {
+        AbPath path = new AbPath(pathString, this.stringUtil.@EMPTY_STRING);
+        AbFile file = AbFile.createAbFileFromAbPath(path);
+        return this.directory.search(file, true);
+    }
+
+    public void backup() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'backup()');
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(URLGLOBALS.getWebappPath());
+            stringBuffer.append(PATH_GLOBALS.getInstance().@BACKUP_PATH);
+            String backupPath = stringBuffer.toString();
+            AbPath path = new AbPath(backupPath, this.stringUtil.@EMPTY_STRING);
+            BasicArrayList fileBasicArrayList = this.getFileBasicArrayList(backupPath);
+            this.backup(fileBasicArrayList, path.toFileSystemString() + 'backup.zip');
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'backup()', e);
+        }
+    }
+
+    public void backupViews() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'backupViews()');
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(URLGLOBALS.getWebappPath());
+            stringBuffer.append(PATH_GLOBALS.getInstance().@BACKUP_PATH);
+            final String backupPath = stringBuffer.toString();
+            final AbPath path = new AbPath(backupPath, this.stringUtil.@EMPTY_STRING);
+            final BasicArrayList fileBasicArrayList = new BasicArrayListD();
+            //Backup other customizable generated files
+            final StoreFrontsEntity storeFrontsEntity = StoreFrontsEntityFactory.getInstance().getStoreFrontsEntityInstance();
+            final BasicArrayList storeFrontNamesBasicArrayList = storeFrontsEntity.getStoreFrontNames();
+            final int size = storeFrontNamesBasicArrayList.size();
+            String nextStore;
+            String viewsPath;
+            for (int index = 0; index < size; index++) {
+                nextStore = ((String) storeFrontNamesBasicArrayList.get(index));
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(URLGLOBALS.getWebappPath());
+                stringBuffer.append(PATH_GLOBALS.getInstance().@VIEWS_PATH);
+                stringBuffer.append(nextStore);
+                viewsPath = stringBuffer.toString();
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append('Backup Store Views: ');
+                stringBuffer.append(nextStore);
+                stringBuffer.append(' from: ');
+                stringBuffer.append(viewsPath);
+                PreLogUtil.put(stringBuffer.toString(), this, 'backupViews()');
+                //Views
+                fileBasicArrayList.addAllList(this.getFileBasicArrayList(viewsPath));
+            }
+            this.backup(fileBasicArrayList, path.toFileSystemString() + 'backupViews.zip');
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'backupViews()', e);
+        }
+    }
+
+    public void backupResources() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'backupResources()');
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(URLGLOBALS.getWebappPath());
+            stringBuffer.append(PATH_GLOBALS.getInstance().@BACKUP_PATH);
+            final String backupPath = stringBuffer.toString();
+            final AbPath path = new AbPath(backupPath, this.stringUtil.@EMPTY_STRING);
+            final BasicArrayList fileBasicArrayList = new BasicArrayListD();
+            //Backup other customizable generated files
+            final StoreFrontsEntity storeFrontsEntity = StoreFrontsEntityFactory.getInstance().getStoreFrontsEntityInstance();
+            final BasicArrayList storeFrontNamesBasicArrayList = storeFrontsEntity.getStoreFrontNames();
+            final int size = storeFrontNamesBasicArrayList.size();
+            String nextStore;
+            StoreFrontInterface storeFrontInterface;
+            String resourcesPath;
+            for (int index = 0; index < size; index++) {
+                nextStore = ((String) storeFrontNamesBasicArrayList.get(index));
+                storeFrontInterface = storeFrontsEntity.getStoreFrontInterface(nextStore);
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(URLGLOBALS.getWebappPath());
+                stringBuffer.append(storeFrontInterface.getCurrentHostNamePath());
+                stringBuffer.append(storeFrontInterface.getCategoryPath());
+                resourcesPath = stringBuffer.toString();
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append('Backup Store Resrouces: ');
+                stringBuffer.append(nextStore);
+                stringBuffer.append(' from: ');
+                stringBuffer.append(resourcesPath);
+                PreLogUtil.put(stringBuffer.toString(), this, 'backupResources()');
+                //Views
+                fileBasicArrayList.addAllList(this.getFileBasicArrayList(resourcesPath));
+            }
+            this.backup(fileBasicArrayList, path.toFileSystemString() + 'backupResources.zip');
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'backupResources()', e);
+        }
+    }
+
+    public void backupJsps() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'backupJsps()');
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(URLGLOBALS.getWebappPath());
+            stringBuffer.append(PATH_GLOBALS.getInstance().@BACKUP_PATH);
+            final String backupPath = stringBuffer.toString();
+            final AbPath path = new AbPath(backupPath, this.stringUtil.@EMPTY_STRING);
+            final BasicArrayList fileBasicArrayList = new BasicArrayListD();
+            //Backup other customizable generated files
+            final StoreFrontsEntity storeFrontsEntity = StoreFrontsEntityFactory.getInstance().getStoreFrontsEntityInstance();
+            final BasicArrayList storeFrontNamesBasicArrayList = storeFrontsEntity.getStoreFrontNames();
+            final int size = storeFrontNamesBasicArrayList.size();
+            String nextStore;
+            for (int index = 0; index < size; index++) {
+                nextStore = ((String) storeFrontNamesBasicArrayList.get(index));
+                PreLogUtil.put('Backup Store Jsps: ' + nextStore, this, 'backupJsps()');
+                //Store jsps - while they can be generated from the views I still back them up
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(URLGLOBALS.getWebappPath());
+                stringBuffer.append(nextStore);
+                fileBasicArrayList.addAllList(this.getFileBasicArrayList(stringBuffer.toString()));
+            }
+            this.backup(fileBasicArrayList, path.toFileSystemString() + 'backupJsps.zip');
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'backupJsps()', e);
+        }
+    }
+
+    public void backup(BasicArrayList fileBasicArrayList, String zipFile) {
+        try {
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append('ZipFile: ');
+            stringBuffer.append(zipFile);
+            stringBuffer.append(' BasicArrayList: ');
+            stringBuffer.appendint(fileBasicArrayList.size());
+            //  "Creating Backup Zip File: " + stringBuffer.toString(), this, "backup()");
+            PreLogUtil.put('Creating Backup Zip File: ' + stringBuffer.toString(), this, 'backup()');
+            ZipFileUtil.getInstance().create(zipFile, fileBasicArrayList);
+            this.logUtil.putF('Created Backup Zip File', this, 'backup()');
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'backup()', e);
+        }
+    }
+
+}
+
+

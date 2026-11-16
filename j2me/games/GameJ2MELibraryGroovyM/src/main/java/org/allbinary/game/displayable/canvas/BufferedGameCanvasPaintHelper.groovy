@@ -1,0 +1,52 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.displayable.canvas;
+
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullCanvas;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.graphics.Anchor;
+import org.allbinary.graphics.displayable.MyCanvas;
+import org.allbinary.graphics.paint.ProcessPaintable;
+import org.allbinary.util.CircularIndexUtil;
+
+@groovy.transform.CompileStatic
+public class BufferedGameCanvasPaintHelper extends ProcessPaintable {
+    private Canvas gameCanvas = NullCanvas.NULL_CANVAS;
+
+    // Buffering Magic
+    private final static int MAX_IMAGES = 4;
+
+    private final Image[] offScreenImage = new Image[BufferedGameCanvasPaintHelper.MAX_IMAGES];
+
+    private Image previousImage = NullImage.NULL_IMAGE;
+
+    private final CircularIndexUtil circularIndexUtil = CircularIndexUtil.createInstance(BufferedGameCanvasPaintHelper.MAX_IMAGES);
+
+    private final CircularIndexUtil drawCircularIndexUtil = CircularIndexUtil.createInstanceAt(BufferedGameCanvasPaintHelper.MAX_IMAGES - 1, BufferedGameCanvasPaintHelper.MAX_IMAGES);
+
+    public BufferedGameCanvasPaintHelper(AllBinaryGameCanvas gameCanvas) throws Exception {
+        throw new Exception('No Longer Used');
+    }
+
+    @Override
+    public void process() {
+        final MyCanvas myCanvas = (((MyCanvas) this.gameCanvas));
+        myCanvas.draw(this.offScreenImage[this.circularIndexUtil.getIndex()].getGraphics());
+        this.circularIndexUtil.next();
+        this.drawCircularIndexUtil.next();
+    }
+
+    private int anchor = Anchor.TOP_LEFT;
+
+    @Override
+    public void paint(Graphics graphics) {
+        this.previousImage = this.offScreenImage[this.drawCircularIndexUtil.getIndex()];
+        graphics.drawImage(this.previousImage, 0, 0, this.anchor);
+    }
+
+}
+
+

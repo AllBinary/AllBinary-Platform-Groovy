@@ -1,0 +1,77 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.io;
+
+import java.io.DataInputStream;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class LineReader {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private String fileName;
+
+    private String string;
+
+    private int index = 0;
+
+    private AbFileInputStream idFile;
+
+    private DataInputStream idData;
+
+    public LineReader(final String fileName) {
+        try {
+            byte[] bytes = new byte[100000];
+            this.fileName = fileName;
+            this.idFile = new AbFileInputStream(fileName);
+            this.idFile.read(bytes);
+            this.string = new String(bytes);
+        } catch (Exception e) {
+            this.logUtil.put('File: ' + fileName, this, 'LineReader', e);
+            //if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().IDLOGGING))
+            {
+            }
+        }
+    }
+
+    public boolean hasNext() {
+        try {
+            final int nextIndex = this.string.indexOf(CommonSeps.getInstance().@NEW_LINE, index);
+            if (nextIndex == -1) {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'hasNext', e);
+            //if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().IDLOGGING))
+            {
+            }
+            return false;
+        }
+    }
+
+    public String next() throws Exception {
+        try {
+            final int nextIndex = this.string.indexOf(CommonSeps.getInstance().@NEW_LINE, index);
+            if (nextIndex == -1) {
+                throw new Exception('next() should have been called first');
+            }
+            final String temp = this.string.substring(index, nextIndex);
+            index = nextIndex + 1;
+            return temp;
+        } catch (Exception e) {
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'next', e);
+            //if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().IDLOGGING))
+            {
+            }
+            throw e;
+        }
+    }
+
+}
+
+

@@ -1,0 +1,160 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.media.audio.music;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import org.allbinary.android.AndroidServicesUtil;
+import org.allbinary.data.resource.ResourceUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.media.audio.NoSound;
+import org.allbinary.media.audio.Sound;
+import org.allbinary.string.CommonStateStrings;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.time.GameTickTimeDelayHelper;
+import org.allbinary.time.GameTickTimeDelayHelperFactory;
+import org.allbinary.time.TimeDelayHelper;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListUtil;
+
+@groovy.transform.CompileStatic
+public class MusicManager {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final String PLAY = 'Play ';
+
+    private final String FOR = ' for: ';
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final MusicStrings musicStrings = MusicStrings.getInstance();
+
+    private final CommonStateStrings commonStateStrings = CommonStateStrings.getInstance();
+
+    private final BasicArrayListUtil basicArrayListUtil = BasicArrayListUtil.getInstance();
+
+    private final ResourceUtil resourceUtil = ResourceUtil.getInstance();
+
+    private final AndroidServicesUtil androidServicesUtil = AndroidServicesUtil.getInstance();
+
+    private final GameTickTimeDelayHelper gameTickTimeDelayHelper = GameTickTimeDelayHelperFactory.getInstance();
+
+    private final TimeDelayHelper timeDelayHelper = new TimeDelayHelper(0);
+
+    private final TimeDelayHelper timeDelayHelper2 = new TimeDelayHelper(1200);
+
+    //private final String NEXT_SONG = "nextSong - this does not change the MusicService";
+    private final BasicArrayList songList;
+
+    private Sound currentSongSound = NoSound.getInstance();
+
+    private Sound nextSongSound = NoSound.getInstance();
+
+    private int leftVolume = 100;
+
+    private int rightVolume = 100;
+
+    //MusicService.class
+    private final Class musicServiceClass;
+
+    private final Intent currentIntent;
+
+    public MusicManager(final Class musicServiceClass, final BasicArrayList songList) {
+        PreLogUtil.put(this.commonStateStrings.@CONTEXT + this.resourceUtil.getContext(), this, this.commonStrings.@CONSTRUCTOR);
+        this.musicServiceClass = musicServiceClass;
+        this.currentIntent = new Intent(this.resourceUtil.getContext(), musicServiceClass);
+        this.songList = songList;
+    }
+
+    public void nextSong(Sound nextSongSound, final int leftVolume, final int rightVolume) {
+        //PreLogUtil.put(NEXT_SONG, this, this.commonStrings.PROCESS);
+        if (nextSongSound == null) {
+            nextSongSound = NoSound.getInstance();
+        }
+        this.nextSongSound = nextSongSound;
+        this.leftVolume = leftVolume;
+        this.rightVolume = rightVolume;
+        this.reset();
+    }
+
+    public void reset() {
+        this.timeDelayHelper.@delay = 0;
+    }
+
+    public void process() {
+        if (this.songList.size() == 0) {
+            return;
+        }
+        if (this.timeDelayHelper.isTime(this.gameTickTimeDelayHelper.@startTime)) {
+            this.startNewSong();
+            return;
+        }
+        if (this.timeDelayHelper2.isTime(this.gameTickTimeDelayHelper.@startTime)) {
+            if (this.androidServicesUtil.isServiceRunning(this.musicServiceClass.getName())) {
+            } else {
+                this.startNewSong();
+            }
+        }
+    }
+
+    public void show() {
+        for (int index = this.songList.size(); --index >= 0; ) {
+            final Sound sound = ((Sound) this.songList.get(index));
+            final long duration = ((long) sound.getDuration());
+            PreLogUtil.put(new StringMaker().append(this.PLAY).append(sound.getResource()).append(this.FOR).appendlong(duration).toString(), this, this.commonStrings.@PROCESS);
+        }
+    }
+
+    public void startNewSong() {
+        try {
+            //PreLogUtil.put(Memory.getInfo(), this, this.commonStrings.PROCESS);
+            this.resourceUtil.getContext().stopService(this.currentIntent);
+            if (this.nextSongSound === NoSound.getInstance()) {
+                this.currentSongSound = ((Sound) this.basicArrayListUtil.getRandom(this.songList));
+            } else {
+                this.currentSongSound = this.nextSongSound;
+                this.nextSongSound = NoSound.getInstance();
+            }
+            final long duration = ((long) this.currentSongSound.getDuration());
+            //18000;
+            PreLogUtil.put(new StringMaker().append(this.PLAY).append(this.currentSongSound.getResource()).append(this.FOR).appendlong(duration).toString(), this, this.commonStrings.@PROCESS);
+            this.timeDelayHelper.@delay = ((int) duration);
+            this.currentIntent.putExtra(this.musicStrings.@SONG_EXTRA, this.resourceUtil.getResourceId(this.currentSongSound.getResource()).intValue());
+            this.currentIntent.putExtra(this.musicStrings.@LEFT_VOLUME, this.leftVolume);
+            this.currentIntent.putExtra(this.musicStrings.@RIGHT_VOLUME, this.rightVolume);
+            //PreLogUtil.put("startNewSong - Start MusicService", this, this.commonStrings.PROCESS);
+            this.resourceUtil.getContext().startService(this.currentIntent);
+        } catch (Exception e) {
+            String resource = StringUtil.getInstance().@EMPTY_STRING;
+            if (this.currentSongSound != null) {
+                resource = this.currentSongSound.getResource();
+            }
+            PreLogUtil.putOE(this.commonStrings.@EXCEPTION_LABEL + resource, this, this.commonStrings.@PROCESS, e);
+        }
+    }
+
+    public void stop() throws Exception {
+        //PreLogUtil.put(STOP_MUSIC_SERVICE, this, this.commonStrings.PROCESS);
+        this.resourceUtil.getContext().stopService(this.currentIntent);
+    }
+
+    public static void pause(final Activity activity, Class musicServiceClass) {
+        final CommonStateStrings commonStateStrings = CommonStateStrings.getInstance();
+        final Intent musicPauseIntent = new Intent(((Context) activity), musicServiceClass);
+        musicPauseIntent.putExtra(commonStateStrings.@ON_START_COMMAND, 1);
+        activity.startService(musicPauseIntent);
+    }
+
+    public static void resume(final Activity activity, Class musicServiceClass) {
+        if (AndroidServicesUtil.getInstance().isServiceRunning(musicServiceClass.getName())) {
+            final CommonStateStrings commonStateStrings = CommonStateStrings.getInstance();
+            final Intent musicResumeIntent = new Intent(activity, musicServiceClass);
+            musicResumeIntent.putExtra(commonStateStrings.@ON_START_COMMAND, 2);
+            activity.startService(musicResumeIntent);
+        }
+    }
+
+}
+
+

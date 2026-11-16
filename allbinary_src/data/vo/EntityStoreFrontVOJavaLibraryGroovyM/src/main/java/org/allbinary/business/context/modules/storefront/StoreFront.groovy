@@ -1,0 +1,897 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.context.modules.storefront;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import javax.servlet.http.HttpServletRequest;
+import org.allbinary.business.context.configuration.ContextConfiguration;
+import org.allbinary.business.context.configuration.ContextConfigurationDomDocumentMapping;
+import org.allbinary.business.context.configuration.ContextConfigurationInterface;
+import org.allbinary.business.context.configuration.ContextConfigurationInterfaceFactory;
+import org.allbinary.business.entry.EntryData;
+import org.allbinary.business.user.UserData;
+import org.allbinary.data.tree.dom.document.DomDocumentHelper;
+import org.allbinary.globals.FREEBLISKET_PATH_GLOBALS;
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.http.request.RequestParams;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.file.AbFile;
+import org.allbinary.logic.io.file.FileUtil;
+import org.allbinary.logic.io.file.directory.Directory;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.io.path.AbPathData;
+import org.allbinary.logic.io.path.AbPathUtil;
+import org.allbinary.logic.string.SpecialCharacterUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.StringValidationUtil;
+import org.allbinary.logic.string.regex.replace.Replace;
+import org.allbinary.logic.string.tokens.Tokenizer;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.w3c.dom.Document;
+
+@groovy.transform.CompileStatic
+public class StoreFront implements StoreFrontInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final Directory directory = Directory.getInstance();
+
+    private final StringUtil stringUtil = StringUtil.getInstance();
+
+    private final AbPathUtil abPathUtil = AbPathUtil.getInstance();
+
+    private String name = this.stringUtil.@EMPTY_STRING;
+
+    private String basketName = this.stringUtil.@EMPTY_STRING;
+
+    private String homeHostName = this.stringUtil.@EMPTY_STRING;
+
+    private AbPath homeHostNamePath = this.abPathUtil.@NO_ABPATH;
+
+    private String hostName = this.stringUtil.@EMPTY_STRING;
+
+    private AbPath hostNamePath = this.abPathUtil.@NO_ABPATH;
+
+    private String testHomeHostName = this.stringUtil.@EMPTY_STRING;
+
+    private AbPath testHomeHostNamePath = this.abPathUtil.@NO_ABPATH;
+
+    private String testHostName = this.stringUtil.@EMPTY_STRING;
+
+    private AbPath testHostNamePath = this.abPathUtil.@NO_ABPATH;
+
+    private AbPath imagePath = this.abPathUtil.@NO_ABPATH;
+
+    private AbPath staticPath = this.abPathUtil.@NO_ABPATH;
+
+    private AbPath categoryPath = this.abPathUtil.@NO_ABPATH;
+
+    private String inventoryControl = this.stringUtil.@EMPTY_STRING;
+
+    private ContextConfigurationInterface contextConfigurationInterface;
+
+    private String subStores = this.stringUtil.@EMPTY_STRING;
+
+    private String tagLocation = this.stringUtil.@EMPTY_STRING;
+
+    private String packageLocation = this.stringUtil.@EMPTY_STRING;
+
+    private String ftp = this.stringUtil.@EMPTY_STRING;
+
+    private AbPath ftpPath = this.abPathUtil.@NO_ABPATH;
+
+    private String ftpUserName = this.stringUtil.@EMPTY_STRING;
+
+    private String ftpPassword = this.stringUtil.@EMPTY_STRING;
+
+    private String testFtp = this.stringUtil.@EMPTY_STRING;
+
+    private AbPath testFtpPath = this.abPathUtil.@NO_ABPATH;
+
+    private String testFtpUserName = this.stringUtil.@EMPTY_STRING;
+
+    private String testFtpPassword = this.stringUtil.@EMPTY_STRING;
+
+    private String timeCreated = this.stringUtil.@EMPTY_STRING;
+
+    private String lastModified = this.stringUtil.@EMPTY_STRING;
+
+    private final int MINCHAR = 0;
+
+    private final int MINSTORENAMELENGTH = 1;
+
+    private final int MAXCHAR = 255;
+
+    private static final String RESOURCES = ' Resources' + AbPathData.getInstance().@SEPARATOR;
+
+    private final String EMPTY_STRING = StringUtil.getInstance().@EMPTY_STRING;
+
+    private final String[] ONE_EMPTY_STRING_ARRAY = StringUtil.getInstance().@ONE_EMPTY_STRING_ARRAY;
+
+    public StoreFront() {
+        this.contextConfigurationInterface = new ContextConfiguration();
+    }
+
+    public StoreFront(final HttpServletRequest request) throws Exception {
+        this.getFormData(new RequestParams(request).toHashMap());
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@EMAILLOGGING)) {
+            this.logUtil.putF('TWB- needs update for adding and updating context configuration - currently defaults to admin context config', this, 'StoreFront');
+        }
+        //(ContextConfigurationInterface) new ContextConfiguration(storeHashMap));
+        this.setContextConfigurationInterface(ContextConfigurationInterfaceFactory.getInstance().getInstance('Admin'));
+    }
+
+    public StoreFront(final HashMap hashMap) throws Exception {
+        this.getFormData(hashMap);
+        final String domDocumentString = ((String) hashMap.get(StoreFrontData.getInstance().@CONFIGURATION));
+        if (domDocumentString == null) {
+            final Document document = DomDocumentHelper.create(domDocumentString);
+            this.setContextConfigurationInterface(ContextConfigurationInterfaceFactory.getInstance().getInstance(document));
+        }
+    }
+
+    //in the future could use vector from table data
+    private boolean isColumn(String columnName) {
+        if (columnName.compareTo(StoreFrontData.getInstance().@NAME) == 0 || columnName.compareTo(UserData.MAINEMAIL) == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //should be in the pathUtil
+    private AbPath createPath(String key, HashMap hashMap) throws Exception {
+        return new AbPath(this.create(this.EMPTY_STRING, key, hashMap), StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    private AbPath createPath(String append, String key, HashMap hashMap) throws Exception {
+        return new AbPath(this.create(append, key, hashMap), StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    private String get(String key, HashMap hashMap) {
+        return this.create(this.EMPTY_STRING, key, hashMap);
+    }
+
+    private String create(String append, String key, HashMap hashMap) {
+        String path = ((String) hashMap.get(key));
+        if (StringValidationUtil.getInstance().isEmpty(path)) {
+            return this.EMPTY_STRING;
+        } else {
+            if (this.isColumn(path)) {
+                return ((String) hashMap.get(path)) + append;
+            } else {
+                return path;
+            }
+        }
+    }
+
+    private void getFormData(HashMap storeHashMap) throws Exception {
+        StoreFrontData storeFrontData = StoreFrontData.getInstance();
+        this.name = ((String) storeHashMap.get(storeFrontData.@NAME));
+        this.basketName = ((String) storeHashMap.get(storeFrontData.@NAME));
+        this.homeHostName = ((String) storeHashMap.get(storeFrontData.@HOMEHOSTNAME));
+        this.homeHostNamePath = this.createPath(storeFrontData.@HOMEHOSTNAMEPATH, storeHashMap);
+        this.hostName = ((String) storeHashMap.get(storeFrontData.@HOSTNAME));
+        this.hostNamePath = this.createPath(storeFrontData.@HOSTNAMEPATH, storeHashMap);
+        this.testHomeHostName = ((String) storeHashMap.get(storeFrontData.@TESTHOMEHOSTNAME));
+        this.testHomeHostNamePath = this.createPath(storeFrontData.@TESTHOMEHOSTNAMEPATH, storeHashMap);
+        this.testHostName = ((String) storeHashMap.get(storeFrontData.@TESTHOSTNAME));
+        this.testHostNamePath = this.createPath(storeFrontData.@TESTHOSTNAMEPATH, storeHashMap);
+        this.imagePath = this.createPath(StoreFront.RESOURCES, storeFrontData.@IMAGEPATH, storeHashMap);
+        this.staticPath = this.createPath(' Products' + AbPathData.getInstance().@SEPARATOR, storeFrontData.@STATICPATH, storeHashMap);
+        this.categoryPath = this.createPath(StoreFront.RESOURCES, storeFrontData.@CATEGORYPATH, storeHashMap);
+        this.inventoryControl = ((String) storeHashMap.get(storeFrontData.@INVENTORYCONTROL));
+        //this.sale = this.get(storeFrontData.SALE, storeHashMap);
+        this.subStores = ((String) storeHashMap.get(storeFrontData.@SUBSTORES));
+        this.tagLocation = ((String) storeHashMap.get(storeFrontData.@TAGLOCATION));
+        this.packageLocation = ((String) storeHashMap.get(storeFrontData.@PACKAGELOCATION));
+        this.ftp = ((String) storeHashMap.get(storeFrontData.@FTP));
+        this.ftpPath = this.createPath(storeFrontData.@FTPPATH, storeHashMap);
+        this.ftpUserName = ((String) storeHashMap.get(storeFrontData.@FTPUSERNAME));
+        this.ftpPassword = ((String) storeHashMap.get(storeFrontData.@FTPPASSWORD));
+        this.testFtp = ((String) storeHashMap.get(storeFrontData.@TESTFTP));
+        this.testFtpPath = this.createPath(storeFrontData.@TESTFTPPATH, storeHashMap);
+        this.testFtpUserName = ((String) storeHashMap.get(storeFrontData.@TESTFTPUSERNAME));
+        this.testFtpPassword = ((String) storeHashMap.get(storeFrontData.@TESTFTPPASSWORD));
+        this.timeCreated = ((String) storeHashMap.get(EntryData.getInstance().@TIMECREATED));
+        this.lastModified = ((String) storeHashMap.get(EntryData.getInstance().@LASTMODIFIED));
+    }
+
+    public Boolean isNameValid() {
+        if (!StringValidationUtil.getInstance().isValidRequired(this.name, this.MINSTORENAMELENGTH, this.MAXCHAR)) {
+            return Boolean.FALSE;
+        } else {
+            //Since StoreName is used as the store directory
+            boolean isEscapedCharactersContained = false;
+            final String storeNameEscaped = StringEscapeUtils.escapeHtml3(this.name);
+            if (this.name.compareTo(storeNameEscaped) != 0) {
+                isEscapedCharactersContained = true;
+            }
+            final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+            boolean isSpacesContained = false;
+            if (stringValidationUtil.containsSpaces(this.name)) {
+                isSpacesContained = true;
+            }
+            if (isSpacesContained || isEscapedCharactersContained) {
+                final HashMap hashMap = SpecialCharacterUtil.getHashMap();
+                hashMap.put(new String[] {CommonSeps.getInstance().@SPACE}, this.ONE_EMPTY_STRING_ARRAY);
+                this.name = new Replace(hashMap).all(this.name);
+            }
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean isValid() {
+        Boolean valid = Boolean.TRUE;
+        valid = this.isNameValid();
+        final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+        if (!stringValidationUtil.isValidRequired(this.basketName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.homeHostName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.homeHostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.hostName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.hostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testHomeHostName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testHomeHostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testHostName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testHostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.imagePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.staticPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.categoryPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.inventoryControl, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        /*         if(!stringValidationUtil.isValidNotRequired(this.out, MINCHAR, this.MAXCHAR))         {         valid = Boolean.FALSE;         }          if(!stringValidationUtil.isValidNotRequired(this.age, MINCHAR, this.MAXCHAR))         {         valid = Boolean.FALSE;         }          if(!stringValidationUtil.isValidNotRequired(this.sale, MINCHAR, this.MAXCHAR))         {         valid = Boolean.FALSE;         }          if(!stringValidationUtil.isValidNotRequired(this.notification, MINCHAR, this.MAXCHAR))         {         valid = Boolean.FALSE;         }          if(!stringValidationUtil.isValidNotRequired(this.order, MINCHAR, this.MAXCHAR))         {         valid = Boolean.FALSE;         }          if(!stringValidationUtil.isValidNotRequired(this.orderCancel, MINCHAR, this.MAXCHAR))         {         valid = Boolean.FALSE;         }          */
+        if (!stringValidationUtil.isValidNotRequired(this.subStores, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.tagLocation, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidRequired(this.packageLocation, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.ftp, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.ftpPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.ftpUserName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.ftpPassword, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testFtp, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testFtpPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testFtpUserName, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (!stringValidationUtil.isValidNotRequired(this.testFtpPassword, this.MINCHAR, this.MAXCHAR)) {
+            valid = Boolean.FALSE;
+        }
+        if (valid.booleanValue() == true) {
+            //if(InventoryEntityFactory.getInstance().getItem(id)==null)
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    public String nameValidationInfo() {
+        final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+        if (!stringValidationUtil.isValidRequired(this.name, this.MINCHAR, this.MAXCHAR)) {
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append('Name is invalid. Must be < ');
+            stringBuffer.appendint(this.MAXCHAR);
+            stringBuffer.append(' and > 0 characters.<br>');
+            return stringBuffer.toString();
+        }
+        return this.EMPTY_STRING;
+    }
+
+    public String validationInfo() {
+        try {
+            final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(this.nameValidationInfo());
+            if (!stringValidationUtil.isValidRequired(this.basketName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Basket name is invalid. Must be < ');
+                stringBuffer.appendint(this.MAXCHAR);
+                stringBuffer.append(' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.homeHostName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Home host name is invalid. Must be < ');
+                stringBuffer.appendint(this.MAXCHAR);
+                stringBuffer.append(' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.homeHostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Home host name path is invalid. Must be < ');
+                stringBuffer.appendint(this.MAXCHAR);
+                stringBuffer.append(' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.hostName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Host name is invalid. Must be < ');
+                stringBuffer.appendint(this.MAXCHAR);
+                stringBuffer.append(' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.hostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Host name path is invalid. Must be < ');
+                stringBuffer.appendint(this.MAXCHAR);
+                stringBuffer.append(' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testHomeHostName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test home host name is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testHomeHostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test home host name path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testHostName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test host name is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testHostNamePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test host name path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.imagePath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Image path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.staticPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Static path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.categoryPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Category path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.inventoryControl, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Inventory control is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            /*             if(!stringValidationUtil.isValidNotRequired(this.out, MINCHAR, this.MAXCHAR))             {             stringBuffer.append("Out is invalid. Must be < " + this.MAXCHAR + " and > 0 characters.<br>");             }              if(!stringValidationUtil.isValidNotRequired(this.age, MINCHAR, this.MAXCHAR))             {             stringBuffer.append("Age is invalid. Must be < " + this.MAXCHAR + " and > 0 characters.<br>");             }              if(!stringValidationUtil.isValidNotRequired(this.sale, MINCHAR, this.MAXCHAR))             {             stringBuffer.append("Sale is invalid. Must be < " + this.MAXCHAR + " and > 0 characters.<br>");             }              if(!stringValidationUtil.isValidNotRequired(this.notification, MINCHAR, this.MAXCHAR))             {             stringBuffer.append("Notification is invalid. Must be < " + this.MAXCHAR + " and > 0 characters.<br>");             }              if(!stringValidationUtil.isValidNotRequired(this.order, MINCHAR, this.MAXCHAR))             {             stringBuffer.append("Order is invalid. Must be < " + this.MAXCHAR + " and > 0 characters.<br>");             }              if(!stringValidationUtil.isValidNotRequired(this.orderCancel, MINCHAR, this.MAXCHAR))             {             stringBuffer.append("Order cancel is invalid. Must be < " + this.MAXCHAR + " and > 0 characters.<br>");             }              */
+            if (!stringValidationUtil.isValidNotRequired(this.subStores, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Sub stores is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.tagLocation, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Tag location is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidRequired(this.packageLocation, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Package location is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.ftp, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Ftp is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.ftpPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Ftp path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.ftpUserName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Ftp username is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.ftpPassword, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Ftp password is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testFtp, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test ftp is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testFtpPath.toString(), this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test ftp Path is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testFtpUserName, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test ftp username is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            if (!stringValidationUtil.isValidNotRequired(this.testFtpPassword, this.MINCHAR, this.MAXCHAR)) {
+                stringBuffer.append('Test ftp password is invalid. Must be < ' + this.MAXCHAR + ' and > 0 characters.<br>');
+            }
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put('Failed to generate validation error info', this, 'validationInfo()', e);
+            }
+            return 'Error Validating Form';
+        }
+    }
+
+    //these files should be copied to the real server + staticpages path probably with ftp
+    public String getTestHtmlPath() {
+        //in testing mode return the test location else return the working location
+        return String.valueOf(org.allbinary.globals.URLGLOBALS.getTestHtmlPath()) + this.getCurrentHostNamePath();
+    }
+
+    public String getCurrentHostName() {
+        String location = this.EMPTY_STRING;
+        //in testing mode return the test location else return the working location
+        if (org.allbinary.globals.URLGLOBALS.isTestingMode()) {
+            location = this.getTestHostName();
+        } else {
+            location = this.getHostName();
+        }
+        return location;
+    }
+
+    //host name is used by Blisket urls
+    public String getCurrentHostNamePath() {
+        String location = this.EMPTY_STRING;
+        //in testing mode return the test location else return the working location
+        if (org.allbinary.globals.URLGLOBALS.isTestingMode()) {
+            location = this.getTestHostNamePath();
+        } else {
+            location = this.getHostNamePath();
+        }
+        return location;
+    }
+
+    //Home host name is used by remote non blisket urls
+    public String getCurrentHomeHostName() {
+        String location = this.EMPTY_STRING;
+        //in testing mode return the test location else return the working location
+        if (org.allbinary.globals.URLGLOBALS.isTestingMode()) {
+            location = this.getTestHomeHostName();
+        } else {
+            location = this.getHomeHostName();
+        }
+        return location;
+    }
+
+    public String getCurrentHomeHostNamePath() {
+        String location = this.EMPTY_STRING;
+        //in testing mode return the test location else return the working location
+        if (org.allbinary.globals.URLGLOBALS.isTestingMode()) {
+            location = this.getTestHomeHostNamePath();
+        } else {
+            location = this.getHomeHostNamePath();
+        }
+        return location;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getBasketName() {
+        return this.basketName;
+    }
+
+    public String getHomeHostName() {
+        return this.homeHostName;
+    }
+
+    public String getHomeHostNamePath() {
+        return this.homeHostNamePath.toString();
+    }
+
+    public String getHostName() {
+        return this.hostName;
+    }
+
+    public String getHostNamePath() {
+        return this.hostNamePath.toString();
+    }
+
+    public String getTestHomeHostName() {
+        return this.testHomeHostName;
+    }
+
+    public String getTestHomeHostNamePath() {
+        return this.testHomeHostNamePath.toString();
+    }
+
+    public String getTestHostName() {
+        return this.testHostName;
+    }
+
+    public String getTestHostNamePath() {
+        return this.testHostNamePath.toString();
+    }
+
+    /*     public String getImagePath()     {     return this.imagePath;     }      */
+    public String getStaticPath() {
+        return this.staticPath.toString();
+    }
+
+    public String getCategoryPath() {
+        return this.categoryPath.toString();
+    }
+
+    public String getInventoryControl() {
+        return this.inventoryControl;
+    }
+
+    public BasicArrayList getSubStores() throws Exception {
+        try {
+            final Tokenizer tokenizer = new Tokenizer(CommonSeps.getInstance().@SEMICOLON);
+            final BasicArrayList subStoreVector = tokenizer.getTokensFromString(this.subStores, new BasicArrayListD());
+            return subStoreVector;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public String getTagLocation() {
+        return this.tagLocation;
+    }
+
+    public String getPackageLocation() {
+        return this.packageLocation;
+    }
+
+    public String getFtp() {
+        return this.ftp;
+    }
+
+    public String getFtpUserName() {
+        return this.ftpUserName;
+    }
+
+    public String getFtpPassword() {
+        return this.ftpPassword;
+    }
+
+    public String getTestFtp() {
+        return this.testFtp;
+    }
+
+    public String getTestFtpUserName() {
+        return this.testFtpUserName;
+    }
+
+    public String getTestFtpPassword() {
+        return this.testFtpPassword;
+    }
+
+    public String getFtpPath() {
+        return this.ftpPath.toString();
+    }
+
+    public String getTestFtpPath() {
+        return this.testFtpPath.toString();
+    }
+
+    public String getTimeCreated() {
+        return this.timeCreated;
+    }
+
+    public String getLastModified() {
+        return this.lastModified;
+    }
+
+    public void setName(String value) {
+        this.name = value;
+    }
+
+    public void setBasketName(String value) {
+        this.basketName = value;
+    }
+
+    public void setHomeHostName(String value) {
+        this.homeHostName = value;
+    }
+
+    public void setHomeHostNamePath(String value) throws Exception {
+        this.homeHostNamePath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setHostName(String value) {
+        this.hostName = value;
+    }
+
+    public void setHostNamePath(String value) throws Exception {
+        this.hostNamePath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setTestHomeHostName(String value) {
+        this.testHomeHostName = value;
+    }
+
+    public void setTestHomeHostNamePath(String value) throws Exception {
+        this.testHomeHostNamePath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setTestHostName(String value) {
+        this.testHostName = value;
+    }
+
+    public void setTestHostNamePath(String value) throws Exception {
+        this.testHostNamePath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setImagePath(String value) throws Exception {
+        this.imagePath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setStaticPath(String value) throws Exception {
+        this.staticPath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setCategoryPath(String value) throws Exception {
+        this.categoryPath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setSubStores(String value) {
+        this.subStores = value;
+    }
+
+    public void setTagLocation(String value) {
+        this.tagLocation = value;
+    }
+
+    public void setPackageLocation(String value) {
+        this.packageLocation = value;
+    }
+
+    public void setInventoryControl(String value) {
+        this.inventoryControl = value;
+    }
+
+    public void getPackageLocation(String value) {
+        this.packageLocation = value;
+    }
+
+    public void setFtp(String value) {
+        this.ftp = value;
+    }
+
+    public void setFtpUserName(String value) {
+        this.ftpUserName = value;
+    }
+
+    public void setFtpPassword(String value) {
+        this.ftpPassword = value;
+    }
+
+    public void setTestFtp(String value) {
+        this.testFtp = value;
+    }
+
+    public void setTestFtpUserName(String value) {
+        this.testFtpUserName = value;
+    }
+
+    public void setTestFtpPassword(String value) {
+        this.testFtpPassword = value;
+    }
+
+    public void setTimeCreated(String value) {
+        this.timeCreated = value;
+    }
+
+    public void setLastModified(String value) {
+        this.lastModified = value;
+    }
+
+    public void setFtpPath(final String value) throws Exception {
+        this.ftpPath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    public void setTestFtpPath(final String value) throws Exception {
+        this.testFtpPath = new AbPath(value, StringUtil.getInstance().@EMPTY_STRING);
+    }
+
+    private boolean createDirectories() throws Exception {
+        //use storename as man directory
+        AbPath storeAbPath = new AbPath(URLGLOBALS.getWebappPath() + this.getCurrentHomeHostNamePath(), StringUtil.getInstance().@EMPTY_STRING);
+        if (!this.directory.create(storeAbPath)) {
+            return false;
+        }
+        if (!this.directory.create(new AbPath(String.valueOf(storeAbPath) + this.getCategoryPath(), StringUtil.getInstance().@EMPTY_STRING))) {
+            return false;
+        }
+        /*         if(!Directory.create(storeAbPath + this.getImagePath()))         return false;          */
+        if (!this.directory.create(new AbPath(String.valueOf(storeAbPath) + this.getStaticPath(), StringUtil.getInstance().@EMPTY_STRING))) {
+            return false;
+        }
+        return true;
+    }
+
+    //Create directories and copy files for store installation
+    public void install(final int current, final int total) throws Exception {
+        try {
+            //create new store directories if they do not already exist
+            if (!this.createDirectories()) {
+                throw new Exception('Unable to create store directories');
+            }
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append(URLGLOBALS.getMainPath());
+            stringBuffer.append(FREEBLISKET_PATH_GLOBALS.getInstance().@XSLPATH);
+            final String viewPath = stringBuffer.toString();
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append(viewPath);
+            stringBuffer.append(FREEBLISKET_PATH_GLOBALS.getInstance().@INSTALLPATH);
+            final AbPath fromDirectoryAbPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append(viewPath);
+            stringBuffer.append('special');
+            stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+            final AbPath fromSpecialDirectoryAbPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+            stringBuffer.delete(0, stringBuffer.length());
+            stringBuffer.append(viewPath);
+            stringBuffer.append(this.getName());
+            stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+            final AbPath toDirectoryAbPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+            if (current == 0) {
+                if (!this.directory.create(toDirectoryAbPath)) {
+                    throw new Exception('Unable to create store view directory: ' + toDirectoryAbPath.toString());
+                }
+            }
+            final int viewTotal = Math.divideExact((total * 85), 100);
+            final int installTotal = Math.divideExact((total * 93), 100);
+            if (current < viewTotal) {
+                final AbFile file = AbFile.createAbFileFromAbPath(fromSpecialDirectoryAbPath);
+                if (file.isDirectory()) {
+                    int halfViewTotal = Math.divideExact(viewTotal, 2);
+                    if (current < halfViewTotal) {
+                        this.installViews(fromSpecialDirectoryAbPath, toDirectoryAbPath, current, halfViewTotal);
+                    } else if (current < viewTotal) {
+                        this.installViews(fromDirectoryAbPath, toDirectoryAbPath, current - halfViewTotal, viewTotal - halfViewTotal);
+                    }
+                } else {
+                    this.installViews(fromDirectoryAbPath, toDirectoryAbPath, current, viewTotal);
+                }
+            } else if (current < installTotal) {
+                this.installResources(fromDirectoryAbPath, current - viewTotal, installTotal - viewTotal);
+            } else {
+                this.installMedia(fromDirectoryAbPath, current - installTotal, total - installTotal);
+            }
+        } catch (Exception e) {
+            //String error = "Failed to install storefront";
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'install()', e);
+            }
+            throw e;
+        }
+    }
+
+    private void installViews(final AbPath fromDirectoryAbPath, final AbPath toDirectoryAbPath, final int current, final int total) throws Exception {
+        //copy install template/view files for new store
+        FileUtil.getInstance().copyDirectoryPortion(fromDirectoryAbPath, toDirectoryAbPath, true, false, current, total);
+    }
+
+    private void installResources(final AbPath fromDirectoryAbPath, final int current, final int total) throws Exception {
+        final StringMaker stringBuffer = new StringMaker();
+        //Copy in default Resources
+        stringBuffer.append(fromDirectoryAbPath.toString());
+        stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+        stringBuffer.append('Resources');
+        stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+        final AbPath installCategoryAbPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+        stringBuffer.delete(0, stringBuffer.length());
+        stringBuffer.append(URLGLOBALS.getMainPath());
+        stringBuffer.append(this.getCurrentHomeHostNamePath());
+        stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+        stringBuffer.append(this.getCategoryPath());
+        final AbPath categoryAbPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+        FileUtil.getInstance().copyDirectoryPortion(installCategoryAbPath, categoryAbPath, true, false, current, total);
+    }
+
+    private void installMedia(final AbPath fromDirectoryAbPath, final int current, final int total) throws Exception {
+        // CategoryData.ENCRYPTED_EXTENSION);
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(fromDirectoryAbPath.toString());
+        stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+        stringBuffer.append(FREEBLISKET_PATH_GLOBALS.getInstance().@TEMPLATEPATH);
+        stringBuffer.append('images');
+        stringBuffer.append(AbPathData.getInstance().@SEPARATOR);
+        final AbPath viewStoreImagesDirectoryAbPath = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+        final AbPath storeAbPath = new AbPath(URLGLOBALS.getWebappPath() + this.getCurrentHomeHostNamePath(), StringUtil.getInstance().@EMPTY_STRING);
+        FileUtil.getInstance().copyDirectoryPortion(viewStoreImagesDirectoryAbPath, storeAbPath, true, false, current, total);
+    }
+
+    public BasicArrayList toVector() throws Exception {
+        final BasicArrayList dataVector = new BasicArrayListD();
+        dataVector.add(this.name);
+        dataVector.add(this.homeHostName);
+        dataVector.add(this.homeHostNamePath.toString());
+        dataVector.add(this.hostName);
+        dataVector.add(this.hostNamePath.toString());
+        dataVector.add(this.testHomeHostName);
+        dataVector.add(this.testHomeHostNamePath.toString());
+        dataVector.add(this.testHostName);
+        dataVector.add(this.testHostNamePath.toString());
+        dataVector.add(this.imagePath.toString());
+        dataVector.add(this.staticPath.toString());
+        dataVector.add(this.categoryPath.toString());
+        dataVector.add(this.inventoryControl);
+        final ContextConfigurationDomDocumentMapping contextConfigurationDomDocumentMapping = new ContextConfigurationDomDocumentMapping(this.getContextConfigurationInterface());
+        dataVector.add(contextConfigurationDomDocumentMapping.toDomDocumentString());
+        dataVector.add(this.subStores);
+        dataVector.add(this.tagLocation);
+        dataVector.add(this.packageLocation);
+        dataVector.add(this.ftp);
+        dataVector.add(this.ftpPath.toString());
+        dataVector.add(this.ftpUserName);
+        dataVector.add(this.ftpPassword);
+        dataVector.add(this.testFtp);
+        dataVector.add(this.testFtpPath.toString());
+        dataVector.add(this.testFtpUserName);
+        dataVector.add(this.testFtpPassword);
+        Calendar calendar = Calendar.getInstance();
+        String time = new String(new Long(calendar.getTimeInMillis()).toString());
+        dataVector.add(time);
+        dataVector.add(time);
+        return dataVector;
+    }
+
+    public HashMap toHashMap() throws Exception {
+        final StoreFrontData storeFrontData = StoreFrontData.getInstance();
+        final HashMap dataHashMap = StdUtil.getInstance().createHashMap();
+        dataHashMap.put(storeFrontData.@NAME, this.name);
+        dataHashMap.put(storeFrontData.@HOMEHOSTNAME, this.homeHostName);
+        dataHashMap.put(storeFrontData.@HOMEHOSTNAMEPATH, this.homeHostNamePath.toString());
+        dataHashMap.put(storeFrontData.@HOSTNAME, this.hostName);
+        dataHashMap.put(storeFrontData.@HOSTNAMEPATH, this.hostNamePath.toString());
+        dataHashMap.put(storeFrontData.@TESTHOMEHOSTNAME, this.testHomeHostName);
+        dataHashMap.put(storeFrontData.@TESTHOMEHOSTNAMEPATH, this.testHomeHostNamePath.toString());
+        dataHashMap.put(storeFrontData.@TESTHOSTNAME, this.testHostName);
+        dataHashMap.put(storeFrontData.@TESTHOSTNAMEPATH, this.testHostNamePath.toString());
+        dataHashMap.put(storeFrontData.@IMAGEPATH, this.imagePath.toString());
+        dataHashMap.put(storeFrontData.@STATICPATH, this.staticPath.toString());
+        dataHashMap.put(storeFrontData.@CATEGORYPATH, this.categoryPath.toString());
+        dataHashMap.put(storeFrontData.@INVENTORYCONTROL, this.inventoryControl);
+        ContextConfigurationDomDocumentMapping contextConfigurationDomDocumentMapping = new ContextConfigurationDomDocumentMapping(this.getContextConfigurationInterface());
+        dataHashMap.put(storeFrontData.@CONFIGURATION, contextConfigurationDomDocumentMapping.toDomDocumentString());
+        dataHashMap.put(storeFrontData.@SUBSTORES, this.subStores);
+        dataHashMap.put(storeFrontData.@TAGLOCATION, this.tagLocation);
+        dataHashMap.put(storeFrontData.@PACKAGELOCATION, this.packageLocation);
+        dataHashMap.put(storeFrontData.@FTP, this.ftp);
+        dataHashMap.put(storeFrontData.@FTPPATH, this.ftpPath.toString());
+        dataHashMap.put(storeFrontData.@FTPUSERNAME, this.ftpUserName);
+        dataHashMap.put(storeFrontData.@FTPPASSWORD, this.ftpPassword);
+        dataHashMap.put(storeFrontData.@TESTFTP, this.testFtp);
+        dataHashMap.put(storeFrontData.@TESTFTPPATH, this.testFtpPath.toString());
+        dataHashMap.put(storeFrontData.@TESTFTPUSERNAME, this.testFtpUserName);
+        dataHashMap.put(storeFrontData.@TESTFTPPASSWORD, this.testFtpPassword);
+        final Calendar calendar = Calendar.getInstance();
+        final String time = new String(new Long(calendar.getTimeInMillis()).toString());
+        dataHashMap.put(EntryData.getInstance().@LASTMODIFIED, time);
+        return dataHashMap;
+    }
+
+    public Object getKey() {
+        return ((Object) this.getName());
+    }
+
+    public ContextConfigurationInterface getContextConfigurationInterface() {
+        return this.contextConfigurationInterface;
+    }
+
+    public void setContextConfigurationInterface(final ContextConfigurationInterface contextConfigurationInterface) {
+        this.contextConfigurationInterface = contextConfigurationInterface;
+    }
+
+}
+
+

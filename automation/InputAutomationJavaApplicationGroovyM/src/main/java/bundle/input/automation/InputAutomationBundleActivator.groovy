@@ -1,0 +1,68 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package bundle.input.automation;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import bundle.input.automation.module.configuration.InputAutomationConfigurationModuleChangeListener;
+import bundle.input.automation.robot.InputAutomationRobotChangeListener;
+import org.allbinary.input.automation.InputAutomationJFrame;
+import org.allbinary.input.automation.module.osgi.InputAutomationModuleServiceConsumer;
+import org.allbinary.input.automation.module.osgi.InputAutomationNewBundleRunnable;
+import org.allbinary.input.automation.osgi.InputAutomationServiceFactory;
+import org.allbinary.input.automation.robot.osgi.InputAutomationRobotServiceConsumer;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.osgi.OSGIActivatorUtil;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class InputAutomationBundleActivator implements BundleActivator, InputAutomationBundleActivatorListenerInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private static Thread moduleManagementThread;
+
+    private static BundleContext bundleContext;
+
+    //private ServiceTracker remoteTracker;
+    public static BundleContext getBundleContext() {
+        return InputAutomationBundleActivator.bundleContext;
+    }
+
+    public void start(final BundleContext bundleContext) throws Exception {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@START);
+            this.bundleContext = bundleContext;
+            /*                 try {                 }                 catch (IOException ioe) {                         //throw new FactoryConfigurationError(ioe);                 }                  */
+            InputAutomationBundleActivator.moduleManagementThread = new Thread(new InputAutomationNewBundleRunnable(this));
+            InputAutomationBundleActivator.moduleManagementThread.start();
+            InputAutomationJFrame.create(this);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@START, e);
+            throw e;
+        }
+    }
+
+    public void registerAsService() throws Exception {
+        OSGIActivatorUtil.registerAsService(this.getBundleContext(), InputAutomationServiceFactory.getInstance(), InputAutomationConfigurationModuleChangeListener.class.getName());
+        OSGIActivatorUtil.registerAsService(this.getBundleContext(), InputAutomationServiceFactory.getInstance(), InputAutomationRobotChangeListener.class.getName());
+    }
+
+    public void useServices() throws Exception {
+        new InputAutomationRobotServiceConsumer(this.getBundleContext()).process();
+        new InputAutomationModuleServiceConsumer(this.getBundleContext()).process();
+    }
+
+    public void stop(final BundleContext context) throws Exception {
+        this.logUtil.putF(this.commonStrings.@START, this, 'stop');
+        if (InputAutomationJFrame.getInstance() != null) {
+            InputAutomationJFrame.destroy();
+        } else {
+            this.logUtil.putF('Nothing to stop', this, 'stop');
+        }
+    }
+
+}
+
+

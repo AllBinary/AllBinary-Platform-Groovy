@@ -1,0 +1,50 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import javax.microedition.lcdui.Image;
+import org.allbinary.graphics.Anchor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import org.microemu.android.device.AndroidImageInterface;
+
+@groovy.transform.CompileStatic
+public class ImageRotationUtil {
+    private static final ImageRotationUtil instance = new ImageRotationUtil();
+
+    public static ImageRotationUtil getInstance() {
+        return ImageRotationUtil.instance;
+    }
+
+    private final Matrix matrix = new Matrix();
+
+    private ImageRotationUtil() {
+    }
+
+    private int anchor = Anchor.TOP_LEFT;
+
+    // String resource,
+    public Image createRotatedImage(Image originalImage, int rotationInDegrees) throws Exception {
+        final Image image = ImageCreationUtil.getInstance().createImageWH(originalImage.getWidth(), originalImage.getHeight());
+        if (image.isMutable()) {
+            //Bitmap originalBitmap = originalImage.getBitmap();
+            final Bitmap bitmap = (((AndroidImageInterface) image)).getBitmap();
+            final int width = bitmap.getWidth();
+            final int height = bitmap.getHeight();
+            //image.getGraphics().drawRect(0, 0, width, height);
+            this.matrix.setRotate(((float) rotationInDegrees), ((float) (width >> 1)), ((float) (height >> 1)));
+            final Canvas canvas = (((AndroidImageInterface) image)).getCanvas();
+            //canvas.save();
+            canvas.concat(this.matrix);
+            image.getGraphics().drawImage(originalImage, 0, 0, this.anchor);
+            //canvas.restore();
+            return image;
+        } else {
+            throw new Exception('Not Mutable');
+        }
+    }
+
+}
+
+

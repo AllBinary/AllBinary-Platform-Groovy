@@ -1,0 +1,88 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.generic.configuration.profile;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.data.tree.dom.DomNodeHelper;
+import org.allbinary.data.tree.dom.ModDomHelper;
+import org.allbinary.input.automation.module.generic.configuration.profile.actions.GenericProfileActions;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+@groovy.transform.CompileStatic
+public class GenericProfile {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private String name;
+
+    private BasicArrayList vector;
+
+    private GenericProfileActions genericProfileActions;
+
+    public GenericProfile(Node node) {
+        this.setName(DomNodeHelper.getTextNodeValue(node));
+        this.vector = new BasicArrayListD();
+        NodeList nodeList = node.getChildNodes();
+        this.logUtil.putF('Name: ' + this.getName() + ' Child Nodes: ' + nodeList.getLength(), this, 'Contructor');
+        for (int index = 0; index < nodeList.getLength(); index++) {
+            Node profileNode = nodeList.item(index);
+            if (profileNode.getNodeName().compareTo(GenericProfileDataWorkerData.NAME) == 0) {
+                GenericProfileDataWorkerType genericProfileDataWorkerType = GenericProfileDataWorkerType.getInstance(profileNode);
+                this.logUtil.putF('Adding GenericProfileDataWorkerType: ' + genericProfileDataWorkerType.toString(), this, 'Contructor');
+                this.vector.add(genericProfileDataWorkerType);
+            }
+        }
+    }
+
+    public GenericProfile(String name) {
+        this.setName(name);
+        this.vector = new BasicArrayListD();
+    }
+
+    public BasicArrayList getGenericProfileDataWorkerTypeVector() {
+        return this.vector;
+    }
+
+    public void add(GenericProfileDataWorkerType genericProfileDataWorkerType) {
+        if (!this.vector.contains(genericProfileDataWorkerType)) {
+            this.vector.add(genericProfileDataWorkerType);
+        }
+    }
+
+    public void remove(GenericProfileDataWorkerType genericProfileDataWorkerType) {
+        this.vector.remove(genericProfileDataWorkerType);
+    }
+
+    public Node toXmlNode(Document document) throws Exception {
+        Node node = ModDomHelper.createTextNode(document, GenericProfileData.NAME, this.name);
+        final int size = this.vector.size();
+        for (int index = 0; index < size; index++) {
+            GenericProfileDataWorkerType genericProfileDataWorkerType = ((GenericProfileDataWorkerType) this.vector.get(index));
+            node.appendChild(genericProfileDataWorkerType.toXmlNode(document));
+        }
+        return node;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public GenericProfileActions getGenericProfileActions() {
+        return this.genericProfileActions;
+    }
+
+    public void setGenericProfileActions(GenericProfileActions genericProfileActions) {
+        this.genericProfileActions = genericProfileActions;
+    }
+
+}
+
+

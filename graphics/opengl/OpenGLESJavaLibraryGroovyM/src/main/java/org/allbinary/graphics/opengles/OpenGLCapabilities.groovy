@@ -1,0 +1,314 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.opengles;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+import org.allbinary.AndroidUtil;
+import org.allbinary.image.opengles.OpenGLESGL10ImageFactory;
+import org.allbinary.image.opengles.OpenGLESGL11VBOImageFactory;
+import org.allbinary.image.opengles.OpenGLImageSpecificFactory;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.tokens.Tokenizer;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.game.configuration.feature.Features;
+import org.allbinary.logic.communication.log.LogUtil;
+
+@groovy.transform.CompileStatic
+public class OpenGLCapabilities {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final OpenGLCapabilities instance = new OpenGLCapabilities();
+
+    public static OpenGLCapabilities getInstance() {
+        return OpenGLCapabilities.instance;
+    }
+
+    public final boolean CUSTOM_GL_SURFACE_VIEW = true;
+
+    private final StringUtil stringUtil = StringUtil.getInstance();
+
+    private boolean initialized = false;
+
+    private String glVersionString = this.stringUtil.@EMPTY_STRING;
+
+    private String glShaderVersionString = this.stringUtil.@EMPTY_STRING;
+
+    public int shaderVersion = 0;
+
+    private String glRenderer = this.stringUtil.@EMPTY_STRING;
+
+    private String glVendor = this.stringUtil.@EMPTY_STRING;
+
+    private String glExtensions = this.stringUtil.@EMPTY_STRING;
+
+    private boolean possiblyAccelerated;
+
+    private String acceleratedString = this.stringUtil.@EMPTY_STRING;
+
+    public int maxTextureSize = 64;
+
+    public final String VERSION_1_0 = '1.0';
+
+    public final String VERSION_1_1 = '1.1';
+
+    public final String VERSION_2_0 = '2.0';
+
+    public final String VERSION_3_0 = '3.0';
+
+    public final String VERSION_3_1 = '3.1';
+
+    public final String VERSION_3_2 = '3.2';
+
+    public final String VERSION_HIGHER_THAN_EXISTS = '999.999';
+
+    public final String VERSION_UNK = 'Unk';
+
+    public final String GL_EXT_GPU_SHADER_100 = 'GL_ARB_shading_language_100';
+
+    //4.50              4.5
+    public final String GL_EXT_GPU_SHADER4 = 'GL_EXT_gpu_shader4';
+
+    private String glVersion = this.glVersionString;
+
+    public String glInstanceVersion = this.VERSION_UNK;
+
+    private boolean glExtensionDrawTexture;
+
+    private boolean glThreedDrawTexture;
+
+    private boolean glExtensionGPUShader4;
+
+    private boolean glExtensionGPUShader100;
+
+    private boolean vertexBufferObjectSupport;
+
+    private OpenGLCapabilities() {
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
+    }
+
+    private void requireInitialization() {
+    }
+
+    public void initCapabilities(GL10 gl) {
+        final String METHOD_NAME = 'initGLCapabilities';
+        try {
+            final Features features = Features.getInstance();
+            final OpenGLFeatureFactory openGLFeatureFactory = OpenGLFeatureFactory.getInstance();
+            final OpenGLImageSpecificFactory openGLImageSpecificFactory = OpenGLImageSpecificFactory.getInstance();
+            final StringMaker stringBuffer = new StringMaker();
+            this.glVersionString = gl.glGetString(GL10.GL_VERSION);
+            final int GL_SHADING_LANGUAGE_VERSION = 0x8b8c;
+            this.glShaderVersionString = gl.glGetString(GL_SHADING_LANGUAGE_VERSION);
+            //GL_ARB_fragment_program: SM 2.0 or better.            
+            if (this.glShaderVersionString == null) {
+                this.glShaderVersionString = this.stringUtil.@EMPTY_STRING;
+            }
+            try {
+                if (this.glShaderVersionString != null && this.glShaderVersionString.indexOf(((int) ('.' as char))) >= 0) {
+                    final int startIndex = this.glShaderVersionString.lastIndexOf(((int) (' ' as char)));
+                    if (startIndex >= 0) {
+                        this.glShaderVersionString = this.glShaderVersionString.substring(startIndex + 1);
+                    }
+                    this.shaderVersion = Integer.parseInt(this.glShaderVersionString.replace(CommonSeps.getInstance().@PERIOD, StringUtil.getInstance().@EMPTY_STRING));
+                }
+            } catch (Exception e) {
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                this.logUtil.put(commonStrings.@EXCEPTION, this, METHOD_NAME, e);
+            }
+            this.glRenderer = gl.glGetString(GL10.GL_RENDERER);
+            this.glVendor = gl.glGetString(GL10.GL_VENDOR);
+            this.glExtensions = gl.glGetString(GL10.GL_EXTENSIONS);
+            if (this.glExtensions.indexOf(this.GL_EXT_GPU_SHADER_100) >= 0) {
+                this.glExtensionGPUShader100 = true;
+            } else {
+                this.glExtensionGPUShader100 = false;
+            }
+            if (this.glExtensions.indexOf(this.GL_EXT_GPU_SHADER4) >= 0) {
+                this.glExtensionGPUShader4 = true;
+            } else {
+                this.glExtensionGPUShader4 = false;
+            }
+            if (this.glRenderer == null) {
+                this.glRenderer = this.stringUtil.@EMPTY_STRING;
+            }
+            if (this.glRenderer.toLowerCase().indexOf('pixelflinger') >= 0) {
+                this.acceleratedString = 'Probably Not for ' + this.glRenderer;
+                this.possiblyAccelerated = false;
+            } else {
+                this.acceleratedString = 'Probably for ' + this.glRenderer;
+                ;
+                this.possiblyAccelerated = true;
+            }
+            /*         if(this.isExtension(openGLFeatureFactory.OPENGL_DRAW_TEXTURE))         {             this.glExtensionDrawTexture = true;         }         else         {             this.glExtensionDrawTexture = false;         }              */
+            this.glExtensionDrawTexture = false;
+            if (this.glVersionString == null) {
+                this.glVersionString = this.stringUtil.@EMPTY_STRING;
+                this.glVersion = this.VERSION_UNK;
+            } else if (this.glVersionString.indexOf(' 1.0') >= 0) {
+                this.glVersion = this.VERSION_1_0;
+            } else if (this.glVersionString.indexOf(' 1.1') >= 0) {
+                this.glVersion = this.VERSION_1_1;
+            } else {
+                this.glVersion = this.VERSION_UNK;
+            }
+            if (gl instanceof GL11) {
+                this.glInstanceVersion = this.VERSION_1_1;
+            } else if (gl instanceof GL10) {
+                this.glInstanceVersion = this.VERSION_1_0;
+            }
+            if (this.glVendor == null) {
+                this.glVendor = this.stringUtil.@EMPTY_STRING;
+            }
+            if (this.glExtensions == null) {
+                this.glExtensions = this.stringUtil.@EMPTY_STRING;
+            }
+            if (this.possiblyAccelerated) {
+                PreLogUtil.put(new StringMaker().append('VBO:?').appendboolean((this.glInstanceVersion === this.VERSION_1_1)).append('||').appendboolean(this.isExtension(openGLFeatureFactory.@OPENGL_VERTEX_BUFFER_OBJECT)).toString(), this, METHOD_NAME);
+                if ((this.glInstanceVersion === this.VERSION_1_1 || this.isExtension(openGLFeatureFactory.@OPENGL_VERTEX_BUFFER_OBJECT))) {
+                    if (AndroidUtil.isAndroid()) {
+                        PreLogUtil.put('VBO implementation was detected, but disabled by default for Android', this, METHOD_NAME);
+                    } else {
+                        PreLogUtil.put('VBO implementation was detected, but disabled for now', this, METHOD_NAME);
+                    }
+                }
+            }
+            final StringUtil stringUtil = StringUtil.getInstance();
+            if (features.isDefault(openGLFeatureFactory.@OPENGL_AUTO_SELECT)) {
+                //StupidTimer.visit(new RendererSurfaceCreatedVisitor());
+                if (this.vertexBufferObjectSupport) {
+                    openGLImageSpecificFactory.setImageFactory(new OpenGLESGL11VBOImageFactory());
+                } else {
+                    stringBuffer.append('OpenGL is on but ');
+                    stringBuffer.append(stringUtil.toString(openGLFeatureFactory.@OPENGL_DRAW_TEXTURE));
+                    stringBuffer.append(' was not available');
+                    PreLogUtil.put(stringBuffer.toString(), this, METHOD_NAME);
+                    openGLImageSpecificFactory.setImageFactory(new OpenGLESGL10ImageFactory());
+                }
+            } else {
+                stringBuffer.append(stringUtil.toString(openGLFeatureFactory.@OPENGL_AUTO_SELECT));
+                stringBuffer.append(' is not on');
+                PreLogUtil.put(stringBuffer.toString(), this, METHOD_NAME);
+                openGLImageSpecificFactory.setImageFactory(new OpenGLESGL10ImageFactory());
+            }
+            //GL_MAX_RECTANGLE_TEXTURE_SIZE, and maybe GL_MAX_3D_TEXTURE_SIZE            
+            final int[] maxTextureSizeArray = new int[1];
+            gl.glGetIntegerv(GL10.GL_MAX_TEXTURE_SIZE, maxTextureSizeArray, 0);
+            this.maxTextureSize = maxTextureSizeArray[0];
+            //OpenGLImageSpecificFactory.getInstance().setImageFactory(new OpenGLESGL10RectangleImageFactory());
+            this.initialized = true;
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, METHOD_NAME, e);
+        }
+    }
+
+    private boolean isExtension(OpenGLFeature gameFeature) {
+        int index = this.glExtensions.indexOf(gameFeature.getName());
+        if (index >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isGlExtensionDrawTexture() {
+        this.requireInitialization();
+        return this.glExtensionDrawTexture;
+    }
+
+    public boolean isGlExtensionGPUShader100() {
+        return this.glExtensionGPUShader100;
+    }
+
+    public boolean isGlExtensionGPUShader4() {
+        this.requireInitialization();
+        return this.glExtensionGPUShader4;
+    }
+
+    public String getGlVersion() {
+        this.requireInitialization();
+        return this.glVersion;
+    }
+
+    public String getGlVersionString() {
+        this.requireInitialization();
+        return this.glVersionString;
+    }
+
+    public String getGlShaderVersion() {
+        this.requireInitialization();
+        return this.glShaderVersionString;
+    }
+
+    public boolean isGlThreedDrawTexture() {
+        this.requireInitialization();
+        return this.glThreedDrawTexture;
+    }
+
+    public String getGlRenderer() {
+        this.requireInitialization();
+        return this.glRenderer;
+    }
+
+    public boolean isVertexBufferObjectSupport() {
+        this.requireInitialization();
+        return this.vertexBufferObjectSupport;
+    }
+
+    public boolean isTextureSizeValid(final int widthAndHeight) {
+        this.requireInitialization();
+        if (this.maxTextureSize >= widthAndHeight) {
+            return true;
+        }
+        return false;
+    }
+
+    public String toString() {
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('GL_VERSION: ');
+        stringBuffer.append(this.glVersionString);
+        stringBuffer.append(' GL_SHADING_LANGUAGE_VERSION: ');
+        stringBuffer.append(this.glShaderVersionString);
+        stringBuffer.append(' GL_RENDERER: ');
+        stringBuffer.append(this.glRenderer);
+        stringBuffer.append(' GL_VENDOR: ');
+        stringBuffer.append(this.glVendor);
+        stringBuffer.append(commonSeps.@NEW_LINE);
+        stringBuffer.append(' Is Accelerated: ');
+        stringBuffer.append(this.acceleratedString);
+        stringBuffer.append(commonSeps.@NEW_LINE);
+        stringBuffer.append(' VBO Support: ');
+        stringBuffer.appendboolean(this.isVertexBufferObjectSupport());
+        stringBuffer.append(commonSeps.@NEW_LINE);
+        stringBuffer.append(' Max Texture Size: ');
+        stringBuffer.appendint(this.maxTextureSize);
+        stringBuffer.append(commonSeps.@NEW_LINE);
+        stringBuffer.append(' GL_EXTENSIONS: ');
+        try {
+            Tokenizer tokenizer = new Tokenizer(commonSeps.@SPACE);
+            BasicArrayList list = tokenizer.getTokensFromString(this.glExtensions, new BasicArrayListD());
+            final int size = list.size();
+            for (int index = 0; index < size; index++) {
+                stringBuffer.append(commonSeps.@NEW_LINE);
+                stringBuffer.append(this.stringUtil.toString(list.@objectArray[index]));
+            }
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            PreLogUtil.putOE(commonStrings.@EXCEPTION, this, commonStrings.@TOSTRING, e);
+        }
+        return stringBuffer.toString();
+    }
+
+}
+
+

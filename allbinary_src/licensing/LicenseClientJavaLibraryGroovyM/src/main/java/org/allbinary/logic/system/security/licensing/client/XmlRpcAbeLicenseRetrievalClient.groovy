@@ -1,0 +1,95 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.licensing.client;
+
+import org.allbinary.logic.string.StringUtil;
+import java.io.IOException;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.init.crypt.jcehelper.CryptInterface;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.xmlrpc.XmlRpcAbeClient;
+import org.allbinary.logic.java.exception.ExceptionUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.logic.system.security.licensing.AbeClientLicense;
+import org.allbinary.logic.system.security.licensing.AbeLicenseInterface;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.util.ABHashtable;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+
+@groovy.transform.CompileStatic
+public class XmlRpcAbeLicenseRetrievalClient extends XmlRpcAbeClient {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public XmlRpcAbeLicenseRetrievalClient(AbeClientInformationInterface clientInfo) {
+        super(clientInfo, 'LicServ.getLicense');
+    }
+
+    public Object get(final Object anyType, final CryptInterface cryptInterface) throws Exception {
+        try {
+            // {
+            final String server = getClientInfo().getLicenseServer(this.getServer());
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(TRYING);
+            stringBuffer.appendint(this.getServer());
+            stringBuffer.append(SEP);
+            stringBuffer.append(server);
+            this.logUtil.putF(CommonLabels.getInstance().@START_LABEL + stringBuffer.toString(), this, this.commonStrings.@GET);
+            // }
+            final BasicArrayList param = new BasicArrayListD();
+            final XmlRpcClient xmlRpcClient = new XmlRpcClient(server);
+            this.setClient(xmlRpcClient);
+            xmlRpcClient.setBasicAuthentication(StringUtil.getInstance().@EMPTY_STRING, StringUtil.getInstance().@EMPTY_STRING);
+            final ABHashtable<Object, Object> hashtable = this.getClientInfo().toHashtable();
+            // {
+            this.logUtil.putF(CLIENT_INFO + hashtable.toString(), this, this.commonStrings.@GET);
+            /*              * if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().LICENSING)) {              * this.logUtil.putF("Xml-Rpc Client Liscense Request: \n" +              * client.toString(), this,GET); }              */
+            param.add(hashtable);
+            // KeySpecFactory.DES,
+            final Object result = xmlRpcClient.executeWithCrypt(this.getRemoteMethod(), param, cryptInterface);
+            // {
+            this.logUtil.putF(RESULT + result.toString(), this, this.commonStrings.@GET);
+            // }
+            final ABHashtable<Object, Object> resultHashtable = ((ABHashtable<Object, Object>) result);
+            if (!AbeClientLicense.hasRequiredKeys(resultHashtable)) {
+                // {
+                this.logUtil.putF(INVALID, this, this.commonStrings.@GET);
+                // }
+                return this.tryAnother(anyType);
+            }
+            final AbeLicenseInterface abeLicenseInterface = new AbeClientLicense(resultHashtable);
+            // {
+            this.logUtil.putF(this.commonStrings.@END + stringBuffer.toString(), this, this.commonStrings.@GET);
+            // }
+            isOnline = true;
+            return abeLicenseInterface;
+        } catch (IOException e) {
+            // {
+            this.logUtil.put(EXCEPTION_IN_CLIENT, this, this.commonStrings.@GET, e);
+            // {
+            this.logUtil.putF(TRYING_OTHER_SERVERS + ExceptionUtil.getInstance().getStackTrace(e), this, this.commonStrings.@GET);
+            // }
+            if (!e.getMessage().startsWith(HOST_NOT_RESOLVED)) {
+                return this.tryAnother(anyType);
+            } else {
+                isOnline = false;
+                throw new Exception(HOST_NOT_RESOLVED_MSG);
+            }
+        } catch (XmlRpcException e) {
+            // {
+            this.logUtil.put(SERVER_REPORTED_ERROR, this, this.commonStrings.@GET, e);
+            // }
+            return this.tryAnother(anyType);
+        } catch (Exception e) {
+            // {
+            this.logUtil.put(UNKNOWN_ERROR, this, this.commonStrings.@GET, e);
+            // }
+            return this.tryAnother(anyType);
+        }
+    }
+
+}
+
+

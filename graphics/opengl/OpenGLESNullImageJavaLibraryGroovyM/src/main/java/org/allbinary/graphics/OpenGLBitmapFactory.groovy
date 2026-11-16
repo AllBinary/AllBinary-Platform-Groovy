@@ -1,0 +1,38 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics;
+
+import java.io.IOException;
+import java.io.InputStream;
+import javax.microedition.lcdui.Image;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.platform.graphics.PlatformBitmapBase;
+import org.allbinary.platform.graphics.PlatformBitmapBaseFactory;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class OpenGLBitmapFactory extends PlatformBitmapBaseFactory {
+    private static final OpenGLBitmapFactory instance = new OpenGLBitmapFactory();
+
+    /**      * @return the instance      */
+    public static OpenGLBitmapFactory getInstance() {
+        return OpenGLBitmapFactory.instance;
+    }
+
+    public final OpenGLBitmapConfig ARGB_8888 = new OpenGLBitmapConfig(NullUtil.getInstance().@NULL_OBJECT);
+
+    public OpenGLBitmap createBitmap(int width, int height, OpenGLBitmapConfig config) {
+        return new OpenGLBitmap(NullUtil.getInstance().@NULL_OBJECT);
+    }
+
+    public OpenGLBitmap decodeStream(InputStream inputStream) throws IOException {
+        return new OpenGLBitmap(NullUtil.getInstance().@NULL_OBJECT);
+    }
+
+    @Override
+    public PlatformBitmapBase createBitmap(final Image image) {
+        return new OpenGLBitmap(NullUtil.getInstance().@NULL_OBJECT);
+    }
+
+}
+
+

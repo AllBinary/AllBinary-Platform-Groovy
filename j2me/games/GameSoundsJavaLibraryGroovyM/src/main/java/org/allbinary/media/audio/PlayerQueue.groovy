@@ -1,0 +1,76 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.audio;
+
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class PlayerQueue {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private int max;
+
+    private static final String TOTAL = 'Sounds In Queue: ';
+
+    PlayerQueue(int max) {
+        this.max = max;
+    }
+
+    public void add(Sound sound) {
+        try {
+            if (!this.list.contains(sound)) {
+                //this.logUtil.putF(new StringMaker().append("Adding: ").append(sound.getResource()).toString(), this, this.commonStrings.ADD);
+                this.list.add(sound);
+            }
+        } catch (Exception e) {
+            PreLogUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@ADD);
+        }
+    }
+
+    public boolean process() {
+        Sound sound = NoSound.getInstance();
+        try {
+            boolean played = false;
+            if (this.list.size() > 0) {
+                sound = ((Sound) this.list.removeAt(0));
+                //Should be possible, but it still happens?
+                if (sound != null) {
+                    //SoundThreadPool.getInstance().runTask(sound);
+                    sound.getPlayerP().start();
+                }
+                while (this.list.size() > this.max) {
+                    this.list.removeAt(0);
+                }
+                played = true;
+            }
+            return played;
+        } catch (Exception e) {
+            String resource = StringUtil.getInstance().@EMPTY_STRING;
+            if (sound != null) {
+                resource = sound.getResource();
+            }
+            /*             try             {                 final String message = CommonStrings.getInstance();                               GameNotificationEvent gameNotificationEvent =                      new GameNotificationEvent(                             this, message,                             SmallIntegerSingletonFactory.getInstance(1),                             BasicColor.RED,                             Boolean.FALSE);                  GameNotificationEventHandler.getInstance().fireEvent(                         gameNotificationEvent);                                 }             catch(Exception e2)             {                              }             */
+            PreLogUtil.put(new StringMaker().append(this.commonStrings.@EXCEPTION_LABEL).append(resource).toString(), this, this.commonStrings.@PROCESS);
+            return false;
+        }
+    }
+
+    public void clear() {
+        this.list.clear();
+    }
+
+    public String toString() {
+        return new StringMaker().append(PlayerQueue.TOTAL).appendint(this.list.size()).toString();
+    }
+
+}
+
+

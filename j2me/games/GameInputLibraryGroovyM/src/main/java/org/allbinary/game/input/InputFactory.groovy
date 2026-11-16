@@ -1,0 +1,64 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class InputFactory {
+    private static Object instance = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static InputFactory getInstance() {
+        if (InputFactory.instance === NullUtil.getInstance().@NULL_OBJECT) {
+            InputFactory.instance = new InputFactory();
+        }
+        return ((InputFactory) InputFactory.instance);
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    public final String KEY_CODE_LABEL = 'KeyCode: ';
+
+    public final String DEVICE_ID_LABEL = 'DeviceId: ';
+
+    //VK_CONTEXT_MENU
+    public final int MAX = SmallIntegerSingletonFactory.getInstance().getMin();
+
+    //protected final Input[] negativeInputIntegerArray = new Input[6];
+    protected final Input[] inputIntegerArray = new Input[this.MAX];
+
+    public final Input NO_INPUT = new Input(0, this.commonStrings.@UNKNOWN);
+
+    private InputFactory() {
+        final int size = this.inputIntegerArray.length;
+        //this.logUtil.putF(new StringMaker().append("size: ").append(size).toString(), this, this.commonStrings.CONSTRUCTOR);
+        for (int index = 0; index < size; index++) {
+            this.inputIntegerArray[index] = this.NO_INPUT;
+        }
+    }
+
+    public void add(int id, Input input) {
+        this.inputIntegerArray[id] = input;
+    }
+
+    public Input getInstanceById(int id) {
+        if (id < 0) {
+            id = -id;
+        }
+        if (id > this.inputIntegerArray.length) {
+            //this.logUtil.put(new StringMaker().append("id: ").append(id).toString(), this, this.commonStrings.GET_INSTANCE, new Exception());
+            this.logUtil.putF(new StringMaker().append('Warning id: ').appendint(id).toString(), this, this.commonStrings.@GET_INSTANCE);
+            return this.NO_INPUT;
+        }
+        return this.inputIntegerArray[id];
+    }
+
+}
+
+

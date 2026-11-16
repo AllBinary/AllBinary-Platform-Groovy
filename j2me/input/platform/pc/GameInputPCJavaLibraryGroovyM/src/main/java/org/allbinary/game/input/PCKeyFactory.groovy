@@ -1,0 +1,240 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import org.allbinary.math.PositionStrings;
+import org.allbinary.string.CommonPhoneStrings;
+import org.allbinary.string.CommonSeps;
+
+@groovy.transform.CompileStatic
+public class PCKeyFactory {
+    private static final PCKeyFactory SINGLETON = new PCKeyFactory();
+
+    public static final PCKeyFactory getInstance() {
+        return PCKeyFactory.SINGLETON;
+    }
+
+    private final ABKeyEventWrapper keyEventWrapper = ABKeyEventWrapper.getInstance();
+
+    public final PCGameKey UNKNOWN = new PCGameKey(this.keyEventWrapper.@VK_UNDEFINED, 'UNKNOWN');
+
+    public final PCGameKey ENTER = new PCGameKey(5, 'Enter');
+
+    public final PCGameKey _A = new PCGameKey(this.keyEventWrapper.@VK_A, 'A');
+
+    public final PCGameKey _B = new PCGameKey(this.keyEventWrapper.@VK_B, 'B');
+
+    public final PCGameKey _C = new PCGameKey(this.keyEventWrapper.@VK_C, 'C');
+
+    public final PCGameKey _D = new PCGameKey(this.keyEventWrapper.@VK_D, 'D');
+
+    public final PCGameKey _E = new PCGameKey(this.keyEventWrapper.@VK_E, 'E');
+
+    public final PCGameKey _F = new PCGameKey(this.keyEventWrapper.@VK_F, 'F');
+
+    public final PCGameKey _G = new PCGameKey(this.keyEventWrapper.@VK_G, 'G');
+
+    public final PCGameKey _H = new PCGameKey(this.keyEventWrapper.@VK_H, 'H');
+
+    public final PCGameKey _I = new PCGameKey(this.keyEventWrapper.@VK_I, 'I');
+
+    public final PCGameKey _J = new PCGameKey(this.keyEventWrapper.@VK_J, 'J');
+
+    public final PCGameKey _K = new PCGameKey(this.keyEventWrapper.@VK_K, 'K');
+
+    public final PCGameKey _L = new PCGameKey(this.keyEventWrapper.@VK_L, 'L');
+
+    public final PCGameKey _M = new PCGameKey(this.keyEventWrapper.@VK_M, 'M');
+
+    public final PCGameKey _N = new PCGameKey(this.keyEventWrapper.@VK_N, 'N');
+
+    public final PCGameKey _O = new PCGameKey(this.keyEventWrapper.@VK_O, 'O');
+
+    public final PCGameKey _P = new PCGameKey(this.keyEventWrapper.@VK_P, 'P');
+
+    public final PCGameKey _Q = new PCGameKey(this.keyEventWrapper.@VK_Q, 'Q');
+
+    public final PCGameKey _R = new PCGameKey(this.keyEventWrapper.@VK_R, 'R');
+
+    public final PCGameKey _S = new PCGameKey(this.keyEventWrapper.@VK_S, 'S');
+
+    public final PCGameKey _T = new PCGameKey(this.keyEventWrapper.@VK_T, 'T');
+
+    public final PCGameKey _U = new PCGameKey(this.keyEventWrapper.@VK_U, 'U');
+
+    public final PCGameKey _V = new PCGameKey(this.keyEventWrapper.@VK_V, 'V');
+
+    public final PCGameKey _W = new PCGameKey(this.keyEventWrapper.@VK_W, 'W');
+
+    public final PCGameKey _X = new PCGameKey(this.keyEventWrapper.@VK_X, 'X');
+
+    public final PCGameKey _Y = new PCGameKey(this.keyEventWrapper.@VK_Y, 'Y');
+
+    public final PCGameKey _Z = new PCGameKey(this.keyEventWrapper.@VK_Z, 'Z');
+
+    public final PCGameKey a = new PCGameKey(97, 'a');
+
+    public final PCGameKey b = new PCGameKey(98, 'b');
+
+    public final PCGameKey c = new PCGameKey(99, 'c');
+
+    public final PCGameKey d = new PCGameKey(100, 'd');
+
+    public final PCGameKey e = new PCGameKey(101, 'e');
+
+    public final PCGameKey f = new PCGameKey(102, 'f');
+
+    public final PCGameKey g = new PCGameKey(103, 'g');
+
+    public final PCGameKey h = new PCGameKey(104, 'h');
+
+    public final PCGameKey i = new PCGameKey(105, 'i');
+
+    public final PCGameKey j = new PCGameKey(106, 'j');
+
+    public final PCGameKey k = new PCGameKey(107, 'k');
+
+    public final PCGameKey l = new PCGameKey(108, 'l');
+
+    public final PCGameKey m = new PCGameKey(109, 'm');
+
+    public final PCGameKey n = new PCGameKey(110, 'n');
+
+    public final PCGameKey o = new PCGameKey(111, 'o');
+
+    public final PCGameKey p = new PCGameKey(112, 'p');
+
+    public final PCGameKey q = new PCGameKey(113, 'q');
+
+    public final PCGameKey r = new PCGameKey(114, 'r');
+
+    public final PCGameKey s = new PCGameKey(115, 's');
+
+    public final PCGameKey t = new PCGameKey(116, 't');
+
+    public final PCGameKey u = new PCGameKey(117, 'u');
+
+    public final PCGameKey v = new PCGameKey(118, 'v');
+
+    public final PCGameKey w = new PCGameKey(119, 'w');
+
+    public final PCGameKey x = new PCGameKey(120, PositionStrings.getInstance().@X);
+
+    public final PCGameKey y = new PCGameKey(121, PositionStrings.getInstance().@Y);
+
+    public final PCGameKey z = new PCGameKey(122, 'z');
+
+    public final PCGameKey ZERO = new PCGameKey(this.keyEventWrapper.@VK_0, CommonPhoneStrings.getInstance().@ZERO);
+
+    public final PCGameKey ONE = new PCGameKey(this.keyEventWrapper.@VK_1, CommonPhoneStrings.getInstance().@ONE);
+
+    public final PCGameKey TWO = new PCGameKey(this.keyEventWrapper.@VK_2, CommonPhoneStrings.getInstance().@TWO);
+
+    public final PCGameKey THREE = new PCGameKey(this.keyEventWrapper.@VK_3, CommonPhoneStrings.getInstance().@THREE);
+
+    public final PCGameKey FOUR = new PCGameKey(this.keyEventWrapper.@VK_4, CommonPhoneStrings.getInstance().@FOUR);
+
+    public final PCGameKey FIVE = new PCGameKey(this.keyEventWrapper.@VK_5, CommonPhoneStrings.getInstance().@FIVE);
+
+    public final PCGameKey SIX = new PCGameKey(this.keyEventWrapper.@VK_6, CommonPhoneStrings.getInstance().@SIX);
+
+    public final PCGameKey SEVEN = new PCGameKey(this.keyEventWrapper.@VK_7, CommonPhoneStrings.getInstance().@SEVEN);
+
+    public final PCGameKey EIGHT = new PCGameKey(this.keyEventWrapper.@VK_8, CommonPhoneStrings.getInstance().@EIGHT);
+
+    public final PCGameKey NINE = new PCGameKey(this.keyEventWrapper.@VK_9, CommonPhoneStrings.getInstance().@NINE);
+
+    public final PCGameKey DPAD_UP = new PCGameKey(this.keyEventWrapper.@VK_UP, CommonPhoneStrings.getInstance().@UP);
+
+    public final PCGameKey DPAD_DOWN = new PCGameKey(this.keyEventWrapper.@VK_DOWN, CommonPhoneStrings.getInstance().@DOWN);
+
+    public final PCGameKey DPAD_LEFT = new PCGameKey(this.keyEventWrapper.@VK_LEFT, CommonPhoneStrings.getInstance().@LEFT);
+
+    public final PCGameKey DPAD_RIGHT = new PCGameKey(this.keyEventWrapper.@VK_RIGHT, CommonPhoneStrings.getInstance().@RIGHT);
+
+    public final PCGameKey DPAD_UP2 = this.DPAD_UP;
+
+    public final PCGameKey DPAD_DOWN2 = this.DPAD_DOWN;
+
+    public final PCGameKey DPAD_LEFT2 = this.DPAD_LEFT;
+
+    public final PCGameKey DPAD_RIGHT2 = this.DPAD_RIGHT;
+
+    //      "CENTER");
+    public final PCGameKey COMMA = new PCGameKey(this.keyEventWrapper.@VK_COMMA, 'COMMA');
+
+    public final PCGameKey SPACE = new PCGameKey(this.keyEventWrapper.@VK_SPACE, 'SPACE');
+
+    public final PCGameKey DEL = new PCGameKey(this.keyEventWrapper.@VK_DELETE, 'DEL');
+
+    //      CommonPhoneStrings.getInstance().POUND);
+    public final PCGameKey STAR = new PCGameKey(42, CommonPhoneStrings.getInstance().@STAR);
+
+    public final PCGameKey QUESTION = new PCGameKey(47, '?');
+
+    public final PCGameKey PERIOD = new PCGameKey(this.keyEventWrapper.@VK_PERIOD, CommonSeps.getInstance().@PERIOD);
+
+    public final PCGameKey ESCAPE = new PCGameKey(this.keyEventWrapper.@VK_ESCAPE, 'Esc');
+
+    public final PCGameKey BACK_SPACE = new PCGameKey(this.keyEventWrapper.@VK_BACK_SPACE, 'Backspace');
+
+    //      AbPathData.EXTENSION_SEP);
+    public boolean isSubmission(Input input) {
+        if (input === this.ENTER) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isDelete(Input input) {
+        if (input === this.DEL) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isBackSpace(Input input) {
+        if (input === this.BACK_SPACE) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isUp(Input input) {
+        if (input === this.DPAD_UP || input === this.DPAD_UP2) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isDown(Input input) {
+        if (input === this.DPAD_DOWN || input === this.DPAD_DOWN2) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isLeft(Input input) {
+        if (input === this.DPAD_LEFT || input === this.DPAD_LEFT2) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isRight(Input input) {
+        if (input === this.DPAD_RIGHT || input === this.DPAD_RIGHT2) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isEnter(Input input) {
+        if (input === this.ENTER) {
+            return true;
+        }
+        return false;
+    }
+
+}
+
+

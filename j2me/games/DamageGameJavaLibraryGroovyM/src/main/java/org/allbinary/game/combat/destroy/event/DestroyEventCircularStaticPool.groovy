@@ -1,0 +1,34 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.combat.destroy.event;
+
+import org.allbinary.game.displayable.canvas.AllBinaryGameCanvas;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.logic.util.event.AllBinaryEventCircularPool;
+
+@groovy.transform.CompileStatic
+public class DestroyEventCircularStaticPool {
+    private static final DestroyEventCircularStaticPool instance = new DestroyEventCircularStaticPool();
+
+    public static DestroyEventCircularStaticPool getInstance() {
+        return DestroyEventCircularStaticPool.instance;
+    }
+
+    private AllBinaryEventCircularPool EVENT_POOL = new AllBinaryEventCircularPool(20);
+
+    private DestroyEventCircularStaticPool() {
+    }
+
+    public void init(AllBinaryGameCanvas combatGameCanvas) {
+        this.EVENT_POOL.initAllBinaryEventCircularPool(new DestroyEventFactory(combatGameCanvas));
+    }
+
+    public DestroyedEvent getInstanceForLayer(AllBinaryLayer layerInterface) throws Exception {
+        DestroyedEvent destroyedEvent = ((DestroyedEvent) this.EVENT_POOL.getNextInstance());
+        destroyedEvent.setLayerInterfaceForCircularStaticPool(layerInterface);
+        return destroyedEvent;
+    }
+
+}
+
+

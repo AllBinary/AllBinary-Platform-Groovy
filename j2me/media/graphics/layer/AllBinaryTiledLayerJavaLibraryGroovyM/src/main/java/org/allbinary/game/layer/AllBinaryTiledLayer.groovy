@@ -1,0 +1,165 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2006 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.graphics.paint.PaintableInterface;
+import org.allbinary.layer.Layer;
+import org.allbinary.layer.NamedInterface;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class AllBinaryTiledLayer extends Layer implements NamedInterface, PaintableInterface {
+    //LayerInterface
+    private int cellWidth;
+
+    private int cellHeight;
+
+    private final int halfWidth;
+
+    private final int halfHeight;
+
+    private final int halfCellWidth;
+
+    private final int halfCellHeight;
+
+    private final Integer dataId;
+
+    public AllBinaryTiledLayer(final Integer dataId, final int width, final int height, final int cellWidth, final int cellHeight) {
+        //super(tiledLayer.getWidth(), tiledLayer.getHeight());
+        super(0, 0);
+        this.dataId = dataId;
+        this.setLayerWidth(width);
+        this.setLayerHeight(height);
+        //this.logUtil.putF("TiledLayer: w: " + width + " h: " + height, this, this.commonStrings.CONSTRUCTOR);
+        super.setPosition(0, 0, 0);
+        //this.logUtil.putF("TiledLayer: x: " + this.x + " y: " + this.y, this, this.commonStrings.CONSTRUCTOR);
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
+        this.halfWidth = (this.getWidth() >> 1);
+        this.halfHeight = (this.getHeight() >> 1);
+        //this.logUtil.putF("TiledLayer: hw: " + this.halfWidth + " hh: " + this.halfHeight, this, this.commonStrings.CONSTRUCTOR);
+        this.halfCellWidth = (cellWidth >> 1);
+        this.halfCellHeight = (cellHeight >> 1);
+    }
+
+    public void setCells(final int[][] mapTwoDArray) {
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('Start: r: ');
+        stringBuffer.appendint(mapTwoDArray.length);
+        stringBuffer.append(' c: ');
+        stringBuffer.appendint(mapTwoDArray[0].length);
+        stringBuffer.append(' rows: ');
+        stringBuffer.appendint(this.getRows());
+        stringBuffer.append(' columns: ');
+        stringBuffer.appendint(this.getColumns());
+        this.logUtil.putF(stringBuffer.toString(), this, 'setCells');
+        final int rows = this.getRows();
+        final int columns = this.getColumns();
+        for (int col = 0; col < columns; col++) {
+            for (int row = 0; row < rows; row++) {
+                this.setCell(col, row, mapTwoDArray[row][col]);
+            }
+        }
+    }
+
+    public void updateCells(final int[][] mapTwoDArray, final int fromTileId, final int toTileId) {
+        //        this.logUtil.putF(stringBuffer.append(fromTileId).append(TO).append(toTileId).toString(), this, UPDATE_CELLS);
+        final int rows = this.getRows();
+        final int columns = this.getColumns();
+        for (int col = 0; col < columns; col++) {
+            for (int row = 0; row < rows; row++) {
+                if (fromTileId == mapTwoDArray[row][col]) {
+                    //                    this.logUtil.put(stringBuffer.append(fromTileId).append(TO).append(toTileId).append(AT).append(col).append(',').append(row).toString(), this, UPDATE_CELLS);
+                    mapTwoDArray[row][col] = toTileId;
+                    this.setCell(col, row, mapTwoDArray[row][col]);
+                }
+            }
+        }
+    }
+
+    @Override
+    public String getName() {
+        return this.getClass().getName();
+    }
+
+    @Override
+    public void paint(final Graphics graphics) {
+    }
+
+    @Override
+    public void paintThreed(final Graphics graphics) {
+    }
+
+    public int getX2() {
+        return this.x + this.getWidth();
+    }
+
+    public int getY2() {
+        return this.y + this.getHeight();
+    }
+
+    public int getZ2() {
+        return ((int) (this.z + this.getDepth()));
+    }
+
+    public int getCellWidth() {
+        return this.cellWidth;
+    }
+
+    public int getCellHeight() {
+        return this.cellHeight;
+    }
+
+    public int getCell(final int col, final int row) {
+        return -1;
+    }
+
+    public int getColumns() {
+        return -1;
+    }
+
+    public int getRows() {
+        return -1;
+    }
+
+    public void setCell(final int col, final int row, final int tileIndex) {
+    }
+
+    public int getHalfWidth() {
+        return this.halfWidth;
+    }
+
+    public int getHalfHeight() {
+        return this.halfHeight;
+    }
+
+    public Integer getDataId() {
+        return this.dataId;
+    }
+
+    public int getHalfCellWidth() {
+        return this.halfCellWidth;
+    }
+
+    public int getHalfCellHeight() {
+        return this.halfCellHeight;
+    }
+
+    public boolean isOnTileLayer(final int column, final int row) {
+        if (this.getColumns() > column && this.getRows() > row && row >= 0 && column >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int getAnimatedTile(final int animationTileIndex) {
+        return animationTileIndex;
+    }
+
+}
+
+

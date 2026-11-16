@@ -1,0 +1,167 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package views.business.context.modules.storefront.customizer;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.data.tables.transform.info.TransformInfoEntity;
+import org.allbinary.data.tables.transform.info.TransformInfoEntityBuilder;
+import org.allbinary.data.tree.dom.DomNodeInterface;
+import org.allbinary.data.tree.dom.document.DomDocumentHelper;
+import org.allbinary.data.tree.dom.document.XmlDocumentHelper;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.visual.transform.info.TransformInfo;
+import org.allbinary.logic.visual.transform.info.TransformInfoHttpInterface;
+import org.allbinary.logic.visual.transform.info.TransformInfoInterface;
+import org.allbinary.logic.visual.transform.info.objectConfig.TransformInfoObjectConfigInterface;
+import org.w3c.dom.Document;
+
+@groovy.transform.CompileStatic
+public class CustomizerUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final CustomizerUtil instance = new CustomizerUtil();
+
+    public static CustomizerUtil getInstance() {
+        return CustomizerUtil.instance;
+    }
+
+    private CustomizerUtil() {
+    }
+
+    public TransformInfoInterface getTransformInfoInterfaceToCustomize(TransformInfoInterface customizerTransformInfoInterface, TransformInfoInterface transformInfoInterface) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + customizerTransformInfoInterface.getName(), this, 'getTransformInfoInterfaceToCustomize()');
+        }
+        TransformInfoEntity transformInfoEntityInterface = TransformInfoEntityBuilder.getInstance();
+        String viewName = transformInfoInterface.getName();
+        TransformInfoHttpInterface httpTransformInfoInterface = ((TransformInfoHttpInterface) customizerTransformInfoInterface);
+        TransformInfoInterface customizedTransformInfoInterface = transformInfoEntityInterface.get(viewName, httpTransformInfoInterface.getPropertiesHashMap(), httpTransformInfoInterface.getPageContext());
+        return customizedTransformInfoInterface;
+    }
+
+    //get all of the components for a component that is modified by the customizer view
+    public BasicArrayList getTransformInfoObjectConfigComponentNodesToCustomize(TransformInfoInterface customizerTransformInfoInterface, TransformInfoInterface transformInfoInterface) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + customizerTransformInfoInterface.getName(), this, 'getTransformInfoObjectConfigComponentNodesToCustomize()');
+        }
+        TransformInfoEntity transformInfoEntityInterface = TransformInfoEntityBuilder.getInstance();
+        String viewName = transformInfoInterface.getName();
+        TransformInfoHttpInterface httpTransformInfoInterface = ((TransformInfoHttpInterface) customizerTransformInfoInterface);
+        TransformInfoInterface customizedTransformInfoInterface = transformInfoEntityInterface.get(viewName, httpTransformInfoInterface.getPropertiesHashMap(), httpTransformInfoInterface.getPageContext());
+        return this.getTransformInfoObjectConfigComponentNodes(customizedTransformInfoInterface);
+    }
+
+    //get all components in objectconfig
+    public BasicArrayList getTransformInfoObjectConfigComponentNodes(TransformInfoInterface transformInfoInterface) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + transformInfoInterface.getName(), this, 'getTransformInfoObjectConfigComponentNodes()');
+        }
+        TransformInfoObjectConfigInterface transformInfoObjectConfigInterface = transformInfoInterface.getObjectConfigInterface();
+        return transformInfoObjectConfigInterface.getTransforms();
+    }
+
+    public BasicArrayList getTransformInfoObjectConfigGroupComponentNodes(TransformInfoInterface transformInfoInterface) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + transformInfoInterface.getName(), this, 'getTransformInfoObjectConfigComponentNodes()');
+        }
+        TransformInfoObjectConfigInterface transformInfoObjectConfigInterface = transformInfoInterface.getObjectConfigInterface();
+        return transformInfoObjectConfigInterface.getGroupTransforms();
+    }
+
+    //The new data/xml is generated by the domNodeInterface
+    public void insert(TransformInfoInterface transformInfoInterface, DomNodeInterface domNodeInterface) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + transformInfoInterface.getName(), this, 'insert()');
+        }
+        TransformInfoEntity transformInfoEntityInterface = TransformInfoEntityBuilder.getInstance();
+        BasicArrayList allViewsToBeModified = this.getTransformInfoObjectConfigGroupComponentNodes(transformInfoInterface);
+        //get the view xml/data that will replace the old xml/data
+        Document document = DomDocumentHelper.create();
+        document.appendChild(domNodeInterface.toXmlNode(document));
+        String documentString = XmlDocumentHelper.toString(document);
+        StringMaker stringBuffer = new StringMaker();
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            stringBuffer.append('Total Views For Modification: ');
+            stringBuffer.appendint(allViewsToBeModified.size());
+            stringBuffer.append(' New Xml/Data: ');
+            stringBuffer.append(documentString);
+            this.logUtil.putF(stringBuffer.toString(), this, 'insert()');
+        }
+        //CustomizerUtil.getInstance().write(transformInfoInterface, documentString);
+        transformInfoInterface.setData(documentString);
+        final int size = allViewsToBeModified.size();
+        for (int index = 0; index < size; index++) {
+            TransformInfo transformInfo = ((TransformInfo) allViewsToBeModified.get(index));
+            String viewNameOfViewToBeModified = transformInfo.getName();
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(transformInfoInterface.getName());
+                stringBuffer.append(' is modifying view: ');
+                stringBuffer.append(viewNameOfViewToBeModified);
+                this.logUtil.putF(stringBuffer.toString(), this, 'insert()');
+            }
+            TransformInfoHttpInterface httpTransformInfoInterface = ((TransformInfoHttpInterface) transformInfoInterface);
+            TransformInfoInterface specifiedTransformInfoInterface = transformInfoEntityInterface.get(viewNameOfViewToBeModified, httpTransformInfoInterface.getPropertiesHashMap(), httpTransformInfoInterface.getPageContext());
+            if (specifiedTransformInfoInterface == null) {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append(transformInfoInterface.getName());
+                    stringBuffer.append(' is unable to add data to view: ');
+                    stringBuffer.append(viewNameOfViewToBeModified);
+                    stringBuffer.append(' since it does not exist');
+                    this.logUtil.putF(stringBuffer.toString(), this, 'insert()');
+                }
+            } else {
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF(transformInfoInterface.getName() + ' is adding data to view: ' + viewNameOfViewToBeModified, this, 'insert()');
+                }
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append(viewNameOfViewToBeModified);
+                    stringBuffer.append(' is changing data in ');
+                    stringBuffer.append(specifiedTransformInfoInterface.getDataFilePath().toString());
+                    stringBuffer.append(' to the following data:\n');
+                    stringBuffer.append(documentString);
+                    this.logUtil.putF(stringBuffer.toString(), this, 'insert()');
+                }
+                //save xml data to specified view
+                this.write(specifiedTransformInfoInterface, documentString);
+            }
+        }
+    }
+
+    public void write(TransformInfoInterface specifiedTransformInfoInterface, String documentString) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + specifiedTransformInfoInterface.getName(), this, 'write()');
+        }
+        TransformInfoEntity transformInfoEntityInterface = TransformInfoEntityBuilder.getInstance();
+        //should encrypt
+        specifiedTransformInfoInterface.setData(documentString);
+        //specifiedTransformInfoInterface.setData();
+        transformInfoEntityInterface.update(specifiedTransformInfoInterface.toHashMap());
+    }
+
+    //that are all updated at once with the CustomizerUtils.write
+    public Document getViewDataForComponentsInObjectConfig(TransformInfoInterface transformInfoInterface) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('View Name: ' + transformInfoInterface.getName(), this, 'getViewDataForComponentsInObjectConfig()');
+        }
+        //BasicArrayList allViewsToBeModified = CustomizerUtil.getInstance().getTransformInfoObjectConfigComponentNodes(transformInfoInterface);
+        TransformInfoObjectConfigInterface transformInfoObjectConfigInterface = transformInfoInterface.getObjectConfigInterface();
+        BasicArrayList allViewsToBeModified = transformInfoObjectConfigInterface.getGroupTransforms();
+        TransformInfoEntity transformInfoEntityInterface = TransformInfoEntityBuilder.getInstance();
+        final int size = allViewsToBeModified.size();
+        for (int index = 0; index < size; index++) {
+            TransformInfo nextTransformInfoInterface = ((TransformInfo) allViewsToBeModified.get(index));
+            String viewNameOfViewToBeModified = nextTransformInfoInterface.getName();
+            TransformInfoHttpInterface httpTransformInfoInterface = ((TransformInfoHttpInterface) transformInfoInterface);
+            TransformInfoInterface specifiedTransformInfoInterface = transformInfoEntityInterface.get(viewNameOfViewToBeModified, httpTransformInfoInterface.getPropertiesHashMap(), httpTransformInfoInterface.getPageContext());
+            return specifiedTransformInfoInterface.getDataDocument();
+        }
+        throw new Exception('No Components Specified in ObjectConfig');
+    }
+
+}
+
+

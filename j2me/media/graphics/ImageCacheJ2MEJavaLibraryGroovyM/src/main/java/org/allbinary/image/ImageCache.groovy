@@ -1,0 +1,122 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.image;
+
+import java.io.InputStream;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.J2MEUtil;
+import org.allbinary.TsUtil;
+import org.allbinary.data.resource.ResourceUtil;
+import org.allbinary.game.gd.resource.GDResources;
+import org.allbinary.logic.ABSystemWrapper;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.system.Memory;
+
+@groovy.transform.CompileStatic
+public class ImageCache extends ImageCacheBase {
+    public static final ImageCache NULL_IMAGE_CACHE = new ImageCache();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    //private final ABSystemWrapper systemWrapper = ABSystemWrapper.getInstance();
+    private final TsUtil tsUtil = TsUtil.getInstance();
+
+    public ImageCache() {
+    }
+
+    //AllBinaryRendererBase3
+    public void addListener(Object renderer) {
+    }
+
+    public int getIndex(final Object key) {
+        final GDResources gdResources = GDResources.getInstance();
+        final String[] resourceStringArray = gdResources.@resourceStringArray;
+        final int size = resourceStringArray.length;
+        for (int index = 0; index < size; index++) {
+            if (resourceStringArray[index] === key) {
+                return index;
+            }
+        }
+        this.logUtil.putF(new StringMaker().append('unable to find key: ').append(StringUtil.getInstance().toString(key)).toString(), this, this.commonStrings.@RUN);
+        throw new RuntimeException();
+    }
+
+    @Override
+    public Image get(final String caller, final int width, final int height) throws Exception {
+        int foundIndex = this.getIndexWH(width, height);
+        Image image = this.getFromAvailable(foundIndex, width, height);
+        if (image === NullImage.NULL_IMAGE) {
+            this.volume += width * height;
+            if (this.volume > 32000) {
+                //this.logUtil.putF(new StringMaker().append("Image for: ").append(caller).toString(), this, this.commonStrings.GET);
+                this.tsUtil.gc();
+                //System.gc();
+                this.volume = 0;
+            }
+            image = this.createImage(caller, width, height);
+            //this.logUtil.putF(new StringMaker().append("Image: ").append(image).toString(), this, this.commonStrings.GET);
+            final int[] widths = this.widths;
+            if (this.nextIndex > widths.length - 1) {
+                if (foundIndex == -1) {
+                    foundIndex = this.nextIndex;
+                    widths[this.nextIndex] = width;
+                    this.heights[this.nextIndex] = height;
+                    this.nextIndex++;
+                }
+                this.listOfList[foundIndex].add(image);
+            }
+        }
+        return image;
+    }
+
+    @Override
+    public Image getWithKey(final Object key) throws Exception {
+        Image image = this.getImage(key);
+        if (image === NullImage.NULL_IMAGE) {
+            final ResourceUtil resourceUtil = ResourceUtil.getInstance();
+            final InputStream resourceInputStream = resourceUtil.getResourceAsStream(((String) key));
+            if (resourceInputStream == null) {
+                throw new RuntimeException(new StringMaker().append('Image resource is not available for key: ').append(StringUtil.getInstance().toString(key)).toString());
+            }
+            try {
+                //this.logUtil.putF(Memory.getInfo(), this, this.commonStrings.GET);
+                image = this.createImageFromInputStream(key, resourceInputStream);
+            } catch (Exception e) {
+                this.logUtil.put('Exception: Trying Again After GC', this, this.commonStrings.@GET, e);
+                this.logUtil.putF(new StringMaker().append('InputStream: ').append(StringUtil.getInstance().toString(resourceInputStream)).toString(), this, this.commonStrings.@GET);
+                this.tsUtil.gc();
+                this.tsUtil.gc();
+                this.logUtil.putF(Memory.getInfo(), this, this.commonStrings.@GET);
+                Thread.sleep(100);
+                image = this.createImageFromInputStream(key, resourceInputStream);
+            }
+            if (J2MEUtil.isHTML()) {
+            } else {
+                resourceInputStream.close();
+            }
+            //            }
+            this.hashtable.put(key, image);
+        }
+        //        this.logUtil.putF(key + " = " + image.toString(), this, this.commonStrings.CONSTRUCTOR);
+        return image;
+    }
+
+    public void loadImageForAnimation() throws Exception {
+    }
+
+    public void progressEnded() {
+    }
+
+    public void runTask() {
+    }
+
+    public boolean isLazy() {
+        return false;
+    }
+
+}
+
+

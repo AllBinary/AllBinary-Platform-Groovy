@@ -1,0 +1,57 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map;
+
+import org.allbinary.game.layer.AllBinaryGameLayer;
+import org.allbinary.logic.util.event.EventListenerInterface;
+import org.allbinary.logic.util.event.handler.BasicEventHandler;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class GeographicMapEventHandler extends BasicEventHandler {
+    private static GeographicMapEventHandler instance = new GeographicMapEventHandler();
+
+    public static GeographicMapEventHandler getInstance() {
+        return GeographicMapEventHandler.instance;
+    }
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private GeographicMapEventHandler() {
+    }
+
+    public void addListener(AllBinaryGameLayer gameLayer) {
+        if (!this.list.contains(gameLayer)) {
+            this.list.add(gameLayer);
+        }
+    }
+
+    @Override
+    public void removeAllListeners() {
+        this.list.clear();
+        super.removeAllListeners();
+    }
+
+    @Override
+    public void removeListener(EventListenerInterface eventListenerInterface) {
+        this.list.remove(eventListenerInterface);
+        super.removeListener(eventListenerInterface);
+    }
+
+    public void fireEvent() {
+        for (int index = this.list.size(); --index >= 0; ) {
+            try {
+                AllBinaryGameLayer gameLayer = ((AllBinaryGameLayer) this.list.get(index));
+                gameLayer.move();
+            } catch (Exception e) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, EventStrings.getInstance().@FIRE_EVENT, e);
+            }
+        }
+    }
+
+}
+
+

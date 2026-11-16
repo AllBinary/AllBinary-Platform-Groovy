@@ -1,0 +1,81 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai.scroller;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.game.ai.BasicAI;
+import org.allbinary.game.input.GameInput;
+import org.allbinary.game.physics.velocity.BasicVelocityProperties;
+import org.allbinary.game.physics.velocity.VelocityInterfaceCompositeInterface;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.logic.math.MathUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class BasePatrolAI extends BasicAI {
+    public final static Integer MAX_DISTANCE = SmallIntegerSingletonFactory.getInstance().getAt(2);
+
+    public final static Integer DIRECTION_ARRAY = SmallIntegerSingletonFactory.getInstance().getAt(3);
+
+    public final static Integer FIRING_DISTANCE = SmallIntegerSingletonFactory.getInstance().getAt(4);
+
+    public static Integer SPEED = SmallIntegerSingletonFactory.getInstance().getAt(5);
+
+    protected Integer maxDistance;
+
+    protected int currentDistance;
+
+    //private Integer[] directionArray;
+    protected int xTotalDistance;
+
+    //private int yTotalDistance;
+    protected int lastKeyDirection = Canvas.RIGHT;
+
+    protected int keyDirection = Canvas.RIGHT;
+
+    public BasePatrolAI(final ABHashtable<Object, Object> hashtable, final AllBinaryLayer ownerLayerInterface, final GameInput gameInput) throws Exception {
+        super(ownerLayerInterface, gameInput);
+        this.maxDistance = ((Integer) hashtable.get(BasePatrolAI.MAX_DISTANCE));
+        this.currentDistance = this.maxDistance.intValue();
+    }
+
+    protected void update() {
+        this.updateTotalDistance();
+        this.changeDirectionIfReachedPacingAreaMax();
+    }
+
+    private void updateTotalDistance() {
+        final VelocityInterfaceCompositeInterface velocityInterfaceCompositeInterface = ((VelocityInterfaceCompositeInterface) this.getOwnerLayerInterface());
+        final BasicVelocityProperties velocityProperties = velocityInterfaceCompositeInterface.getVelocityProperties();
+        this.xTotalDistance += velocityProperties.getVelocityXBasicDecimalP().getScaled();
+    }
+
+    // Limit pacing to a maximum distance
+    private void changeDirectionIfReachedPacingAreaMax() {
+        final MathUtil mathUtil = MathUtil.getInstance();
+        final int totalDistance = mathUtil.abs(this.xTotalDistance);
+        if (totalDistance > this.currentDistance) {
+            this.nextDirection();
+        }
+    }
+
+    protected void nextDirection() {
+        // for(int index = 0; index < directionArray.length; index++)
+        if (this.lastKeyDirection == Canvas.LEFT) {
+            this.keyDirection = Canvas.RIGHT;
+            this.lastKeyDirection = this.keyDirection;
+            this.xTotalDistance = 0;
+        } else if (this.lastKeyDirection == Canvas.RIGHT) {
+            this.keyDirection = Canvas.LEFT;
+            this.lastKeyDirection = this.keyDirection;
+            this.xTotalDistance = 0;
+        }
+    }
+
+    public void disable() {
+    }
+
+}
+
+

@@ -1,0 +1,73 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.dhtml.html.table;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.visual.dhtml.html.HtmlTag;
+
+@groovy.transform.CompileStatic
+public class HtmlRow extends HtmlTag {
+    private final String END = '>';
+
+    private final String START = '<tr ';
+
+    private final String ENDTAG = '</tr>';
+
+    private int numberOfColumns = 0;
+
+    private String before;
+
+    private String after;
+
+    private BasicArrayList htmlCellsVector;
+
+    public HtmlRow(String before, String after) {
+        this.before = new String(before);
+        this.after = new String(after);
+        this.htmlCellsVector = new BasicArrayListD();
+    }
+
+    public void addCell(HtmlCell htmlCell) {
+        this.htmlCellsVector.add(htmlCell);
+        this.numberOfColumns++;
+    }
+
+    public int getNumberOfColumns() {
+        return this.numberOfColumns;
+    }
+
+    public String toString() {
+        final StringUtil stringUtil = StringUtil.getInstance();
+        String result = stringUtil.@EMPTY_STRING;
+        Object[] attributeKeys = this.otherAttributes.keySet().toArray();
+        int attributeSize = attributeKeys.length;
+        int cellSize = this.htmlCellsVector.size();
+        result = this.before;
+        result += this.START;
+        result += ' ';
+        for (int i = 0; i < attributeSize; i++) {
+            String key = ((String) attributeKeys[i]);
+            String value = ((String) otherAttributes.get(key));
+            if (value != null && value.compareTo(stringUtil.@EMPTY_STRING) != 0) {
+                result += key;
+                result += '=\"';
+                result += value;
+                result += '\" ';
+            }
+        }
+        result += this.END;
+        for (int i = 0; i < cellSize; i++) {
+            result += this.htmlCellsVector.get(i).toString();
+            result += ' ';
+        }
+        result += this.ENDTAG;
+        result += this.after;
+        return result;
+    }
+
+}
+
+

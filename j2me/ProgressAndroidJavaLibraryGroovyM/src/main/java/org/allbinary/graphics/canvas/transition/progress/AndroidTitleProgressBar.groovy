@@ -1,0 +1,195 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.canvas.transition.progress;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.android.activity.NullProgressActivity;
+import org.allbinary.android.activity.ProgressActivityInterface;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class AndroidTitleProgressBar extends ProgressCanvas {
+    class TitleProgressBarSetProgressRunnable implements Runnable {
+        private final AndroidTitleProgressBar androidTitleProgressBar;
+
+        TitleProgressBarSetProgressRunnable(final AndroidTitleProgressBar androidTitleProgressBar) {
+            this.androidTitleProgressBar = androidTitleProgressBar;
+        }
+
+        @Override
+        public void run() {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            try {
+                final int value = ((int) this.androidTitleProgressBar.getValue());
+                this.androidTitleProgressBar.@progressActivity.onTitleProgressBarSetProgress(value);
+            } catch (Exception e) {
+                logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@RUN, e);
+            }
+        }
+
+    }
+
+    class TitleProgressBarPortionSetProgressRunnable implements Runnable {
+        private final AndroidTitleProgressBar androidTitleProgressBar;
+
+        TitleProgressBarPortionSetProgressRunnable(final AndroidTitleProgressBar androidTitleProgressBar) {
+            this.androidTitleProgressBar = androidTitleProgressBar;
+        }
+
+        @Override
+        public void run() {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            try {
+                final int value = ((int) (((float) (this.androidTitleProgressBar.getValue() + ((float) (this.androidTitleProgressBar.getMaxValue() / this.androidTitleProgressBar.@portion))))));
+                this.androidTitleProgressBar.@progressActivity.onTitleProgressBarSetProgress(value);
+            } catch (Exception e) {
+                logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@RUN, e);
+            }
+        }
+
+    }
+
+    class ShowTitleProgressBarRunnable implements Runnable {
+        private final AndroidTitleProgressBar androidTitleProgressBar;
+
+        ShowTitleProgressBarRunnable(final AndroidTitleProgressBar androidTitleProgressBar) {
+            this.androidTitleProgressBar = androidTitleProgressBar;
+        }
+
+        @Override
+        public void run() {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            try {
+                final int maxValue = ((int) this.androidTitleProgressBar.getMaxValue());
+                this.androidTitleProgressBar.@progressActivity.onShowTitleProgressBar(maxValue, false);
+            } catch (Exception e) {
+                logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@RUN, e);
+            }
+        }
+
+    }
+
+    class DismissTitleProgressBarRunnable implements Runnable {
+        private final AndroidTitleProgressBar androidTitleProgressBar;
+
+        DismissTitleProgressBarRunnable(final AndroidTitleProgressBar androidTitleProgressBar) {
+            this.androidTitleProgressBar = androidTitleProgressBar;
+        }
+
+        @Override
+        public void run() {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            try {
+                this.androidTitleProgressBar.@progressActivity.onDismissTitleProgressBar();
+            } catch (Exception e) {
+                logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@RUN, e);
+            }
+        }
+
+    }
+
+    private ShowTitleProgressBarRunnable showTitleProgressBarRunnable = new ShowTitleProgressBarRunnable(this);
+
+    private DismissTitleProgressBarRunnable dismissTitleProgressBarRunnable = new DismissTitleProgressBarRunnable(this);
+
+    private TitleProgressBarPortionSetProgressRunnable progressDialogPortionSetProgressRunnable = new TitleProgressBarPortionSetProgressRunnable(this);
+
+    private TitleProgressBarSetProgressRunnable progressDialogSetProgressRunnable = new TitleProgressBarSetProgressRunnable(this);
+
+    //private MidletActivity midletActivity;
+    private ProgressActivityInterface progressActivity = NullProgressActivity.NULL_PROGRESS_ACTIVITY;
+
+    private int portion = 0;
+
+    protected AndroidTitleProgressBar(final String title, final BasicColor backgroundBasicColor, final BasicColor foregroundBasicColor) {
+        super(title, backgroundBasicColor, foregroundBasicColor);
+    }
+
+    //    }
+    public void init(ProgressActivityInterface activity) {
+        this.progressActivity = activity;
+    }
+
+    public boolean isInitialized() {
+        if (this.progressActivity !== NullProgressActivity.NULL_PROGRESS_ACTIVITY) {
+            // && this.midletActivity != null)
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void start() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@START_METHOD_NAME);
+            super.start();
+            // this.midletActivity.startProgressActivity();
+            this.progressActivity.runOnUiThread(this.showTitleProgressBarRunnable);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@START_METHOD_NAME, e);
+        }
+    }
+
+    @Override
+    public void end() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@END_METHOD_NAME);
+            this.progressActivity.runOnUiThread(this.dismissTitleProgressBarRunnable);
+            // this.progressActivity = null;
+            super.end();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@END_METHOD_NAME, e);
+        }
+    }
+
+    @Override
+    public void addPortion(int value, String text, int index) {
+        try {
+            //this.logUtil.putF(this.commonStrings.START, this, ADD_PORTION);
+            super.addPortion(value, text, index);
+            this.portion = value;
+            this.progressActivity.runOnUiThread(this.progressDialogPortionSetProgressRunnable);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.ADD_PORTION, e);
+        }
+    }
+
+    @Override
+    public void addNormalPortion(int value, String text) {
+        try {
+            //this.logUtil.putF(this.commonStrings.START, this, ADD_PORTION);
+            super.addNormalPortion(value, text);
+            this.portion = value;
+            this.progressActivity.runOnUiThread(this.progressDialogPortionSetProgressRunnable);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.ADD_PORTION, e);
+        }
+    }
+
+    @Override
+    protected void setValue(int value) {
+        try {
+            super.setValue(value);
+            this.progressActivity.runOnUiThread(this.progressDialogSetProgressRunnable);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'setValue', e);
+        }
+    }
+
+    public void waitUntilDisplayed() {
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+    }
+
+}
+
+

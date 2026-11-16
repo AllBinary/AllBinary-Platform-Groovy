@@ -1,0 +1,61 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.form.item;
+
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.ImageItem;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.displayable.DisplayInfoSingleton;
+import org.allbinary.graphics.form.ScreenInfo;
+import org.allbinary.logic.VectorUtil;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.util.visitor.Visitor;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class CommandTextItemArrayFactory {
+    //protected final CommonStrings commonStrings = CommonStrings.getInstance();
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private final Visitor visitorInterface;
+
+    public CommandTextItemArrayFactory(final Visitor visitorInterface) {
+        this.visitorInterface = visitorInterface;
+    }
+
+    public final ABCustomItem[] getInstance(final Object vector, final BasicColor backgroundBasicColor, final BasicColor foregroundBasicColor) {
+        final VectorUtil vectorUtil = VectorUtil.getInstance();
+        final int size = vectorUtil.getSize(vector);
+        this.list.clear();
+        CommandTextItem textItem;
+        int priorityLimit = 7;
+        final DisplayInfoSingleton displayInfo = DisplayInfoSingleton.getInstance();
+        final boolean isLargeEnoughDisplayForBigMenu = (displayInfo.isPortrait() && displayInfo.getLastHeight() >= ScreenInfo.getInstance().@MEDIUM_WIDTH) || (!displayInfo.isPortrait() && displayInfo.getLastWidth() >= ScreenInfo.getInstance().@MEDIUM_WIDTH);
+        if (!isLargeEnoughDisplayForBigMenu && size > 3) {
+            priorityLimit = 3;
+        }
+        Command command;
+        for (int index = 0; index < size; index++) {
+            command = ((Command) vectorUtil.elementAt(vector, index));
+            //isNotPriority || command.getPriority() == 3
+            if (command.getPriority() < priorityLimit) {
+                //PreLogUtil.put("Label: " + command.getLabel(), this, this.commonStrings.GET_INSTANCE);
+                Boolean aBoolean = ((Boolean) this.visitorInterface.visit(command));
+                if (aBoolean.booleanValue()) {
+                    textItem = new CommandTextItem(command, ImageItem.LAYOUT_DEFAULT, StringUtil.getInstance().@EMPTY_STRING, backgroundBasicColor, foregroundBasicColor);
+                    this.list.add(textItem);
+                }
+            }
+        }
+        final ABCustomItem[] textItemArray = new ABCustomItem[this.list.size()];
+        final int size2 = textItemArray.length;
+        for (int index = 0; index < size2; index++) {
+            textItemArray[index] = ((ABCustomItem) this.list.@objectArray[index]);
+        }
+        return textItemArray;
+    }
+
+}
+
+

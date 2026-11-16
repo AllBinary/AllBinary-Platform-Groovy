@@ -1,0 +1,86 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.opengles;
+
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class GLUtil {
+    private static final GLUtil instance = new GLUtil();
+
+    /**      * @return the instance      */
+    public static GLUtil getInstance() {
+        return GLUtil.instance;
+    }
+
+    private final int BYTES_PER_FLOAT = 4;
+
+    public final FloatBuffer NULL_FLOAT_BUFFER = ByteBuffer.allocateDirect(0).asFloatBuffer();
+
+    public FloatBuffer makeFloatBuffer3(float p_a, float p_b, float p_c) {
+        final ByteBuffer b = ByteBuffer.allocateDirect(3 * this.BYTES_PER_FLOAT);
+        b.order(ByteOrder.nativeOrder());
+        final FloatBuffer buffer = b.asFloatBuffer();
+        buffer.put(p_a);
+        buffer.put(p_b);
+        buffer.put(p_c);
+        this.position(buffer, 0);
+        return buffer;
+    }
+
+    public FloatBuffer makeFloatBuffer4(float p_a, float p_b, float p_c, float p_d) {
+        final ByteBuffer b = ByteBuffer.allocateDirect(4 * this.BYTES_PER_FLOAT);
+        b.order(ByteOrder.nativeOrder());
+        final FloatBuffer buffer = b.asFloatBuffer();
+        buffer.put(p_a);
+        buffer.put(p_b);
+        buffer.put(p_c);
+        buffer.put(p_d);
+        this.position(buffer, 0);
+        return buffer;
+    }
+
+    public FloatBuffer makeFloatBuffer(final ByteBuffer byteBuffer) {
+        final ByteBuffer b = ByteBuffer.allocateDirect(byteBuffer.limit() * this.BYTES_PER_FLOAT);
+        b.order(ByteOrder.nativeOrder());
+        final FloatBuffer buffer = b.asFloatBuffer();
+        int unsigned;
+        float v;
+        while (byteBuffer.hasRemaining()) {
+            unsigned = (((int) byteBuffer.get())) & 0xFF;
+            v = ((float) ((((float) unsigned)) / 255f));
+            buffer.put(v);
+        }
+        this.position(buffer, 0);
+        return buffer;
+    }
+
+    //Hack for Android Studio using internal JDK 11 or newer in builds.
+    public Buffer position(final Buffer buffer, final int newPosition) {
+        return buffer.position(newPosition);
+    }
+
+    //When Shaders are enabled this should be done on the GPU
+    public void rotateUVs(final float[] uvs, final float angleDegrees, final float pivotU, final float pivotV) {
+        final double angleRad = Math.toRadians(((double) angleDegrees));
+        final double cosA = Math.cos(angleRad);
+        final double sinA = Math.sin(angleRad);
+        for (int i = 0; i < uvs.length; i += 2) {
+            float u = uvs[i];
+            float v = uvs[i + 1];
+            float du = ((float) (u - pivotU));
+            float dv = ((float) (v - pivotV));
+            float ru = ((float) (((float) (du * cosA - dv * sinA)) + pivotU));
+            float rv = ((float) (((float) (du * sinA + dv * cosA)) + pivotV));
+            uvs[i] = ru;
+            uvs[i + 1] = rv;
+        }
+    }
+
+}
+
+

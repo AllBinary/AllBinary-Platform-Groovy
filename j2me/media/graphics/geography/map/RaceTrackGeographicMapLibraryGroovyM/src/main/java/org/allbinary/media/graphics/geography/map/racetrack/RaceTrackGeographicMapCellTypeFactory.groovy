@@ -1,0 +1,76 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map.racetrack;
+
+import org.allbinary.media.graphics.geography.map.GeographicMapCellType;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellTypeFactory;
+
+@groovy.transform.CompileStatic
+public class RaceTrackGeographicMapCellTypeFactory extends GeographicMapCellTypeFactory {
+    private static final RaceTrackGeographicMapCellTypeFactory instanceC = new RaceTrackGeographicMapCellTypeFactory();
+
+    public static RaceTrackGeographicMapCellTypeFactory getInstance() {
+        return RaceTrackGeographicMapCellTypeFactory.instanceC;
+    }
+
+    public GeographicMapCellType EMPTY_CELL_TYPE = new GeographicMapCellType(0, -1);
+
+    public GeographicMapCellType EASY_CELL_TYPE = this.EMPTY_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType BOTTOM_LEFT_TURN_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType TOP_LEFT_TURN_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType TOP_RIGHT_TURN_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType VERTICAL_STRAIGHT_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType START_LINE_ROAD_CELL_TYPE;
+
+    public final RaceTrackGeographicMapCellType DEFAULT_FINISH_LINE_ROAD_CELL_TYPE;
+
+    public GeographicMapCellType FINISH_LINE_ROAD_CELL_TYPE = GeographicMapCellType.NULL_GEOGRAPHIC_MAP_CELL_TYPE;
+
+    public RaceTrackGeographicMapCellTypeFactory() {
+        final RaceTrackGeographicMapCellTypes raceTrackGeographicMapCellTypes = RaceTrackGeographicMapCellTypes.getInstance();
+        this.BOTTOM_LEFT_TURN_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@BOTTOM_LEFT_TURN_ROAD_CELL_TYPE;
+        this.BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@BOTTOM_RIGHT_TURN_ROAD_CELL_TYPE;
+        this.TOP_LEFT_TURN_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@TOP_LEFT_TURN_ROAD_CELL_TYPE;
+        this.TOP_RIGHT_TURN_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@TOP_RIGHT_TURN_ROAD_CELL_TYPE;
+        this.HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@HORIZONTAL_STRAIGHT_ROAD_CELL_TYPE;
+        this.VERTICAL_STRAIGHT_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@VERTICAL_STRAIGHT_ROAD_CELL_TYPE;
+        this.START_LINE_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@START_LINE_ROAD_CELL_TYPE;
+        this.DEFAULT_FINISH_LINE_ROAD_CELL_TYPE = raceTrackGeographicMapCellTypes.@DEFAULT_FINISH_LINE_ROAD_CELL_TYPE;
+    }
+
+    @Override
+    public int getStartType() {
+        return this.START_LINE_ROAD_CELL_TYPE.getType();
+    }
+
+    @Override
+    public int getEndType() {
+        return this.FINISH_LINE_ROAD_CELL_TYPE.getType();
+    }
+
+    @Override
+    public int getEmptyType() {
+        return this.EMPTY_CELL_TYPE.getType();
+    }
+
+    @Override
+    public boolean isPath(final GeographicMapCellType cellType) {
+        // i_TileType == FINISH_LINE_ROAD_CELL_TYPE)
+        if (cellType !== this.EMPTY_CELL_TYPE && cellType !== this.EASY_CELL_TYPE) {
+            return true;
+        }
+        return false;
+    }
+
+}
+
+

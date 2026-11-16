@@ -1,0 +1,60 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.image.opengles;
+
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.platform.graphics.PlatformBitmapBase;
+import org.allbinary.platform.graphics.PlatformBitmapBaseFactory;
+import org.allbinary.platform.opengles.PlatformTextureBaseFactory;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+//OpenGLESNullImageJ2MEJavaLibrary
+@groovy.transform.CompileStatic
+public class OpenGLESImage implements OpenGLSurfaceChangedInterface {
+    public static final OpenGLESImage NULL_OPENGL_IMAGE = new OpenGLESImage(NullImage.NULL_IMAGE, PlatformBitmapBaseFactory.NULL_PLATFORM_BITMAP_BASE_FACTORY, PlatformTextureBaseFactory.NULL_PLATFORM_TEXTURE_BASE_FACTORY);
+
+    public static final BasicArrayList texture2dList = new BasicArrayListD();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    protected final PlatformTextureBaseFactory textureFactory;
+
+    public final PlatformBitmapBase openGLBitmap;
+
+    public final OpenGLESImageProperties openGLESImageProperties = new OpenGLESImageProperties();
+
+    public OpenGLESImage(final Image image, final PlatformBitmapBaseFactory bitmapFactory, final PlatformTextureBaseFactory textureFactory) {
+        //super(image);
+        this.openGLBitmap = bitmapFactory.createBitmap(image);
+        this.textureFactory = textureFactory;
+    }
+
+    @Override
+    public void set(GL gl) throws Exception {
+        throw new Exception(this.commonStrings.@NOT_IMPLEMENTED);
+    }
+
+    protected boolean initTexture(GL10 gl) {
+        return false;
+    }
+
+    public void drawRegion(GL10 gl, int viewHeight, float x_src, float y_src, float width, float height, int x, int y, int z) {
+    }
+
+    public void draw(GL10 gl, int x, int y, int z) {
+    }
+
+    public static final int TYPE = 4;
+
+    public int getType() {
+        return OpenGLESImage.TYPE;
+    }
+
+}
+
+

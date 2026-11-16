@@ -1,0 +1,110 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.io.file.zip;
+
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.AbDataOutputStream;
+import org.allbinary.logic.io.AbFileInputStream;
+import org.allbinary.logic.io.AbFileOutputStream;
+import org.allbinary.logic.io.DataOutputStreamFactory;
+import org.allbinary.logic.io.StreamUtil;
+import org.allbinary.logic.io.file.AbFile;
+import org.allbinary.logic.io.file.FileUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class ZipFileUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final ZipFileUtil instance = new ZipFileUtil();
+
+    /**      * @return the instance      */
+    public static ZipFileUtil getInstance() {
+        return ZipFileUtil.instance;
+    }
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    public void create(String outFilename, BasicArrayList fileBasicArrayList) {
+        try {
+            final AbFile zipFile = AbFile.createAbFile(outFilename);
+            if (zipFile.exists()) {
+                zipFile.delete();
+            }
+            zipFile.createNewFile();
+            final ZipOutputStream outputStream = new ZipOutputStream(AbFileOutputStream.createFromAbFile(zipFile));
+            final StreamUtil streamUtil = StreamUtil.getInstance();
+            final StringMaker stringBuffer = new StringMaker();
+            final byte[] byteArray = new byte[16384];
+            AbFileInputStream fileInputStream;
+            final int size = fileBasicArrayList.size();
+            int current = 0;
+            for (int i = 0; i < size; i++) {
+                AbFile file = ((AbFile) fileBasicArrayList.get(i));
+                if (file.isDirectory()) {
+                } else if (file.isFile()) {
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.appendint(current);
+                    stringBuffer.append(' Creating Zip File Entry: ');
+                    stringBuffer.append(file.getPath());
+                    this.logUtil.putF(stringBuffer.toString(), this, 'create()');
+                    try {
+                        fileInputStream = AbFileInputStream.createFromAbFile(file);
+                        outputStream.putNextEntry(new ZipEntry(file.getPath()));
+                        streamUtil.get(fileInputStream, outputStream, byteArray);
+                        outputStream.closeEntry();
+                        streamUtil.close(fileInputStream);
+                    } catch (Exception e) {
+                        this.logUtil.putF('Skipping File (Probably Local): ' + file.getPath(), this, 'create()');
+                    }
+                }
+                current++;
+            }
+            streamUtil.close(outputStream);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'create', e);
+        }
+    }
+
+    public void unzip(String path, AbFile zipFile, String fileName) throws Exception {
+        byte[] buffer = new byte[16384];
+        ZipInputStream inputStream = null;
+        try {
+            inputStream = new ZipInputStream(AbFileInputStream.createFromAbFile(zipFile));
+            ZipEntry zipEntry;
+            final StringMaker stringBuffer = new StringMaker();
+            final FileUtil fileUtil = FileUtil.getInstance();
+            while ((zipEntry = inputStream.getNextEntry()) != null) {
+                String entryName = zipEntry.getName();
+                if (zipEntry.isDirectory()) {
+                } else {
+                    AbFile entryFile = AbFile.createAbFile(path + entryName);
+                    stringBuffer.delete(0, stringBuffer.length());
+                    stringBuffer.append('ZipEntry Name: ');
+                    stringBuffer.append(entryName);
+                    stringBuffer.append(' isFile: ');
+                    stringBuffer.appendboolean(entryFile.isFile());
+                    stringBuffer.append(' isDirectory: ');
+                    stringBuffer.appendboolean(entryFile.isDirectory());
+                    stringBuffer.append(' getParent: ');
+                    stringBuffer.append(entryFile.getParent());
+                    this.logUtil.putF(stringBuffer.toString(), this, 'unzip');
+                    AbDataOutputStream dataOutputStream = DataOutputStreamFactory.getInstance().getInstanceForAbFile(entryFile);
+                    fileUtil.write(inputStream, dataOutputStream, buffer);
+                }
+                inputStream.closeEntry();
+            }
+        } finally {
+            StreamUtil.getInstance().close(inputStream);
+        }
+    }
+
+}
+
+

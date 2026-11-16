@@ -1,0 +1,72 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.installer;
+
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.logic.communication.http.file.upload.FileUploadData;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.AbIOSystem;
+import org.allbinary.logic.io.file.AbFile;
+import org.allbinary.logic.io.file.directory.Directory;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.util.BasicArrayList;
+
+@groovy.transform.CompileStatic
+public class DeleteCloud {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public DeleteCloud() {
+    }
+
+    public boolean delete(String prePath, int current, int total) {
+        try {
+            if (AbIOSystem.getInstance().isType('com.vobject.appengine.java.io')) {
+                final StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append(URLGLOBALS.getWebappPath());
+                stringBuffer.append(prePath);
+                final AbPath path = new AbPath(stringBuffer.toString(), StringUtil.getInstance().@EMPTY_STRING);
+                //Using cloud file search currently causes problems when trying to output new file
+                final AbFile file = AbFile.createAbFileFromAbPath(path);
+                final BasicArrayList fileBasicArrayList = Directory.getInstance().search(file, true);
+                int size = fileBasicArrayList.size();
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append('Searched: ');
+                stringBuffer.append(path.toFileSystemString());
+                stringBuffer.append(' BasicArrayList: ');
+                stringBuffer.appendint(size);
+                int portion = Math.divideExact(size, total) + 1;
+                int start = portion * current;
+                int end = start + portion;
+                if (end > size) {
+                    end = size;
+                }
+                stringBuffer.append(' Section: ');
+                stringBuffer.appendint(start);
+                stringBuffer.append(' - ');
+                stringBuffer.appendint(end);
+                this.logUtil.putF(stringBuffer.toString(), this, 'initialize()');
+                AbFile nextFile;
+                for (int index = start; index < end; index++) {
+                    nextFile = ((AbFile) fileBasicArrayList.get(index));
+                    try {
+                        //!nextFile.isDirectory() && 
+                        if (nextFile.getPath().indexOf(FileUploadData.getInstance().@FILE) < 0) {
+                            nextFile.delete();
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                this.logUtil.putF('Deleted Files From Cloud', this, 'initialize()');
+            }
+            return true;
+        } catch (Exception e) {
+            this.logUtil.put('Unable to copy installer files into cloud', this, 'initialize()', e);
+            return false;
+        }
+    }
+
+}
+
+

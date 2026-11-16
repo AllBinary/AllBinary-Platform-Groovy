@@ -1,0 +1,116 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.data.resource;
+
+import java.io.InputStream;
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import org.allbinary.debug.DebugFactory;
+import org.allbinary.debug.NoDebug;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.HashtableUtil;
+
+//Android
+@groovy.transform.CompileStatic
+public class ResourceUtil {
+    private static final ResourceUtil instance = new ResourceUtil();
+
+    public static ResourceUtil getInstance() {
+        return ResourceUtil.instance;
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    //private Activity activity;
+    private Object context = NullUtil.getInstance().@NULL_OBJECT;
+
+    private Object resources = NullUtil.getInstance().@NULL_OBJECT;
+
+    private ABHashtable<Object, Object> hashMap = StdUtil.getInstance().createHashtable();
+
+    private ResourceUtil() {
+    }
+
+    public void setLoadingPaths(String path, String ext) {
+        this.logUtil.putF(CommonStrings.getInstance().@NOT_IMPLEMENTED, this, 'setLoadingPaths');
+    }
+
+    public Context getContext() {
+        return ((Context) this.context);
+    }
+
+    /*     public Activity getActivity()     {         return activity;     }     */
+    public void setContextFromActivity(Activity activity) {
+        //this.activity = activity;
+        this.context = activity;
+    }
+
+    public void setContext(Context aContext) {
+        this.context = aContext;
+    }
+
+    public Integer getResourceId(String resource) {
+        final Integer value = ((Integer) this.hashMap.get(resource));
+        if (DebugFactory.getInstance() !== NoDebug.getInstance()) {
+            PreLogUtil.put(new StringMaker().append(resource).append(CommonSeps.getInstance().@COLON).append(value.toString()).toString(), this, 'getResourceId');
+        }
+        return value;
+    }
+
+    public void addResource(String resource, Integer value) {
+        if (DebugFactory.getInstance() !== NoDebug.getInstance()) {
+            PreLogUtil.put(new StringMaker().append(resource).append(CommonSeps.getInstance().@COLON).append(value.toString()).toString(), this, 'addResource');
+            if (this.containsDuplicate(resource, value)) {
+                ForcedLogUtil.log(new StringMaker().append('Found Duplicate Resource: ').append(resource).toString(), this);
+            }
+        }
+        this.hashMap.put(resource, value);
+    }
+
+    private boolean containsDuplicate(String resource, Integer value) {
+        Object[] objectArray = HashtableUtil.getInstance().getKeysAsArray(this.hashMap);
+        for (int index = objectArray.length; --index >= 0; ) {
+            Integer integer = ((Integer) this.hashMap.get(((Object) objectArray[index])));
+            if (resource !== objectArray[index]) {
+                if (value !== integer) {
+                    if (value.intValue() == integer.intValue()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /*     private Resources getResources()     {         return this.resources;     }     */
+    public void setResources(final Resources resources) {
+        this.logUtil.putF(new StringMaker().append('Resource Loader: ').append(resources.getClass().getName()).toString(), this, 'setResources');
+        this.resources = resources;
+    }
+
+    //final String RESOURCE = "Resource Found";
+    public InputStream getResourceAsStream(final String resource) throws Exception {
+        // InputStream inputStream = assetManager.open(resourcePath);
+        final Integer integer = ((Integer) this.hashMap.get(resource));
+        final int id = integer.intValue();
+        final Resources resources = (((Resources) this.resources));
+        final InputStream inputStream = resources.openRawResource(id);
+        if (inputStream != null) {
+            //this.logUtil.putF(RESOURCE, this, METHOD_NAME);
+            return inputStream;
+        }
+        return inputStream;
+    }
+
+}
+
+

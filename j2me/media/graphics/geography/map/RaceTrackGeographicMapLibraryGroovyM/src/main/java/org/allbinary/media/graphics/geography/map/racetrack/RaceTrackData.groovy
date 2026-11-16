@@ -1,0 +1,128 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map.racetrack;
+
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.graphics.CellPosition;
+import org.allbinary.logic.NullUtil;
+
+@groovy.transform.CompileStatic
+public class RaceTrackData {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private Image tileSetImage = NullImage.NULL_IMAGE;
+
+    private Image miniTileSetImage = NullImage.NULL_IMAGE;
+
+    private int cellWidth = 0;
+
+    private int cellHeight = 0;
+
+    private int miniCellWidth = 0;
+
+    private int miniCellHeight = 0;
+
+    private int[][] mapArray = NullUtil.getInstance().@NULL_INT_ARRAY_ARRAY;
+
+    private int[] cellTypeIdToGeographicMapCellTypeArray = NullUtil.getInstance().@NULL_INT_ARRAY;
+
+    private CellPosition[] NO_OVER_PASSES_ARRAY = new CellPosition[0];
+
+    private CellPosition[] overPassGeographicMapCellPositionArray = this.NO_OVER_PASSES_ARRAY;
+
+    private Integer id;
+
+    public RaceTrackData(final Integer id, final int cellWidth, final int cellHeight, final int miniCellWidth, final int miniCellHeight, final int[] cellTypeIdToGeographicMapCellTypeArray, final int[][] mapArray) {
+        this.id = id;
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
+        this.miniCellWidth = miniCellWidth;
+        this.miniCellHeight = miniCellHeight;
+        this.mapArray = mapArray;
+        this.cellTypeIdToGeographicMapCellTypeArray = cellTypeIdToGeographicMapCellTypeArray;
+    }
+
+    protected void setMapArray(int[][] mapArray) {
+        //this.logUtil.putF("Set Map Array: Rows: " + mapArray.length + "Cols:  " + mapArray[0].length, this, "setMapArray");
+        this.mapArray = mapArray;
+    }
+
+    public int[][] getMapArray() {
+        return this.mapArray;
+    }
+
+    protected void setCellTypeIdToGeographicMapCellTypeArray(int[] cellTypeIdToGeographicMapCellTypeArray) {
+        this.cellTypeIdToGeographicMapCellTypeArray = cellTypeIdToGeographicMapCellTypeArray;
+    }
+
+    public int[] getCellTypeIdToGeographicMapCellTypeArray() {
+        return this.cellTypeIdToGeographicMapCellTypeArray;
+    }
+
+    private void setCellWidth(int cellWidth) {
+        this.cellWidth = cellWidth;
+    }
+
+    public int getCellWidth() {
+        return this.cellWidth;
+    }
+
+    private void setCellHeight(int cellHeight) {
+        this.cellHeight = cellHeight;
+    }
+
+    public int getCellHeight() {
+        return this.cellHeight;
+    }
+
+    public CellPosition[] getOverPassGeographicMapCellPositionArray() {
+        return this.overPassGeographicMapCellPositionArray;
+    }
+
+    public void setOverPassGeographicMapCellPositionArray(CellPosition[] overPassGeographicMapCellPositionArray) {
+        this.overPassGeographicMapCellPositionArray = overPassGeographicMapCellPositionArray;
+    }
+
+    public Image getTileSetImage() {
+        return this.tileSetImage;
+    }
+
+    public void setTileSetImage(Image tileSetImage) {
+        this.tileSetImage = tileSetImage;
+    }
+
+    public Image getMiniTileSetImage() {
+        return this.miniTileSetImage;
+    }
+
+    public void setMiniTileSetImage(Image miniTileSetImage) {
+        this.miniTileSetImage = miniTileSetImage;
+    }
+
+    public int getMiniCellWidth() {
+        return this.miniCellWidth;
+    }
+
+    public void setMiniCellWidth(int miniCellWidth) {
+        this.miniCellWidth = miniCellWidth;
+    }
+
+    public int getMiniCellHeight() {
+        return this.miniCellHeight;
+    }
+
+    public void setMiniCellHeight(int miniCellHeight) {
+        this.miniCellHeight = miniCellHeight;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+}
+
+

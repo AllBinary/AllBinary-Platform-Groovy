@@ -1,0 +1,79 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package taghelpers;
+
+import java.util.HashMap;
+import javax.servlet.jsp.PageContext;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.control.validate.ValidationComponentInterface;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+@groovy.transform.CompileStatic
+public class ValidationViewHelper extends ViewHelper implements ValidationComponentInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private ValidationComponentInterface viewInterface;
+
+    public ValidationViewHelper(HashMap hashMap, PageContext pageContext) throws Exception {
+        super(hashMap, pageContext);
+        this.viewInterface = ((ValidationComponentInterface) this.getViewObject());
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@TAGHELPER)) {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        }
+    }
+
+    public Boolean isValid() {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@TAGHELPER)) {
+                this.logUtil.putF('Started', this, this.commonStrings.@IS_VALID);
+            }
+            return this.viewInterface.isValid();
+        } catch (Exception e) {
+            //error += "Unknown";
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@IS_VALID, e);
+            }
+            return Boolean.FALSE;
+        }
+    }
+
+    public String validationInfo() {
+        try {
+            return this.viewInterface.validationInfo();
+        } catch (Exception e) {
+            //error += "Unknown";
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'validationInfo()', e);
+            }
+            return 'Unknown Validation Error';
+        }
+    }
+
+    public Document toValidationInfoDoc() {
+        try {
+            return this.viewInterface.toValidationInfoDoc();
+        } catch (Exception e) {
+            //error += "Unknown";
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'toValidationInfoDoc()', e);
+            }
+            return null;
+        }
+    }
+
+    public Node toValidationInfoNode(Document document) {
+        try {
+            return this.viewInterface.toValidationInfoNode(document);
+        } catch (Exception e) {
+            //error += "Unknown";
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'toValidationInfoNode()', e);
+            }
+            return null;
+        }
+    }
+
+}
+
+

@@ -1,0 +1,51 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.pathfinding;
+
+import org.allbinary.logic.util.cache.BaseBasicArrayListCache;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListS;
+
+@groovy.transform.CompileStatic
+public class BasicGeographicMapExtractedPathCacheFactory extends BaseBasicArrayListCache {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static final BasicGeographicMapExtractedPathCacheFactory instance = new BasicGeographicMapExtractedPathCacheFactory();
+
+    /**      * @return the instance      */
+    public static BasicGeographicMapExtractedPathCacheFactory getInstance() {
+        return BasicGeographicMapExtractedPathCacheFactory.instance;
+    }
+
+    private int maxConcurrentPaths;
+
+    private int maxPaths;
+
+    private BasicGeographicMapExtractedPathCacheFactory() {
+    }
+
+    public void init(int maxConcurrentPaths, int maxPaths) {
+        //maxPaths = 0;
+        if (maxConcurrentPaths != this.maxConcurrentPaths) {
+            for (int index = maxConcurrentPaths; index >= this.maxConcurrentPaths; index--) {
+                this.list.add(new BasicArrayListS(maxPaths));
+            }
+            this.maxConcurrentPaths = maxConcurrentPaths;
+        }
+        this.maxPaths = maxPaths;
+    }
+
+    public BasicArrayList getPath() {
+        if (this.list.size() > 0) {
+            return ((BasicArrayList) this.list.removeAt(0));
+        } else {
+            return new BasicArrayListS(this.maxPaths);
+        }
+    }
+
+    public void release(BasicArrayList list) {
+        list.clear();
+        this.list.add(list);
+    }
+
+}
+
+

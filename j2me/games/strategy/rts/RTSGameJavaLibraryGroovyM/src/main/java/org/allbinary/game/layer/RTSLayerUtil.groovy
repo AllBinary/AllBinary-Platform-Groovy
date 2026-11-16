@@ -1,0 +1,158 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import org.allbinary.game.identification.GroupCommonFactory;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.direction.DirectionFactory;
+import org.allbinary.game.GameInfo;
+import org.allbinary.game.combat.weapon.WeaponProperties;
+import org.allbinary.game.identification.BasicGroupFactory;
+import org.allbinary.game.part.PartInterface;
+import org.allbinary.game.part.weapon.BasicWeaponPart;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.racetrack.BaseRaceTrackGeographicMap;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class RTSLayerUtil {
+    private static final RTSLayerUtil instance = new RTSLayerUtil();
+
+    public static RTSLayerUtil getInstance() {
+        return RTSLayerUtil.instance;
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final GroupCommonFactory groupCommonFactory = GroupCommonFactory.getInstance();
+
+    private WeaponProperties createWeaponProperties(final WeaponProperties weaponProperties, final int currentLevel, final int lastLevel) {
+        long reloadTime = weaponProperties.getReloadTime();
+        if (lastLevel > currentLevel) {
+            reloadTime = reloadTime + 50;
+        } else if (lastLevel < currentLevel) {
+            reloadTime = reloadTime - 50;
+        }
+        final WeaponProperties newWeaponProperties = new WeaponProperties(reloadTime, weaponProperties.getTargetingTime(), weaponProperties.getSpeed().getUnscaled(), Math.divideExact(weaponProperties.getDamage(), lastLevel) * currentLevel, weaponProperties.getDissipation());
+        //      "WeaponProperties: ").append(newWeaponProperties, //    this, "createWeaponProperties");
+        return newWeaponProperties;
+    }
+
+    public void downgrade(final RTSLayer rtsLayer) {
+        rtsLayer.setLevel(rtsLayer.getLevel() - 1);
+        final PartInterface[] partInterfaceArray = rtsLayer.getPartInterfaceArray();
+        final int size = partInterfaceArray.length;
+        BasicWeaponPart partInterface;
+        for (int index = size; --index >= 0; ) {
+            partInterface = ((BasicWeaponPart) partInterfaceArray[index]);
+            partInterface.setWeaponProperties(this.createWeaponProperties(partInterface.getWeaponProperties(), rtsLayer.getLevel(), rtsLayer.getLevel() + 1));
+        }
+        rtsLayer.select();
+    }
+
+    public void upgrade(final RTSLayer rtsLayer) {
+        rtsLayer.setLevel(rtsLayer.getLevel() + 1);
+        final PartInterface[] partInterfaceArray = rtsLayer.getPartInterfaceArray();
+        final int size = partInterfaceArray.length;
+        BasicWeaponPart partInterface;
+        for (int index = size; --index >= 0; ) {
+            partInterface = ((BasicWeaponPart) partInterfaceArray[index]);
+            partInterface.setWeaponProperties(this.createWeaponProperties(partInterface.getWeaponProperties(), rtsLayer.getLevel(), rtsLayer.getLevel() - 1));
+        }
+        rtsLayer.select();
+    }
+
+    private final long MAX_RELOAD_TIME = Math.divideExact(((long) Integer.MAX_VALUE), ((long) 100000));
+
+    //1000 = 1000 10000 = 100000
+    public long getCostExponential(final long cost) {
+        return (Math.divideExact((cost * cost * cost), (cost * 1000)));
+    }
+
+    private int getWeaponPropertiesCost(final WeaponProperties weaponProperties) {
+        //I artificially reduce the cost of reload time since they miss a bunch
+        long cost = (weaponProperties.getDamage() + weaponProperties.getRange() + ((Math.divideExact(this.MAX_RELOAD_TIME, weaponProperties.getReloadTime())) >> 1));
+        //this.logUtil.putF("Pre Cost: ").append(cost, this, "getWeaponPropertiesCost");
+        cost = this.getCostExponential(cost);
+        //this.logUtil.putF("Cost: ").append(cost, this, "getWeaponPropertiesCost");
+        return ((int) cost);
+    }
+
+    public int getCost(RTSLayer rtsLayer) {
+        int total = 0;
+        final PartInterface[] partInterfaceArray = rtsLayer.getPartInterfaceArray();
+        final int size = partInterfaceArray.length;
+        BasicWeaponPart partInterface;
+        WeaponProperties weaponProperties;
+        for (int index = size - 1; index >= 0; index--) {
+            partInterface = ((BasicWeaponPart) partInterfaceArray[index]);
+            weaponProperties = partInterface.getWeaponProperties();
+            total += this.getWeaponPropertiesCost(weaponProperties);
+        }
+        return total;
+    }
+
+    public int getDowngradeCost(final RTSLayer rtsLayer) {
+        final PartInterface[] partInterfaceArray = rtsLayer.getPartInterfaceArray();
+        final int size = partInterfaceArray.length;
+        int downgradeCost = 0;
+        BasicWeaponPart partInterface;
+        WeaponProperties weaponProperties;
+        int downgradeWeaponCost;
+        int currentWeaponCost;
+        for (int index = size - 1; index >= 0; index--) {
+            partInterface = ((BasicWeaponPart) partInterfaceArray[index]);
+            weaponProperties = partInterface.getWeaponProperties();
+            downgradeWeaponCost = this.getWeaponPropertiesCost(this.createWeaponProperties(weaponProperties, rtsLayer.getLevel() - 1, rtsLayer.getLevel()));
+            currentWeaponCost = this.getWeaponPropertiesCost(weaponProperties);
+            downgradeCost += (currentWeaponCost - downgradeWeaponCost);
+        }
+        downgradeCost = Math.divideExact(downgradeCost * 9, 10);
+        this.logUtil.putF(new StringMaker().append('Total Cost: ').appendint(downgradeCost).toString(), this, 'getDowngradeCost');
+        return downgradeCost;
+    }
+
+    public int getUpgradeCost(final RTSLayer rtsLayer) {
+        int upgradeCost = 0;
+        final PartInterface[] partInterfaceArray = rtsLayer.getPartInterfaceArray();
+        final int size = partInterfaceArray.length;
+        BasicWeaponPart partInterface;
+        WeaponProperties weaponProperties;
+        int upgradedWeaponCost;
+        int currentWeaponCost;
+        for (int index = size - 1; index >= 0; index--) {
+            partInterface = ((BasicWeaponPart) partInterfaceArray[index]);
+            weaponProperties = partInterface.getWeaponProperties();
+            upgradedWeaponCost = this.getWeaponPropertiesCost(this.createWeaponProperties(weaponProperties, rtsLayer.getLevel() + 1, rtsLayer.getLevel()));
+            currentWeaponCost = this.getWeaponPropertiesCost(weaponProperties);
+            upgradeCost += (upgradedWeaponCost - currentWeaponCost);
+        }
+        this.logUtil.putF(new StringMaker().append('Total Cost: ').appendint(upgradeCost).toString(), this, 'getUpgradeCost');
+        return upgradeCost;
+    }
+
+    public final void destroyAndClear(BasicArrayList list) throws Exception {
+        RTSLayer rtsLayer;
+        for (int index = list.size() - 1; index >= 0; index--) {
+            rtsLayer = ((RTSLayer) list.get(index));
+            rtsLayer.setDestroyed(true);
+        }
+        list.clear();
+    }
+
+    public final ABHashtable<Object, Object> createFakeRTSLayerHashtable(final BaseRaceTrackGeographicMap baseRaceTrackGeographicMap) {
+        final ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+        final FakeLayerManager layerManager = new FakeLayerManager(GameInfo.NONE);
+        layerManager.setGeographicMapInterface(new BasicGeographicMap[] {baseRaceTrackGeographicMap});
+        hashtable.put(AllBinaryGameLayerManager.ID, layerManager);
+        hashtable.put(DirectionFactory.getInstance().@NAME, DirectionFactory.getInstance().@LEFT);
+        hashtable.put(this.groupCommonFactory.@ID, BasicGroupFactory.getInstance().@NONE_ARRAY);
+        return hashtable;
+    }
+
+}
+
+

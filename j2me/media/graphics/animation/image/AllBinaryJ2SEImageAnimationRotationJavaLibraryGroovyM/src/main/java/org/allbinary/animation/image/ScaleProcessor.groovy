@@ -1,0 +1,37 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Image;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.media.image.ImageScaleUtil;
+import org.allbinary.string.CommonStrings;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class ScaleProcessor extends ScaleBaseProcessor {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final ScaleProcessor instanceC = new ScaleProcessor();
+
+    /**      * @return the instance      */
+    public static ScaleBaseProcessor getInstance() {
+        return ScaleProcessor.instanceC;
+    }
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final ImageScaleUtil imageScaleUtil = ImageScaleUtil.getInstance();
+
+    @Override
+    public void update(final Image originalImage, final Image[] originalImageArray, final Image[] ximageToShowArray, final int unused, final float scaleX, final float scaleY, final float maxScaleX, final float maxScaleY) {
+        try {
+            this.imageScaleUtil.scale2(originalImage, originalImageArray, ximageToShowArray, unused, scaleX, scaleY, maxScaleX, maxScaleY);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@UPDATE, e);
+        }
+    }
+
+}
+
+

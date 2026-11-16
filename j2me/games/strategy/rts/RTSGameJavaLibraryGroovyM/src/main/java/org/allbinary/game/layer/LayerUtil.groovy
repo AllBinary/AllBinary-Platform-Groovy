@@ -1,0 +1,35 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import org.allbinary.string.CommonSeps;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.math.PositionStrings;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class LayerUtil {
+    private static final String HASHTABLE = 'Hashtable: ';
+
+    public static String toString(final ABHashtable<Object, Object> hashtable, final int x, final int y, final int z) {
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final PositionStrings positionStrings = PositionStrings.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(LayerUtil.HASHTABLE);
+        stringBuffer.append(StringUtil.getInstance().toString(hashtable));
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(positionStrings.@X_LABEL);
+        stringBuffer.appendint(x);
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(positionStrings.@Y_LABEL);
+        stringBuffer.appendint(y);
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(positionStrings.@Z_LABEL);
+        stringBuffer.appendint(z);
+        return stringBuffer.toString();
+    }
+
+}
+
+

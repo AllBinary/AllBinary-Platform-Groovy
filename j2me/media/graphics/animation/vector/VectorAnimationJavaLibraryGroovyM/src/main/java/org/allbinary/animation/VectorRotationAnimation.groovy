@@ -1,0 +1,49 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation;
+
+import org.allbinary.direction.Direction;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.math.Angle;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.math.AngleInfo;
+
+@groovy.transform.CompileStatic
+public class VectorRotationAnimation extends VectorBaseRotationAnimation {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    public VectorRotationAnimation(final int[][][] currentPoints, final BasicColor basicColor, final AnimationBehavior animationBehavior) throws Exception {
+        //int angleIncrement
+        super(AngleInfo.getInstance(((short) (Math.divideExact(((int) AngleFactory.getInstance().@TOTAL_ANGLE), currentPoints.length)))), currentPoints, basicColor, animationBehavior);
+        this.angleInfo.adjustAngle(this.getFrame());
+    }
+
+    @Override
+    public void setFrameByDirection(final Direction direction) {
+        Angle angle = this.directionUtil.getFrameAngle(direction);
+        this.adjustFrameToAngle(angle);
+    }
+
+    @Override
+    public void setFrameToAngle(final Angle angle) {
+        this.adjustFrameToAngle(angle);
+    }
+
+    @Override
+    public void setFrame(final int index) {
+        super.setFrame(index);
+        this.angleInfo.adjustAngle(this.getFrame());
+    }
+
+    @Override
+    public void adjustFrame(final short newAngle) {
+        this.setFrame(this.frameUtil.getFrameForAngle(newAngle, ((int) this.angleInfo.getAngleIncrementInfo().getAngleIncrement())));
+    }
+
+    @Override
+    public void adjustFrameToAngle(final Angle newAngle) {
+        this.adjustFrame(newAngle.getValue());
+    }
+
+}
+
+

@@ -1,0 +1,120 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.layer;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.thread.SynchObject;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.ABSystemWrapper;
+
+@groovy.transform.CompileStatic
+public class LayerManager {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final ABSystemWrapper systemWrapper = ABSystemWrapper.getInstance();
+
+    private final TsUtil tsUtil = TsUtil.getInstance();
+
+    private final LayerManagerLoggingBase layerManagerLogging;
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    private final SynchObject anyType = new SynchObject();
+
+    public LayerManager(final LayerManagerLoggingBase layerManagerLogging) {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        this.layerManagerLogging = layerManagerLogging;
+    }
+
+    public boolean contains(final AllBinaryLayer layerInterface) {
+        return this.list.contains(layerInterface);
+    }
+
+    public void update(final AllBinaryLayer layerInterface) throws Exception {
+        boolean had = this.list.remove(layerInterface);
+        if (had) {
+            AllBinaryLayer nextLayerInterface;
+            final int size = this.list.size();
+            for (int index = 0; index < size; index++) {
+                nextLayerInterface = ((AllBinaryLayer) this.list.get(index));
+                if (layerInterface.getZP() > nextLayerInterface.getZP()) {
+                    this.list.addAt(index, layerInterface);
+                    return;
+                }
+            }
+            this.list.add(layerInterface);
+        }
+    }
+
+    public void insert(final AllBinaryLayer layerInterface) throws Exception {
+        AllBinaryLayer nextLayerInterface;
+        final int size = this.list.size();
+        for (int index = 0; index < size; index++) {
+            nextLayerInterface = ((AllBinaryLayer) this.list.get(index));
+            if (layerInterface.getZP() > nextLayerInterface.getZP()) {
+                this.appendAt(layerInterface, index);
+                return;
+            }
+        }
+        this.append(layerInterface);
+    }
+
+    public void append(final AllBinaryLayer layerInterface) throws Exception {
+        this.layerManagerLogging.append(layerInterface);
+        this.list.add(layerInterface);
+    }
+
+    public void appendAt(final AllBinaryLayer layerInterface, final int index) throws Exception {
+        this.layerManagerLogging.appendAt(layerInterface, index);
+        this.list.addAt(index, layerInterface);
+    }
+
+    public void remove(final AllBinaryLayer layerInterface) throws Exception {
+        synchronized (this.anyType) {
+            this.layerManagerLogging.remove(layerInterface);
+            final boolean result = this.list.remove(layerInterface);
+            this.layerManagerLogging.removeResult(this, layerInterface, result);
+        }
+    }
+
+    public Layer getLayerAt(final int index) {
+        return ((Layer) this.list.@objectArray[index]);
+    }
+
+    public int getSize() {
+        return this.list.size();
+    }
+
+    public void cleanup() throws Exception {
+        //this.logUtil.putF(this.commonStrings.CLEANUP, this, this.commonStrings.CLEANUP);
+        synchronized (this.anyType) {
+            this.list.clear();
+            this.layerManagerLogging.clear();
+            this.tsUtil.gc();
+            this.tsUtil.gc();
+        }
+    }
+
+    //private final String PAINT = canvasStrings.PAINT;
+    public void paint(Graphics g, int x, int y) {
+        synchronized (this.anyType) {
+            //}
+            Layer comp;
+            //}
+            for (int index = this.list.size(); --index >= 0; ) {
+                comp = ((Layer) this.list.@objectArray[index]);
+                if (comp != null && comp.isVisible()) {
+                    comp.paint(g);
+                }
+            }
+        }
+    }
+
+}
+
+

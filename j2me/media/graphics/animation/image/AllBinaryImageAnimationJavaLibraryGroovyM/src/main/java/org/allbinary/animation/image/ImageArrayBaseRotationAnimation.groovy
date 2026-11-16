@@ -1,0 +1,129 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.DisposalUtil;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.animation.RotationAnimation;
+import org.allbinary.graphics.Anchor;
+import org.allbinary.logic.math.PrimitiveIntUtil;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.media.image.ImageModifierUtil;
+import org.allbinary.util.CircularIndexUtil;
+
+@groovy.transform.CompileStatic
+public class ImageArrayBaseRotationAnimation extends RotationAnimation {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final ImageModifierUtil imageModifierUtil = ImageModifierUtil.getInstanceOrCreate();
+
+    private final Image[] originalImageArray;
+
+    private Image[] imageArray = NullImage.NULL_IMAGE_ARRAY;
+
+    private Image currentImage;
+
+    private int totalFrames;
+
+    public ImageArrayBaseRotationAnimation(final Image[] originalImageArray, final AngleInfo angleInfo, final AnimationBehavior animationBehavior) throws Exception {
+        super(angleInfo, CircularIndexUtil.createInstance(Math.divideExact(360, ((int) angleInfo.getAngleIncrementInfo().getAngleIncrement()))), animationBehavior);
+        //this.logUtil.putF(this.commonStrings.START, this, this.commonStrings.CONSTRUCTOR);
+        this.originalImageArray = originalImageArray;
+        this.setImageArray(this.imageModifierUtil.getImageArray(originalImageArray));
+        //this.setImageArray(originalImageArray);
+        this.currentImage = this.imageArray[this.circularIndexUtil.getIndex()];
+    }
+
+    @Override
+    public int getAnimationSize() throws Exception {
+        return this.getSize();
+    }
+
+    @Override
+    public void setAlpha(final int alpha) {
+        if (this.alphaP != alpha) {
+            super.setAlpha(alpha);
+            this.imageModifierUtil.reset();
+            final int index = this.circularIndexUtil.getIndex();
+            this.imageModifierUtil.setAlpha(this.originalImageArray[index], this.imageArray[index], index, this.alphaP);
+        }
+    }
+
+    @Override
+    public void nextRotation() {
+        super.nextRotation();
+        final int index = this.circularIndexUtil.getIndex();
+        this.imageModifierUtil.setAlpha(this.originalImageArray[index], this.imageArray[index], index, this.alphaP);
+        this.currentImage = this.imageArray[index];
+    }
+
+    @Override
+    public void previousRotation() {
+        super.previousRotation();
+        final int index = this.circularIndexUtil.getIndex();
+        this.imageModifierUtil.setAlpha(this.originalImageArray[index], this.imageArray[index], index, this.alphaP);
+        this.currentImage = this.imageArray[index];
+    }
+
+    @Override
+    public void setFrame(final int index2) {
+        super.setFrame(index2);
+        final int index = this.circularIndexUtil.getIndex();
+        this.imageModifierUtil.setAlpha(this.originalImageArray[index], this.imageArray[index], index, this.alphaP);
+        this.currentImage = this.imageArray[index];
+    }
+
+    @Override
+    public void setSequence(final int[] sequence) {
+    }
+
+    @Override
+    public int[] getSequence() {
+        return PrimitiveIntUtil.getArrayInstance();
+    }
+
+    protected void setImageArray(final Image[] imageArray) {
+        this.imageArray = imageArray;
+        this.totalFrames = imageArray.length;
+        this.circularIndexUtil = CircularIndexUtil.createInstance(this.totalFrames);
+    }
+
+    private int anchor = Anchor.TOP_LEFT;
+
+    @Override
+    public void paintXY(final Graphics graphics, final int x, final int y) {
+        graphics.drawImage(this.currentImage, x, y, this.anchor);
+    }
+
+    public void close() throws Exception {
+        final DisposalUtil disposalUtil = DisposalUtil.getInstance();
+        final int size2 = this.imageArray.length;
+        for (int index = 0; index < size2; index++) {
+            disposalUtil.disposeImage(this.imageArray[index]);
+        }
+        final int size = this.originalImageArray.length;
+        for (int index = 0; index < size; index++) {
+            disposalUtil.disposeImage(this.originalImageArray[index]);
+        }
+        disposalUtil.disposeImage(this.currentImage);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        final DisposalUtil disposalUtil = DisposalUtil.getInstance();
+        final int size2 = this.imageArray.length;
+        for (int index = 0; index < size2; index++) {
+            disposalUtil.disposeImage(this.imageArray[index]);
+        }
+        final int size = this.originalImageArray.length;
+        for (int index = 0; index < size; index++) {
+            disposalUtil.disposeImage(this.originalImageArray[index]);
+        }
+        disposalUtil.disposeImage(this.currentImage);
+    }
+
+}
+
+

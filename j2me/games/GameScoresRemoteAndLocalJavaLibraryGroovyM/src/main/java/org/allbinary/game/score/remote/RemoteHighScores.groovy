@@ -1,0 +1,113 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.score.remote;
+
+import java.util.Enumeration;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.game.GameInfo;
+import org.allbinary.game.score.HighScore;
+import org.allbinary.game.score.HighScores;
+import org.allbinary.game.score.RemoteErrorHighScoresSingletonFactory;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.system.SoftwareInformation;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.EnumerationUtil;
+
+@groovy.transform.CompileStatic
+public class RemoteHighScores extends HighScores {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final EnumerationUtil enumerationUtil = EnumerationUtil.getInstance();
+
+    private static final ABHashtable<Object, Object> hashTable = StdUtil.getInstance().createHashtable();
+
+    private final AbeClientInformationInterface abeClientInformation;
+
+    private final SoftwareInformation softwareInformation;
+
+    private Boolean ascending;
+
+    public final String ASCENDING = 'ASCENDING';
+
+    private RemoteHighScores(final AbeClientInformationInterface abeClientInformation, final SoftwareInformation softwareInformation, final GameInfo gameInfo, final String heading, final String columnTwoHeading, final Boolean ascending, final boolean preload) throws Exception {
+        super(gameInfo.toString(), heading, columnTwoHeading);
+        this.abeClientInformation = abeClientInformation;
+        this.softwareInformation = softwareInformation;
+        this.setAscending(ascending);
+        if (preload) {
+            RemoteHighScoresProcessorFactory.getInstance().process(this, this.abeClientInformation, gameInfo);
+        }
+    }
+
+    public static synchronized HighScores getInstance(final AbeClientInformationInterface abeClientInformation, final SoftwareInformation softwareInformation, final GameInfo gameInfo, final String heading, final String columnTwoHeading, final Boolean isAscending) {
+        return RemoteHighScores.getInstancePreload(abeClientInformation, softwareInformation, gameInfo, heading, columnTwoHeading, isAscending, true);
+    }
+
+    public static synchronized HighScores getInstancePreload(final AbeClientInformationInterface abeClientInformation, final SoftwareInformation softwareInformation, final GameInfo gameInfo, final String heading, final String columnTwoHeading, final Boolean isAscending, final boolean preload) {
+        final LogUtil logUtil = LogUtil.getInstance();
+        try {
+            HighScores highScores = ((HighScores) RemoteHighScores.hashTable.get(gameInfo));
+            if (highScores == null) {
+                highScores = new RemoteHighScores(abeClientInformation, softwareInformation, gameInfo, heading, columnTwoHeading, isAscending, preload);
+                RemoteHighScores.hashTable.put(gameInfo, highScores);
+            }
+            return highScores;
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            logUtil.put(commonStrings.@EXCEPTION, RemoteErrorHighScoresSingletonFactory.getInstance(), commonStrings.@GET_INSTANCE, e);
+            return RemoteErrorHighScoresSingletonFactory.getInstance();
+        }
+    }
+
+    //@Override
+    public void addHighScore(final HighScore newHighScore) {
+        RemoteHighScoresSubmissionProcessorFactory.getInstance().process(this, this.abeClientInformation, newHighScore);
+    }
+
+    //This is called when the data comes back in the response
+    public void update(final ABHashtable<Object, Object> hashtable) {
+        this.getList().clear();
+        final BasicArrayList vector = ((BasicArrayList) hashtable.get(((Object) RemoteHighScoresData.getInstance().@HIGH_SCORES)));
+        if (vector != null) {
+            final int size = vector.size();
+            for (int index = 0; index < size; index++) {
+                final BasicArrayList highScoreVector = ((BasicArrayList) vector.get(index));
+                final String displayName = ((String) highScoreVector.get(0));
+                final String score = ((String) highScoreVector.get(1));
+                final long longScore = Long.parseLong(score);
+                //Long.valueOf(score).longValue()
+                final HighScore highScore = new HighScore(-1, displayName, null, longScore);
+                this.getList().add(highScore);
+            }
+        } else {
+            final String NEXT_ELEMENT = new StringMaker().append(CommonLabels.getInstance().@NEXT).append('Element: ').toString();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            final Enumeration enumeration = hashtable.elements();
+            Object nextElement;
+            while (this.enumerationUtil.hasMoreElements(enumeration)) {
+                nextElement = this.enumerationUtil.nextElement(enumeration);
+                this.logUtil.putF(NEXT_ELEMENT + nextElement, this, commonStrings.@PROCESS);
+            }
+        }
+    }
+
+    private void setAscending(final Boolean ascending) {
+        this.ascending = ascending;
+    }
+
+    public Boolean getAscending() {
+        return this.ascending;
+    }
+
+    public SoftwareInformation getSoftwareInformation() {
+        return this.softwareInformation;
+    }
+
+}
+
+

@@ -1,0 +1,142 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.resource;
+
+import org.allbinary.animation.BasicAnimationInterfaceFactoryInterface;
+import org.allbinary.animation.NullAnimationFactory;
+import org.allbinary.game.resource.ResourceLoadingLevelFactory;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.graphics.RectangleFactory;
+import org.allbinary.image.ImageCache;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class BaseResourceAnimationInterfaceFactoryInterfaceFactory implements FeatureResourceAnimationInterfaceFactoryInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final ABHashtable<Object, Object> hashtable;
+
+    private final ABHashtable<Object, Object> rectangleHashtable;
+
+    private final ABHashtable<Object, Object> rectangleArrayOfArraysHashtable;
+
+    private final String name;
+
+    private boolean initialized;
+
+    public BaseResourceAnimationInterfaceFactoryInterfaceFactory(final String name, final ABHashtable<Object, Object> hashtable, final ABHashtable<Object, Object> rectangleHashtable, final ABHashtable<Object, Object> rectangleArrayHashtable) {
+        this.hashtable = hashtable;
+        this.rectangleHashtable = rectangleHashtable;
+        this.rectangleArrayOfArraysHashtable = rectangleArrayHashtable;
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void init(final int level) throws Exception {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        this.logUtil.putF(new StringMaker().append('Available List of Animations: ').append(this.hashtable.toString()).toString(), this, commonStrings.@INIT);
+        this.setInitialized(true);
+    }
+
+    protected void initImageCache(final ImageCache imageCache, final int level) throws Exception {
+    }
+
+    public void add(final String resource, final BasicAnimationInterfaceFactoryInterface animationInterfaceFactoryInterface) throws Exception {
+        //PreLogUtil.put(resource, this, this.commonStrings.ADD);
+        if (this.hashtable.containsKey(((Object) resource))) {
+            throw new Exception(new StringMaker().append('Resource Already Created: ').append(resource).toString());
+        }
+        this.hashtable.put(resource, animationInterfaceFactoryInterface);
+    }
+
+    @Override
+    public BasicAnimationInterfaceFactoryInterface getBasicAnimationInterfaceFactoryInstance(final String resource) throws Exception {
+        final Object basicAnimationInterfaceFactoryInterfaceCanBeNull = this.hashtable.get(resource);
+        if (basicAnimationInterfaceFactoryInterfaceCanBeNull == null) {
+            //this.logUtil.putF(new StringMaker().append("No Resource for: ").append(resource).toString(), this, "getBasicAnimationInterfaceFactoryInstance");
+            return NullAnimationFactory.NULL_NOT_FOR_USE_ANIMATION_FACTORY;
+        }
+        return ((BasicAnimationInterfaceFactoryInterface) basicAnimationInterfaceFactoryInterfaceCanBeNull);
+    }
+
+    @Override
+    public Rectangle getRectangle(final String resource) throws Exception {
+        final Object rectangleCanBeNull = this.rectangleHashtable.get(resource);
+        if (rectangleCanBeNull == null) {
+            return RectangleFactory.SINGLETON;
+        }
+        return ((Rectangle) rectangleCanBeNull);
+    }
+
+    public void addRectangle(final String resource, final Rectangle rectangle) throws Exception {
+        this.rectangleHashtable.put(resource, rectangle);
+    }
+
+    @Override
+    public Rectangle[][] getRectangleArrayOfArrays(final String resource) throws Exception {
+        Object valueCanBeNull = this.rectangleArrayOfArraysHashtable.get(resource);
+        if (valueCanBeNull != null) {
+            final Rectangle[][] rectangleArrayOfArrays = ((Rectangle[][]) valueCanBeNull);
+            return rectangleArrayOfArrays;
+        } else {
+            return RectangleFactory.ARRAY_OF_ARRAYS;
+        }
+    }
+
+    public void addRectangleArrayOfArrays(final String resource, final Rectangle[][] rectangleArrayOfArrays) throws Exception {
+        this.rectangleArrayOfArraysHashtable.put(resource, rectangleArrayOfArrays);
+    }
+
+    @Override
+    public boolean isFeature() {
+        return false;
+    }
+
+    @Override
+    public boolean isLoadingLevel(final int level) {
+        final ResourceLoadingLevelFactory resourceLoadingLevelFactory = ResourceLoadingLevelFactory.getInstance();
+        if (level == resourceLoadingLevelFactory.@LOAD_ALL.getLevel()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String toString() {
+        return new StringMaker().append(this.getClass().getName()).append(CommonSeps.getInstance().@SEMICOLON).append(CommonSeps.getInstance().@SPACE).append(this.name).toString();
+    }
+
+    @Override
+    public ABHashtable<Object, Object> getHashtable() {
+        return this.hashtable;
+    }
+
+    public ABHashtable<Object, Object> getRectangleHashtable() {
+        return this.rectangleHashtable;
+    }
+
+    public ABHashtable<Object, Object> getRectangleArrayOfArraysHashtable() {
+        return this.rectangleArrayOfArraysHashtable;
+    }
+
+    protected void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return this.initialized;
+    }
+
+}
+
+

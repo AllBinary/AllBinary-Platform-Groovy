@@ -1,0 +1,152 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.io.path;
+
+import org.allbinary.logic.io.file.FilePathData;
+import org.allbinary.logic.io.file.FilePathUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.StringValidationUtil;
+import org.allbinary.string.CommonSeps;
+
+@groovy.transform.CompileStatic
+public class AbPath {
+    public static final AbPath createAbPath() {
+        try {
+            final String EMPTY_STRING = StringUtil.getInstance().@EMPTY_STRING;
+            return new AbPath(EMPTY_STRING, EMPTY_STRING);
+        } catch (Exception ex) {
+            throw new RuntimeException();
+        }
+    }
+
+    private final CommonSeps commonSeps = CommonSeps.getInstance();
+
+    private final AbPathData abPathData = AbPathData.getInstance();
+
+    private final PathUtil abPathUtil = PathUtil.getInstance();
+
+    private final String EMPTY_STRING = StringUtil.getInstance().@EMPTY_STRING;
+
+    protected String schema = this.EMPTY_STRING;
+
+    private String path = this.EMPTY_STRING;
+
+    //private int port;
+    protected String nameP = this.EMPTY_STRING;
+
+    private boolean hasSchemaP = false;
+
+    private int numberOfSeps = 0;
+
+    public AbPath(String aPath, String name) throws Exception {
+        final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+        if (!stringValidationUtil.isEmpty(aPath)) {
+            this.schema = this.getSchema(aPath);
+            //this.name = AbPathUtil.getName(aPath);
+            this.nameP = name;
+            this.path = this.abPathUtil.adjustEnd(this.abPathUtil.adjust(this.getPathFromPath(aPath)));
+        } else {
+            this.init();
+            if (!stringValidationUtil.isEmpty(name)) {
+                this.nameP = name;
+            }
+        }
+    }
+
+    private void init() {
+        this.schema = this.EMPTY_STRING;
+        this.setPath(this.abPathData.@SEPARATOR);
+        //this.port = -1;  //use the schemas default port
+        this.nameP = this.EMPTY_STRING;
+    }
+
+    protected String getSchema(String aPath) {
+        int beginIndex = aPath.indexOf(this.commonSeps.@COLON);
+        if (beginIndex >= 0) {
+            this.hasSchemaP = true;
+            return aPath.substring(0, beginIndex);
+        }
+        this.hasSchemaP = false;
+        return this.EMPTY_STRING;
+    }
+
+    public boolean hasSchema() {
+        return this.hasSchemaP;
+    }
+
+    public String getPathFromPath(String aPath) throws Exception {
+        final FilePathData filePathData = FilePathData.getInstance();
+        String tempPath = aPath;
+        /*       if(!this.hasName())       {          this.path = AbPathUtil.adjustEnd(this.path);       }        */
+        if (!this.hasSchema()) {
+            tempPath = this.abPathUtil.adjustStart(tempPath);
+        } else {
+            int beginIndex = tempPath.indexOf(this.commonSeps.@COLON);
+            if (beginIndex >= 0) {
+                beginIndex++;
+                while (tempPath.charAt(beginIndex) == this.abPathData.@SEPARATORCHAR || tempPath.charAt(beginIndex) == filePathData.@SEPARATORCHAR) {
+                    beginIndex++;
+                    this.numberOfSeps++;
+                    if (this.numberOfSeps > 2) {
+                        throw new Exception('Should Not Have More Than Two Seps');
+                    }
+                }
+                tempPath = tempPath.substring(beginIndex, tempPath.length());
+            }
+        }
+        return tempPath;
+    }
+
+    public void setName(final String name) {
+        this.nameP = name;
+    }
+
+    public String getName() {
+        return this.nameP;
+    }
+
+    private static final String NETWORK_SEP = ':/';
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        if (this.hasSchema()) {
+            stringBuffer.append(this.schema);
+            //unix/networke schema sep
+            stringBuffer.append(AbPath.NETWORK_SEP);
+        }
+        stringBuffer.append(this.getPath());
+        stringBuffer.append(this.nameP);
+        /*       if(this.hasName())       {       }        */
+        return stringBuffer.toString();
+    }
+
+    //this.getSchema() + "://" + this.getServer() + CommonSeps.getInstance().COLON + this.getPort() + AbPathData.SEPARATOR;
+    public String toFileSystemString() {
+        if (this.hasSchema()) {
+            final FilePathData filePathData = FilePathData.getInstance();
+            final StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(this.schema);
+            stringBuffer.append(this.commonSeps.@COLON);
+            stringBuffer.append(filePathData.@PATH_START);
+            stringBuffer.append(FilePathUtil.adjust(this.getPath()));
+            stringBuffer.append(this.nameP);
+            return stringBuffer.toString();
+        } else {
+            return FilePathUtil.adjust(this.getPath()) + this.nameP;
+        }
+    }
+
+    /**      * @return the path      */
+    public String getPath() {
+        return this.path;
+    }
+
+    /**      * @param path the path to set      */
+    protected void setPath(String path) {
+        this.path = path;
+    }
+
+}
+
+

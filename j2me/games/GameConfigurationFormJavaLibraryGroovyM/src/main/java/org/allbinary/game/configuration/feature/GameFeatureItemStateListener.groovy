@@ -1,0 +1,72 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.configuration.feature;
+
+import javax.microedition.lcdui.ChoiceGroup;
+import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.ItemStateListener;
+import org.allbinary.game.configuration.GameConfigurationGauge;
+import org.allbinary.game.configuration.GameConfigurationUtil;
+import org.allbinary.game.configuration.GameOptionsForm;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class GameFeatureItemStateListener implements ItemStateListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    //private static final GameFeatureItemStateListener gameFeatureItemStateListener = new GameFeatureItemStateListener();
+    private static BasicArrayList toggleList = new BasicArrayListD();
+
+    private GameOptionsForm gameOptionsForm;
+
+    public GameFeatureItemStateListener(GameOptionsForm gameOptionsForm) {
+        this.gameOptionsForm = gameOptionsForm;
+        // this.logUtil.putF(this.commonStrings.START, this, this.commonStrings.CONSTRUCTOR);
+        GameFeatureFactory gameFeatureFactory = GameFeatureFactory.getInstance();
+        GameFeatureItemStateListener.add(gameFeatureFactory.@ARTIFICIAL_INTELLEGENCE_PROCESSOR);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@COLLIDABLE_INTERFACE_LAYER_PROCESSOR);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@DAMAGE_FLOATERS);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@DROPPED_ITEMS);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@GAME_INPUT_LAYER_PROCESSOR);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@HEALTH_BARS);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@SOUND);
+        //toggleList.add(GameFeature.OPENGL);
+        GameFeatureItemStateListener.add(gameFeatureFactory.@TICKABLE_LAYER_PROCESSOR);
+    }
+
+    public static void add(GameFeature gameFeature) {
+        if (!GameFeatureItemStateListener.toggleList.contains(gameFeature)) {
+            GameFeatureItemStateListener.toggleList.add(gameFeature);
+        }
+    }
+
+    /*     public static GameFeatureItemStateListener getInstance()     {         return gameFeatureItemStateListener;     }     */
+    @Override
+    public void itemStateChanged(Item item) {
+        try {
+            String itemLabel = item.getLabel();
+            this.logUtil.putF(new StringMaker().append(CommonLabels.getInstance().@ITEM_LABEL).append(itemLabel).toString(), this, 'itemStateChanged');
+            if (item instanceof GameConfigurationGauge) {
+                GameConfigurationUtil.getInstance().change(this.gameOptionsForm, ((GameConfigurationGauge) item));
+            } else if (item instanceof ChoiceGroup) {
+                GameFeatureUtil gameFeatureUtil = GameFeatureUtil.getInstance();
+                if (gameFeatureUtil.isExclusive(itemLabel)) {
+                    gameFeatureUtil.updateExclusiveForChoiceGroup(((ChoiceGroup) item));
+                } else {
+                    gameFeatureUtil.updateMultiple(((ChoiceGroup) item));
+                }
+            }
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'itemStateChanged', e);
+        }
+    }
+
+}
+
+

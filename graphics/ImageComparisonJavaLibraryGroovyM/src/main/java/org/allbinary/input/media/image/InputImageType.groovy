@@ -1,0 +1,55 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.media.image;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+
+@groovy.transform.CompileStatic
+public class InputImageType {
+    private static HashMap hashMap = StdUtil.getInstance().createHashMap();
+
+    private final static BasicArrayList TYPE_VECTOR = new BasicArrayListD();
+
+    public static InputImageType CAPTURE = new InputImageType('Capture', 0);
+
+    public static InputImageType COMPARISON = new InputImageType('Comparison', 1);
+
+    public static InputImageType MOTION = new InputImageType('Motion', 2);
+
+    private final String name;
+
+    private final int index;
+
+    private InputImageType(String name, int index) {
+        this.name = name;
+        this.index = index;
+        InputImageType.TYPE_VECTOR.add(this);
+        InputImageType.hashMap.put(this.getName(), this);
+    }
+
+    public String toString() {
+        return 'ImageType: ' + this.getName();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public static InputImageType getInstance(String imageTypeString) {
+        return ((InputImageType) InputImageType.hashMap.get(imageTypeString));
+    }
+
+    public static BasicArrayList getAllAsVector() {
+        return InputImageType.TYPE_VECTOR;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+}
+
+

@@ -1,0 +1,103 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.http.request;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+import org.allbinary.data.tree.dom.ModDomHelper;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonStrings;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+//Note: if request is destroyed or messed up this will not work. Use fileRequestParams
+@groovy.transform.CompileStatic
+public class RequestParams {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private Map map;
+
+    public RequestParams() {
+        this.logUtil.putF('New RequestParams Size: 0', this, this.commonStrings.@CONSTRUCTOR);
+    }
+
+    public RequestParams(HttpServletRequest request) {
+        this.map = request.getParameterMap();
+        this.logUtil.putF('RequestParams Size: ' + this.getMap().keySet().size(), this, this.commonStrings.@CONSTRUCTOR);
+    }
+
+    public RequestParams(PageContext pageContext) {
+        this.map = pageContext.getRequest().getParameterMap();
+        this.logUtil.putF('Request Params Size: ' + this.getMap().keySet().size(), this, this.commonStrings.@CONSTRUCTOR);
+    }
+
+    protected void setMap(Map map) {
+        this.map = map;
+    }
+
+    protected Map getMap() {
+        return this.map;
+    }
+
+    private final String KEY = 'Key: ';
+
+    private final String VALUE = ' Value: ';
+
+    public Node toXmlNode(Document document) {
+        try {
+            final Node node = document.createElement(RequestData.REQUEST);
+            final StringMaker stringBuffer = new StringMaker();
+            final Set keys = this.map.keySet();
+            final Object[] keyArray = keys.toArray();
+            final int size = keyArray.length;
+            for (int i = 0; i < size; i++) {
+                String key = ((String) keyArray[i]);
+                String[] values = ((String[]) this.map.get(key));
+                stringBuffer.delete(0, stringBuffer.length());
+                stringBuffer.append(this.KEY);
+                stringBuffer.append(key);
+                stringBuffer.append(this.VALUE);
+                stringBuffer.append(values[0]);
+                this.logUtil.putF(stringBuffer.toString(), this, 'toXmlNode(document)');
+                node.appendChild(ModDomHelper.createNameValueNodes(document, RequestData.PARAMETER, new String(key), new String(values[0])));
+            }
+            return node;
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'toXmlNode(document)', e);
+            //throw e;
+            return null;
+        }
+    }
+
+    //do not involve multiple values
+    public HashMap toHashMap() throws Exception {
+        HashMap hashMap = StdUtil.getInstance().createHashMap();
+        Set keys = this.map.keySet();
+        Object[] keyArray = keys.toArray();
+        int size = keyArray.length;
+        StringMaker stringBuffer = new StringMaker();
+        for (int i = 0; i < size; i++) {
+            String key = ((String) keyArray[i]);
+            //At some point they made them all String[] but you never know if they will go back or what
+            String[] values = ((String[]) this.map.get(key));
+            hashMap.put(new String(key), new String(values[0]));
+        }
+        stringBuffer.delete(0, stringBuffer.length());
+        stringBuffer.append('RequestParams: ');
+        stringBuffer.append(this.map.toString());
+        stringBuffer.append('\ntoHashMap: ');
+        stringBuffer.append(hashMap.toString());
+        this.logUtil.putF(stringBuffer.toString(), this, 'toHashMap()');
+        return hashMap;
+    }
+
+}
+
+

@@ -1,0 +1,21 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.log;
+
+import org.allbinary.logic.NullUtil;
+
+@groovy.transform.CompileStatic
+public class LogFactory {
+    //ActualPlatform
+    public static final Log getInstance(String specialMessage, Object anyType, String functionName, Object exception) {
+        return new Log(specialMessage, anyType, functionName, exception);
+    }
+
+    //ActualPlatform
+    public static final Log getInstanceF(String specialMessage, Object anyType, String functionName) {
+        return new Log(specialMessage, anyType, functionName, NullUtil.getInstance().@NULL_OBJECT);
+    }
+
+}
+
+

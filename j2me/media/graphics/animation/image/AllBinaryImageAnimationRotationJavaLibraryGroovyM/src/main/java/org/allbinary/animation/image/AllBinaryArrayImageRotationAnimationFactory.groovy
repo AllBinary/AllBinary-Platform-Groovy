@@ -1,0 +1,78 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationBehaviorFactory;
+import org.allbinary.game.configuration.GameConfigurationCentral;
+import org.allbinary.logic.math.PrimitiveIntUtil;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.media.image.ImageToRotationImageArrayUtil;
+
+@groovy.transform.CompileStatic
+public class AllBinaryArrayImageRotationAnimationFactory extends BaseImageAnimationFactory {
+    private Image[] imageArray = NullImage.NULL_IMAGE_ARRAY;
+
+    private int angleIncrement;
+
+    public static AllBinaryArrayImageRotationAnimationFactory createFactory(final Image image, final int dx, final int dy) throws Exception {
+        final AllBinaryArrayImageRotationAnimationFactory arrayImageRotationAnimationFactory = new AllBinaryArrayImageRotationAnimationFactory(image, image.getWidth(), image.getHeight(), Math.divideExact(((int) AngleFactory.getInstance().@TOTAL_ANGLE), GameConfigurationCentral.getInstance().getGameControlFidelity()), AnimationBehaviorFactory.getInstance());
+        arrayImageRotationAnimationFactory.initDXY(dx, dy);
+        return arrayImageRotationAnimationFactory;
+    }
+
+    public static AllBinaryArrayImageRotationAnimationFactory createFactoryA(final Image image, final int dx, final int dy, final int angleIncrement) throws Exception {
+        final AllBinaryArrayImageRotationAnimationFactory arrayImageRotationAnimationFactory = new AllBinaryArrayImageRotationAnimationFactory(image, image.getWidth(), image.getHeight(), angleIncrement, AnimationBehaviorFactory.getInstance());
+        arrayImageRotationAnimationFactory.initDXY(dx, dy);
+        return arrayImageRotationAnimationFactory;
+    }
+
+    //    }
+    public AllBinaryArrayImageRotationAnimationFactory(final Image image, final int width, final int height, final int angleIncrement, final AnimationBehaviorFactory animationBehaviorFactory) throws Exception {
+        super(image, PrimitiveIntUtil.getArrayInstance(), width, height, 0, 0, animationBehaviorFactory);
+        this.angleIncrement = angleIncrement;
+        this.init();
+    }
+
+    private void init() throws Exception {
+        this.setImageArray(ImageToRotationImageArrayUtil.getInstance().generate(this.getImage(), this.getAngleIncrement(), ((int) AngleFactory.getInstance().@TOTAL_ANGLE)));
+    }
+
+    private void initDXY(final int dx, final int dy) {
+        this.animationFactoryInitializationVisitor.@dx = dx;
+        this.animationFactoryInitializationVisitor.@dy = dy;
+        this.animationFactoryInitializationVisitor.@originalDx = dx;
+        this.animationFactoryInitializationVisitor.@originalDy = dy;
+    }
+
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        final Image[] scaledImageArray = new Image[this.imageArray.length];
+        final int size = scaledImageArray.length;
+        final Image image = this.getImage();
+        for (int index = 0; index < size; index++) {
+            scaledImageArray[index] = this.animationFactoryImageScaleUtil.createImage(image, image.getWidth(), image.getHeight(), this.scaleProperties.@scaleWidth, this.scaleProperties.@scaleHeight);
+        }
+        if (this.animationFactoryInitializationVisitor.@dx != 0 || this.animationFactoryInitializationVisitor.@dy != 0) {
+            //this.logUtil.putF(new StringMaker().append(PositionStrings.getInstance().DX_LABEL).append((float) this.animationFactoryInitializationVisitor.dx).append(PositionStrings.getInstance().DY_LABEL).append((float) this.animationFactoryInitializationVisitor.dy).toString(), this, "getInstance");
+            this.animationFactoryImageScaleUtil.processAdjust(this);
+            return new AdjustedImageArrayRotationAnimation(scaledImageArray, AngleInfo.getInstance(((short) this.getAngleIncrement())), ((int) AngleFactory.getInstance().@TOTAL_ANGLE), this.animationFactoryInitializationVisitor.@dx, this.animationFactoryInitializationVisitor.@dy, this.animationBehaviorFactory.getOrCreateInstance());
+        } else {
+            return new ImageArrayRotationAnimation(scaledImageArray, AngleInfo.getInstance(((short) this.getAngleIncrement())), ((int) AngleFactory.getInstance().@TOTAL_ANGLE), this.animationBehaviorFactory.getOrCreateInstance());
+        }
+    }
+
+    protected void setImageArray(final Image[] imageArray) {
+        this.imageArray = imageArray;
+    }
+
+    protected int getAngleIncrement() {
+        return this.angleIncrement;
+    }
+
+}
+
+

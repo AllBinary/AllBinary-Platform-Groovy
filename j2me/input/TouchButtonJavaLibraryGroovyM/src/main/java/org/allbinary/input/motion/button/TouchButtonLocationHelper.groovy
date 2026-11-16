@@ -1,0 +1,78 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.motion.button;
+
+import org.allbinary.graphics.displayable.DisplayInfoSingleton;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class TouchButtonLocationHelper {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final int totalColumns;
+
+    private final int totalRows;
+
+    private int columnsRemainder;
+
+    private int rowsRemainder;
+
+    private int columnsRemainderHalf;
+
+    private int rowsRemainderHalf;
+
+    public TouchButtonLocationHelper() {
+        int buttonSize = CommonButtons.getInstance().@STANDARD_BUTTON_SIZE;
+        DisplayInfoSingleton displayInfo = DisplayInfoSingleton.getInstance();
+        //PreLogUtil.put(commonStrings.START_LABEL + displayInfo.toString(), this, "TouchButtonLocationHelper");
+        this.totalColumns = Math.round(((float) (((float) displayInfo.getLastWidth()) / buttonSize)));
+        this.totalRows = Math.round(((float) (((float) displayInfo.getLastHeight()) / buttonSize)));
+        this.columnsRemainder = displayInfo.getLastWidth() % buttonSize;
+        this.columnsRemainderHalf = (this.columnsRemainder >> 1);
+        this.rowsRemainder = displayInfo.getLastHeight() % buttonSize;
+        this.rowsRemainderHalf = (this.rowsRemainder >> 1);
+    }
+
+    public int getTotalColumns() {
+        return this.totalColumns;
+    }
+
+    public int getTotalRows() {
+        return this.totalRows;
+    }
+
+    public int getColumnsRemainder() {
+        return this.columnsRemainder;
+    }
+
+    public int getRowsRemainder() {
+        return this.rowsRemainder;
+    }
+
+    public int getColumnsRemainderHalf() {
+        return this.columnsRemainderHalf;
+    }
+
+    public int getRowsRemainderHalf() {
+        return this.rowsRemainderHalf;
+    }
+
+    public String toString() {
+        StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('totalColumns: ');
+        stringBuffer.appendint(this.totalColumns);
+        stringBuffer.append(' totalRows: ');
+        stringBuffer.appendint(this.totalRows);
+        stringBuffer.append(' columnsRemainder: ');
+        stringBuffer.appendint(this.columnsRemainder);
+        stringBuffer.append(' rowsRemainder: ');
+        stringBuffer.appendint(this.rowsRemainder);
+        stringBuffer.append(' columnsRemainderHalf: ');
+        stringBuffer.appendint(this.columnsRemainderHalf);
+        stringBuffer.append(' rowsRemainderHalf: ');
+        stringBuffer.appendint(this.rowsRemainderHalf);
+        return stringBuffer.toString();
+    }
+
+}
+
+

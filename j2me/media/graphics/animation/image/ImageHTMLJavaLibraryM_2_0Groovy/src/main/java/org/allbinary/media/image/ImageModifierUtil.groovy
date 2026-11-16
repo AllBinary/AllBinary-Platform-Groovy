@@ -1,0 +1,163 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import org.allbinary.graphics.Anchor;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.microemu.device.playn.PlaynImage;
+import org.microemu.device.ResourceCallbackStrings;
+import playn.core.Callback;
+import playn.core.Canvas;
+import playn.core.CoreImage;
+import playn.core.ImageImpl;
+import playn.html.HTMLPlaynUtil;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class ImageModifierUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public static ImageModifierUtil getInstanceOrCreate() {
+        return new ImageModifierUtil();
+    }
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final ResourceCallbackStrings resourceCallbackStrings = ResourceCallbackStrings.getInstance();
+
+    private final HTMLPlaynUtil playnUtil = HTMLPlaynUtil.getInstance();
+
+    private boolean[] alphaArray;
+
+    public void setColor(final Image unusedOriginalImage, final Image image, final int imageIndex, final BasicColor basicColor) {
+    }
+
+    public void changeColor(final Image unusedOriginalImage, final Image image, final int imageIndex, final BasicColor basicColor) {
+    }
+
+    public void setAlpha(final Image originalImage, final Image image, final int imageIndex, final int alpha) {
+        final float alphaF = alpha;
+        final float alphaFloat = ((float) (alphaF / 255));
+        //final int alphaInt = alpha * 100 / 255;
+        this.setAlphaF(originalImage, image, imageIndex, alphaFloat);
+    }
+
+    public void setAlphaF(final Image originalImage, final Image image, final int imageIndex, final float alpha) {
+        if (this.alphaArray[imageIndex]) {
+            this.alphaArray[imageIndex] = false;
+            this.setAlpha2(originalImage, image, imageIndex, alpha);
+        }
+    }
+
+    public void setAlpha2(final Image originalImage, final Image image, final int imageIndex, final float alpha) {
+        //            if(originalImage != null) {
+        final PlaynImage htmlImage = ((PlaynImage) image);
+        //                if (htmlImage != null) {
+        final ImageImpl canvasImage = ((ImageImpl) htmlImage.getImage());
+        //this.logUtil.putF("alpha: " + alpha, this, "setAlpha");
+        final CoreImage originalPlaynImage = ((CoreImage) (((PlaynImage) originalImage)).getImage());
+        //                        if(originalPlaynImage != null) {
+        final Canvas canvas = this.playnUtil.getCanvas(canvasImage);
+        canvas.clear();
+        canvas.setAlpha(alpha);
+        canvas.draw(originalPlaynImage, 0, 0);
+    }
+
+    public void setAlpha3(final Image image, final float alpha) {
+        final float alphaF = alpha;
+        final float alphaFloat = ((float) (alphaF / 255));
+        final PlaynImage htmlImage = ((PlaynImage) image);
+        final ImageImpl canvasImage = ((ImageImpl) htmlImage.getImage());
+        final Canvas canvas = this.playnUtil.getCanvas(canvasImage);
+        canvas.setAlpha(alphaFloat);
+    }
+
+    public Image[] getImageArray(final Image[] originalImageArray) {
+        final int size = originalImageArray.length;
+        this.alphaArray = new boolean[size];
+        final Image[] imageArray = new Image[size];
+        for (int index = 0; index < size; index++) {
+            imageArray[index] = originalImageArray[index];
+            this.handleImage(imageArray, index, originalImageArray[index]);
+        }
+        return imageArray;
+    }
+
+    class ImageCopyCallback implements Callback {
+        private final ImageModifierUtil imageModifierUtil;
+
+        private final Image[] imageArray;
+
+        private final int index;
+
+        private final Image image;
+
+        private final CoreImage image3;
+
+        ImageCopyCallback(final ImageModifierUtil imageModifierUtil, final Image[] imageArray, final int index, final Image image, final CoreImage image3) {
+            this.imageModifierUtil = imageModifierUtil;
+            this.imageArray = imageArray;
+            this.index = index;
+            this.image = image;
+            this.image3 = image3;
+        }
+
+        @Override
+        public void onSuccess(Object resource) {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final ResourceCallbackStrings resourceCallbackStrings = this.imageModifierUtil.@resourceCallbackStrings;
+            logUtil.putF(resourceCallbackStrings.@DONE + this.image.getName(), this, resourceCallbackStrings.@HANDLE_IMAGE);
+            this.imageModifierUtil.copy(this.imageArray, this.index, this.image, this.image3);
+        }
+
+        @Override
+        public void onFailure(Throwable e) {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final ResourceCallbackStrings resourceCallbackStrings = this.imageModifierUtil.@resourceCallbackStrings;
+            logUtil.put(new StringMaker().append(this.imageModifierUtil.@commonStrings.@EXCEPTION_LABEL).append(resourceCallbackStrings.@ERROR).append(this.image.getName()).toString(), this, resourceCallbackStrings.@HANDLE_IMAGE, e);
+        }
+
+    }
+
+    public void handleImage(final Image[] imageArray, final int index, final Image image) {
+        final CoreImage image3 = ((CoreImage) (((PlaynImage) image)).getImage());
+        if (image3 != null) {
+            //PreLogUtil.put("playnCoreImage: " + (image3 != null ? image3.toString() : StringUtil.getInstance().NULL_STRING), this, "handleImage");
+            if (image3.isReady() || image3.width() + image3.height() <= 0 || image.getName() == this.resourceCallbackStrings.@FROM_DATA) {
+                this.copy(imageArray, index, image, image3);
+            } else {
+                final Callback callback = new ImageCopyCallback(this, imageArray, index, image, image3);
+                image3.addCallback(callback);
+            }
+        } else {
+            this.logUtil.putF(this.resourceCallbackStrings.@NULL + image.isMutable(), this, this.resourceCallbackStrings.@HANDLE_IMAGE);
+        }
+    }
+
+    public void copy(final Image[] imageArray, final int index, final Image image, final CoreImage image3) {
+        try {
+            //this.logUtil.put(DONE + image3.width() + ", " + image3.height(), this, HANDLE_IMAGE);
+            final Image image2 = Image.createImageWH(((int) image3.width()), ((int) image3.height()));
+            final Graphics graphics = image2.getGraphics();
+            graphics.drawImage(image, 0, 0, Anchor.TOP_LEFT);
+            imageArray[index] = image2;
+        } catch (Exception e) {
+            this.logUtil.putF(this.commonStrings.@EXCEPTION_LABEL + resourceCallbackStrings.@DONE, this, resourceCallbackStrings.@HANDLE_IMAGE);
+        }
+    }
+
+    public void reset() {
+        final int size = this.alphaArray.length;
+        for (int index = 0; index < size; index++) {
+            this.alphaArray[index] = true;
+        }
+    }
+
+}
+
+

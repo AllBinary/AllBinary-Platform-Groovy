@@ -1,0 +1,32 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map.racetrack;
+
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.string.CommonLabels;
+
+/**  *  * @author user  * Used for generating static paths.  Use in the build game method  */
+@groovy.transform.CompileStatic
+public class RaceTracksPathPrinter {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private void printPath(BasicArrayList list) {
+        final int size = list.size();
+        for (int index = 0; index < size; index++) {
+            Object anyType = list.get(index);
+            PreLogUtil.put(new StringMaker().append('pathList.add(cellPositionFactory.getInstance').append(anyType.toString()).append(');').toString(), this, 'printPath');
+        }
+    }
+
+    protected void printPaths(BasicArrayList list) {
+        final int size = list.size();
+        for (int index = 0; index < size; index++) {
+            System.out.println(new StringMaker().append(' Path ').appendint(index).append(CommonLabels.getInstance().@COLON_SEP).toString());
+            this.printPath(((BasicArrayList) list.get(index)));
+        }
+    }
+
+}
+
+

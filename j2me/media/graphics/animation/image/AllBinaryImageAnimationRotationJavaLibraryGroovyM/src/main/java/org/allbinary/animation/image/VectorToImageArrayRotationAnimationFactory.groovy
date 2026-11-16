@@ -1,0 +1,58 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.NullImage;
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationBehaviorFactory;
+import org.allbinary.animation.VectorAnimation;
+import org.allbinary.game.configuration.GameConfigurationCentral;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.image.AnimationFrameToImageUtil;
+import org.allbinary.logic.math.PrimitiveIntUtil;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.media.ScaleProperties;
+import org.allbinary.media.image.ImageToRotationImageArrayUtil;
+import org.allbinary.vector.VectorInfo;
+
+@groovy.transform.CompileStatic
+public class VectorToImageArrayRotationAnimationFactory extends BaseImageAnimationFactory {
+    private Image[] imageArray = NullImage.NULL_IMAGE_ARRAY;
+
+    private int angleIncrement;
+
+    //    }
+    public VectorToImageArrayRotationAnimationFactory(final VectorInfo vectorInfo, final BasicColor basicColor, final AnimationBehaviorFactory animationBehaviorFactory) throws Exception {
+        super(AnimationFrameToImageUtil.getInstance().getInstanceTranslate(vectorInfo.getWidth(), vectorInfo.getHeight(), VectorAnimation.createVectorAnimation(vectorInfo.getPoints(), basicColor, animationBehaviorFactory.getOrCreateInstance())), PrimitiveIntUtil.getArrayInstance(), 0, 0, 0, 0, animationBehaviorFactory);
+        this.init();
+    }
+
+    protected void init() throws Exception {
+        final AngleFactory angleFactory = AngleFactory.getInstance();
+        this.angleIncrement = Math.divideExact(((int) angleFactory.@TOTAL_ANGLE), GameConfigurationCentral.getInstance().getGameControlFidelity());
+        this.imageArray = ImageToRotationImageArrayUtil.getInstance().generate(this.getImage(), this.getAngleIncrement(), ((int) angleFactory.@TOTAL_ANGLE));
+    }
+
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        if (this.animationFactoryInitializationVisitor.@dx != 0 || this.animationFactoryInitializationVisitor.@dy != 0) {
+            return new AdjustedImageArrayRotationAnimation(this.imageArray, AngleInfo.getInstance(((short) this.getAngleIncrement())), ((int) AngleFactory.getInstance().@TOTAL_ANGLE), this.animationFactoryInitializationVisitor.@dx, this.animationFactoryInitializationVisitor.@dy, this.animationBehaviorFactory.getOrCreateInstance());
+        } else {
+            //This still offsets.
+            return AdjustedImageArrayRotationAnimation.createAnimation(this.imageArray, AngleInfo.getInstance(((short) this.angleIncrement)), ((int) AngleFactory.getInstance().@TOTAL_ANGLE), this.animationBehaviorFactory.getOrCreateInstance());
+        }
+    }
+
+    protected int getAngleIncrement() {
+        return this.angleIncrement;
+    }
+
+    @Override
+    public void setInitialScale(final ScaleProperties scaleProperties) {
+    }
+
+}
+
+

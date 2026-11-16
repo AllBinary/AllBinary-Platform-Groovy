@@ -1,0 +1,56 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.vector;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.animation.Animation;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.ColorCompositeInterface;
+
+@groovy.transform.CompileStatic
+public class RectangleFilledAnimation extends Animation implements ColorCompositeInterface {
+    protected int widthP;
+
+    protected int heightP;
+
+    public RectangleFilledAnimation(final int width, final int height, final BasicColor basicColor) {
+        this.widthP = width;
+        this.heightP = height;
+        this.setBasicColorP(basicColor);
+    }
+
+    @Override
+    public void nextFrame() {
+    }
+
+    @Override
+    public void paintXY(final Graphics graphics, final int x, final int y) {
+        this.basicSetColorUtil.setBasicColorP3(graphics, this.getBasicColorP(), this.getColor());
+        graphics.fillRect(x, y, this.widthP, this.heightP);
+    }
+
+    /**      * @param width the width to set      */
+    public void setWidth(final int width) {
+        this.widthP = width;
+    }
+
+    /**      * @param height the height to set      */
+    public void setHeight(final int height) {
+        this.heightP = height;
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public BasicColor getBasicColorP() {
+        return super.getBasicColorP();
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public void setBasicColorP(final BasicColor basicColor) {
+        super.setBasicColorP(basicColor);
+    }
+
+}
+
+

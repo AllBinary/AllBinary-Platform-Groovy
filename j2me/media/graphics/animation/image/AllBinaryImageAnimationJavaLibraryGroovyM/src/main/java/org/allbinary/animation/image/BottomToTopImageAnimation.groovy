@@ -1,0 +1,57 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.graphics.Anchor;
+import org.allbinary.logic.math.PrimitiveIntUtil;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class BottomToTopImageAnimation extends ImageSegmentAnimation {
+    private int startHeight;
+
+    private int currentHeight;
+
+    public BottomToTopImageAnimation(final Image image, final AnimationBehavior animationBehavior) throws Exception {
+        super(image, PrimitiveIntUtil.getArrayInstance(), animationBehavior);
+        this.setFrame(this.getSize() - 1);
+    }
+
+    @Override
+    public void nextFrame() {
+        super.previousFrame();
+        this.update();
+    }
+
+    @Override
+    public void previousFrame() {
+        super.nextFrame();
+        this.update();
+    }
+
+    @Override
+    public void setFrame(int index) {
+        super.setFrame(index);
+        this.update();
+    }
+
+    private void update() {
+        this.startHeight = Math.divideExact(this.getDrawHeight() * this.getFrame(), this.getSize());
+        this.currentHeight = this.getDrawHeight() - this.startHeight;
+    }
+
+    private int anchor = Anchor.TOP_LEFT;
+
+    @Override
+    public void paintXY(Graphics graphics, int x, int y) {
+        //  int x_dst, int y_dst, int anchor
+        graphics.drawRegion(this.getImage(), this.getStartX(), this.startHeight, this.getDrawWidth(), this.currentHeight, Sprite.TRANS_NONE, x, y + this.startHeight, this.anchor);
+    }
+
+}
+
+

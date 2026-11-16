@@ -1,0 +1,41 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map;
+
+import org.allbinary.string.CommonStrings;
+import org.allbinary.game.layer.AllBinaryTiledLayer;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class GeographicMapCellPositionFactory extends GeographicMapCellPositionBaseFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final static ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+
+    //For the Non Caching version - Turning off caching here requires turning of caching of paths as well
+    @Override
+    public BasicGeographicMapCellPositionFactory getInstance(final BasicGeographicMap geographicMapInterface) throws Exception {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        final AllBinaryTiledLayer allBinaryTiledLayer = geographicMapInterface.getAllBinaryTiledLayer();
+        Object geographicMapCellPositionFactoryCanBeNull = GeographicMapCellPositionFactory.hashtable.get(allBinaryTiledLayer.getDataId());
+        if (geographicMapCellPositionFactoryCanBeNull == null) {
+            this.logUtil.putF(new StringMaker().append('Creating GeographicMapCellPositionFactory for TileLayer: ').appendint(allBinaryTiledLayer.getDataId().intValue()).toString(), this, commonStrings.@GET_INSTANCE);
+            geographicMapCellPositionFactoryCanBeNull = new BasicGeographicMapCellPositionFactory(geographicMapInterface);
+            GeographicMapCellPositionFactory.hashtable.put(allBinaryTiledLayer.getDataId(), geographicMapCellPositionFactoryCanBeNull);
+            return ((BasicGeographicMapCellPositionFactory) geographicMapCellPositionFactoryCanBeNull);
+        } else {
+            this.logUtil.putF(new StringMaker().append('Reusing GeographicMapCellPositionFactory for TileLayer: ').appendint(allBinaryTiledLayer.getDataId().intValue()).toString(), this, commonStrings.@GET_INSTANCE);
+            return ((BasicGeographicMapCellPositionFactory) geographicMapCellPositionFactoryCanBeNull);
+        }
+    }
+
+    public static ABHashtable<Object, Object> getHashtable() {
+        return GeographicMapCellPositionFactory.hashtable;
+    }
+
+}
+
+

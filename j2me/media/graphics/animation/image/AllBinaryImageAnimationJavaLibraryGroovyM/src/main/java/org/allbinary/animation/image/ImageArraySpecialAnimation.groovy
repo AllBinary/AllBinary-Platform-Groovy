@@ -1,0 +1,72 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.animation.special.SpecialAnimationInterface;
+import org.allbinary.graphics.displayable.DisplayInfoSingleton;
+import org.allbinary.time.GameTickTimeDelayHelperFactory;
+import org.allbinary.time.TimeDelayHelper;
+
+@groovy.transform.CompileStatic
+public class ImageArraySpecialAnimation extends ImageArrayAnimation implements SpecialAnimationInterface {
+    private final TimeDelayHelper timeDelayHelper = new TimeDelayHelper(270);
+
+    public ImageArraySpecialAnimation(final Image[] imageArray, final AnimationBehavior animationBehavior) throws Exception {
+        super(imageArray, animationBehavior);
+        this.reset();
+    }
+
+    private int loopCount = 0;
+
+    public int getLoopCount() {
+        return this.loopCount;
+    }
+
+    @Override
+    public void setLastFrame() {
+        this.circularIndexUtil.setIndex(this.circularIndexUtil.getSize() - 1);
+    }
+
+    @Override
+    public void reset() {
+        this.setFrame(this.getSize() - 1);
+        this.loopCount = 0;
+    }
+
+    @Override
+    public void nextFrame() {
+        if (this.getFrame() > 0) {
+            // If Frame is up long enough
+            if (this.timeDelayHelper.isTime(GameTickTimeDelayHelperFactory.getInstance().@startTime)) {
+                this.previousFrame();
+                if (this.getFrame() == 0) {
+                    this.loopCount++;
+                }
+            }
+        }
+    }
+
+    private final int loopCountTotal = 1;
+
+    @Override
+    public boolean isComplete() {
+        if (this.loopCount < this.loopCountTotal || this.getFrame() != 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void paintXY(final Graphics graphics, int x, int y) {
+        x = DisplayInfoSingleton.getInstance().getLastHalfWidth() - (this.getImage(this.circularIndexUtil.getIndex()).getWidth() >> 1);
+        y = 5;
+        super.paintXY(graphics, x, y);
+    }
+
+}
+
+

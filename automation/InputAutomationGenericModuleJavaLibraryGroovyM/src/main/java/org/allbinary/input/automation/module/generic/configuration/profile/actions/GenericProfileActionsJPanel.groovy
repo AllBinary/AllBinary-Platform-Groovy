@@ -1,0 +1,227 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.generic.configuration.profile.actions;
+
+import org.allbinary.input.automation.module.DefaultListModelHelper;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+/**  *  * @author  USER  */
+@groovy.transform.CompileStatic
+public class GenericProfileActionsJPanel extends javax.swing.JPanel {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private GenericProfileActions genericProfileActions;
+
+    private GenericProfileActionJPanel genericProfileActionJPanel;
+
+    /** Creates new form genericProfileActionsJPanel */
+    public GenericProfileActionsJPanel() throws Exception {
+        this.initComponents();
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        this.newProfileActionJDialog = new javax.swing.JDialog();
+        this.newProfileActionJLabel = new javax.swing.JLabel();
+        this.okNewProfileActionJButton = new javax.swing.JButton();
+        this.newProfileActionJTextField = new javax.swing.JTextField();
+        this.genericProfileActionsJPanel = new javax.swing.JPanel();
+        this.genericProfileActionsJScrollPane = new javax.swing.JScrollPane();
+        this.genericProfileActionsJList = new javax.swing.JList();
+        this.newActionJButton = new javax.swing.JButton();
+        this.deleteActionJButton = new javax.swing.JButton();
+        this.saveJButton = new javax.swing.JButton();
+        this.blankGenericProfileActionJPanel = new javax.swing.JPanel();
+        this.newProfileActionJDialog.setMinimumSize(new java.awt.Dimension(250, 150));
+        this.newProfileActionJDialog.setResizable(false);
+        this.newProfileActionJLabel.setText('New Action Name');
+        this.okNewProfileActionJButton.setText('Ok');
+        this.okNewProfileActionJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    okNewProfileActionJButtonActionPerformed(evt);
+                }
+
+            });
+        javax.swing.GroupLayout newProfileActionJDialogLayout = new javax.swing.GroupLayout(this.newProfileActionJDialog.getContentPane());
+        this.newProfileActionJDialog.getContentPane().setLayout(newProfileActionJDialogLayout);
+        newProfileActionJDialogLayout.setHorizontalGroup(newProfileActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(newProfileActionJDialogLayout.createSequentialGroup().addGroup(newProfileActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(newProfileActionJDialogLayout.createSequentialGroup().addGap(93, 93, 93).addComponent(okNewProfileActionJButton)).addGroup(newProfileActionJDialogLayout.createSequentialGroup().addGap(75, 75, 75).addComponent(newProfileActionJLabel)).addGroup(newProfileActionJDialogLayout.createSequentialGroup().addGap(29, 29, 29).addComponent(newProfileActionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))).addContainerGap(34, Short.MAX_VALUE)));
+        newProfileActionJDialogLayout.setVerticalGroup(newProfileActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, newProfileActionJDialogLayout.createSequentialGroup().addContainerGap().addComponent(newProfileActionJLabel).addGap(21, 21, 21).addComponent(newProfileActionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE).addComponent(okNewProfileActionJButton).addContainerGap()));
+        this.genericProfileActionsJPanel.setPreferredSize(new java.awt.Dimension(10000, 10000));
+        this.genericProfileActionsJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                    genericProfileActionsJListValueChanged(evt);
+                }
+
+            });
+        this.genericProfileActionsJScrollPane.setViewportView(this.genericProfileActionsJList);
+        this.newActionJButton.setText('New');
+        this.newActionJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    newActionJButtonActionPerformed(evt);
+                }
+
+            });
+        this.deleteActionJButton.setText('Delete');
+        this.deleteActionJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    deleteActionJButtonActionPerformed(evt);
+                }
+
+            });
+        this.saveJButton.setText('Save');
+        this.saveJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    saveJButtonActionPerformed(evt);
+                }
+
+            });
+        this.blankGenericProfileActionJPanel.setMinimumSize(new java.awt.Dimension(500, 300));
+        javax.swing.GroupLayout blankGenericProfileActionJPanelLayout = new javax.swing.GroupLayout(this.blankGenericProfileActionJPanel);
+        this.blankGenericProfileActionJPanel.setLayout(blankGenericProfileActionJPanelLayout);
+        blankGenericProfileActionJPanelLayout.setHorizontalGroup(blankGenericProfileActionJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 500, Short.MAX_VALUE));
+        blankGenericProfileActionJPanelLayout.setVerticalGroup(blankGenericProfileActionJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 296, Short.MAX_VALUE));
+        javax.swing.GroupLayout genericProfileActionsJPanelLayout = new javax.swing.GroupLayout(this.genericProfileActionsJPanel);
+        this.genericProfileActionsJPanel.setLayout(genericProfileActionsJPanelLayout);
+        genericProfileActionsJPanelLayout.setHorizontalGroup(genericProfileActionsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(genericProfileActionsJPanelLayout.createSequentialGroup().addComponent(genericProfileActionsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(blankGenericProfileActionJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGroup(genericProfileActionsJPanelLayout.createSequentialGroup().addComponent(newActionJButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(deleteActionJButton).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(saveJButton).addContainerGap()));
+        genericProfileActionsJPanelLayout.setVerticalGroup(genericProfileActionsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(genericProfileActionsJPanelLayout.createSequentialGroup().addGroup(genericProfileActionsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(newActionJButton).addComponent(deleteActionJButton).addComponent(saveJButton)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(genericProfileActionsJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false).addComponent(blankGenericProfileActionJPanel, 0, 296, Short.MAX_VALUE).addComponent(genericProfileActionsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(genericProfileActionsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(genericProfileActionsJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE));
+    }
+
+    // </editor-fold>//GEN-END:initComponents
+    public void setModel() {
+        DefaultListModelHelper defaultListModelHelper = this.getGenericProfileActions().getDefaultListModelHelper();
+        if (defaultListModelHelper.getListModel().getSize() > 0) {
+            this.genericProfileActionsJList.setModel(defaultListModelHelper.getListModel());
+        }
+    }
+
+    private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        try {
+            this.getGenericProfileActions().save();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'saveJButtonActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_saveJButtonActionPerformed
+    private void updateProfileActionUI(String profileActionNameString) {
+        this.blankGenericProfileActionJPanel.removeAll();
+        if (profileActionNameString != null) {
+            GenericProfileAction genericProfileAction = this.getGenericProfileActions().getAction(profileActionNameString);
+            this.setGenericProfileActionJPanel(new GenericProfileActionJPanel());
+            this.getGenericProfileActionJPanel().setGenericProfileAction(genericProfileAction);
+            this.getGenericProfileActionJPanel().updateProfileActionUI();
+            javax.swing.GroupLayout layout = ((javax.swing.GroupLayout) this.blankGenericProfileActionJPanel.getLayout());
+            layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 395, Short.MAX_VALUE).addComponent(this.getGenericProfileActionJPanel(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE));
+            layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 256, Short.MAX_VALUE).addComponent(this.getGenericProfileActionJPanel(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE));
+            this.logUtil.putF('Setting Configuration Profile Actions JPanel', this, 'genericProfileActionsJListValueChanged');
+        }
+    }
+
+    private void genericProfileActionsJListValueChanged(javax.swing.event.ListSelectionEvent evt) {
+        // TODO add your handling code here:
+        try {
+            String profileActionNameString = ((String) this.genericProfileActionsJList.getSelectedValue());
+            this.updateProfileActionUI(profileActionNameString);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'genericProfileActionsJListValueChanged', e);
+        }
+    }
+
+    //GEN-LAST:event_genericProfileActionsJListValueChanged
+    private void okNewProfileActionJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        try {
+            String newActionName = this.newProfileActionJTextField.getText();
+            this.getGenericProfileActions().add(newActionName);
+            this.setModel();
+            this.genericProfileActionsJList.setSelectedValue(newActionName, true);
+            this.newProfileActionJDialog.setVisible(false);
+            this.updateProfileActionUI(newActionName);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'okNewProfileActionJButtonActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_okNewProfileActionJButtonActionPerformed
+    private void deleteActionJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        try {
+            Object[] anyType = this.genericProfileActionsJList.getSelectedValues();
+            for (int index = 0; index < anyType.length; index++) {
+                String nextSelectedValueString = ((String) anyType[index]);
+                this.getGenericProfileActions().remove(nextSelectedValueString);
+            }
+            this.selectFirstElement();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'deleteActionJButtonActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_deleteActionJButtonActionPerformed
+    public void selectFirstElement() throws Exception {
+        this.setModel();
+        if (this.genericProfileActionsJList.getModel().getSize() > 0) {
+            this.genericProfileActionsJList.setSelectedValue(this.genericProfileActionsJList.getModel().getElementAt(0), true);
+            this.updateProfileActionUI(((String) this.genericProfileActionsJList.getModel().getElementAt(0)));
+        } else {
+            //Clear the action window
+            this.blankGenericProfileActionJPanel.removeAll();
+            this.blankGenericProfileActionJPanel.repaint();
+        }
+    }
+
+    public GenericProfileActionJPanel getGenericProfileActionJPanel() {
+        return this.genericProfileActionJPanel;
+    }
+
+    public void setGenericProfileActionJPanel(GenericProfileActionJPanel genericProfileActionJPanel) {
+        this.genericProfileActionJPanel = genericProfileActionJPanel;
+    }
+
+    public GenericProfileActions getGenericProfileActions() {
+        return this.genericProfileActions;
+    }
+
+    public void setGenericProfileActions(GenericProfileActions genericProfileActions) {
+        this.genericProfileActions = genericProfileActions;
+    }
+
+    private void newActionJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        this.newProfileActionJDialog.setVisible(true);
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel blankGenericProfileActionJPanel;
+
+    private javax.swing.JButton deleteActionJButton;
+
+    private javax.swing.JList genericProfileActionsJList;
+
+    private javax.swing.JPanel genericProfileActionsJPanel;
+
+    private javax.swing.JScrollPane genericProfileActionsJScrollPane;
+
+    private javax.swing.JButton newActionJButton;
+
+    private javax.swing.JDialog newProfileActionJDialog;
+
+    private javax.swing.JLabel newProfileActionJLabel;
+
+    private javax.swing.JTextField newProfileActionJTextField;
+
+    private javax.swing.JButton okNewProfileActionJButton;
+
+    private javax.swing.JButton saveJButton;
+
+}
+
+

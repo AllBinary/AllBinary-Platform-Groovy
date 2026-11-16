@@ -1,0 +1,84 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.score;
+
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class HighScores implements HighScoresInterface {
+    private BasicArrayList orderedHighScoresList = new BasicArrayListD();
+
+    // = "Score"
+    private final String name;
+
+    private final String heading;
+
+    private final String columnOneHeading = 'Name';
+
+    private final String columnTwoHeading;
+
+    public HighScores(String name, String heading, String columnTwoHeading) {
+        this.name = name;
+        this.heading = heading;
+        this.columnTwoHeading = columnTwoHeading;
+    }
+
+    public void setList(BasicArrayList orderedHighScoresList) {
+        this.orderedHighScoresList = orderedHighScoresList;
+    }
+
+    @Override
+    public BasicArrayList getList() {
+        return this.orderedHighScoresList;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public int getTotal() {
+        return this.getList().size();
+    }
+
+    @Override
+    public void addHighScore(HighScore newHighScore) {
+        this.orderedHighScoresList.add(newHighScore);
+    }
+
+    public String getHeading() {
+        return this.heading;
+    }
+
+    public String getColumnOneHeading() {
+        return this.columnOneHeading;
+    }
+
+    public String getColumnTwoHeading() {
+        return this.columnTwoHeading;
+    }
+
+    @Override
+    public boolean isBestScore(HighScore newHighScore) throws Exception {
+        return false;
+    }
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('HighScores: ');
+        //stringBuffer.append(this.name);
+        stringBuffer.append(this.heading);
+        //stringBuffer.append(this.columnTwoHeading);
+        stringBuffer.append(CommonSeps.getInstance().@SPACE);
+        stringBuffer.append(CommonLabels.getInstance().@TOTAL_LABEL);
+        stringBuffer.appendint(this.orderedHighScoresList.size());
+        return stringBuffer.toString();
+    }
+
+}
+
+

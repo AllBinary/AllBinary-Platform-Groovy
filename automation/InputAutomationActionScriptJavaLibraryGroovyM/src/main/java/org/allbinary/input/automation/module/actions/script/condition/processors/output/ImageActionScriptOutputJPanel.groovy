@@ -1,0 +1,187 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.actions.script.condition.processors.output;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import javax.swing.*;
+import org.allbinary.input.media.image.InputImageType;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+/**  *  * @author  USER  */
+@groovy.transform.CompileStatic
+public class ImageActionScriptOutputJPanel extends javax.swing.JPanel {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private ImageActionScriptOutputInterface capturedImageActionScriptOutputInterface;
+
+    /** Creates new form ColorAtActionJPanel */
+    public ImageActionScriptOutputJPanel(ImageActionScriptOutputInterface capturedImageActionScriptOutputInterface) throws Exception {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        this.initComponents();
+        this.capturedImageActionScriptOutputInterface = capturedImageActionScriptOutputInterface;
+        this.set();
+    }
+
+    private void set() {
+        this.setImageTypeJlistModel();
+        ImageTypes imageTypes = this.capturedImageActionScriptOutputInterface.getImageTypes();
+        BasicArrayList vector = imageTypes.getVector();
+        int[] selectedArray = new int[vector.size()];
+        final int size = vector.size();
+        for (int index = 0; index < size; index++) {
+            InputImageType imageType = ((InputImageType) vector.get(index));
+            selectedArray[index++] = imageType.getIndex();
+        }
+        this.itemTypesJList.setSelectedIndices(selectedArray);
+        if (this.capturedImageActionScriptOutputInterface.isSaved()) {
+            this.saveJCheckBox.setSelected(true);
+        }
+        if (this.capturedImageActionScriptOutputInterface.isSaved()) {
+            this.displayJCheckBox.setSelected(true);
+        }
+        this.capturedImageActionScriptOutputInterface.log();
+    }
+
+    private void update() {
+        Object[] anyType = this.itemTypesJList.getSelectedValues();
+        ImageTypes imageTypes = ImageTypes.valueOf(anyType);
+        this.capturedImageActionScriptOutputInterface.setImageTypes(imageTypes);
+        if (this.saveJCheckBox.isSelected()) {
+            this.capturedImageActionScriptOutputInterface.setSaved(true);
+        } else {
+            this.capturedImageActionScriptOutputInterface.setSaved(false);
+        }
+        if (this.displayJCheckBox.isSelected()) {
+            this.capturedImageActionScriptOutputInterface.setDisplay(true);
+        } else {
+            this.capturedImageActionScriptOutputInterface.setDisplay(false);
+        }
+        this.capturedImageActionScriptOutputInterface.log();
+    }
+
+    private void setImageTypeJlistModel() {
+        DefaultListModel defaultListModel = new DefaultListModel();
+        BasicArrayList vector = InputImageType.getAllAsVector();
+        final int size = vector.size();
+        for (int index = 0; index < size; index++) {
+            InputImageType imageType = ((InputImageType) vector.get(index));
+            defaultListModel.addElement(imageType.getName());
+        }
+        this.itemTypesJList.setModel(defaultListModel);
+    }
+
+    public javax.swing.JDialog getCapturedImageActionJDialog() {
+        return this.capturedImageActionJDialog;
+    }
+
+    public void setCapturedImageActionJDialog(javax.swing.JDialog capturedImageActionJDialog) {
+        this.capturedImageActionJDialog = capturedImageActionJDialog;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        this.capturedImageActionJDialog = new javax.swing.JDialog();
+        this.titleJLabel = new javax.swing.JLabel();
+        this.okJButton = new javax.swing.JButton();
+        this.saveJCheckBox = new javax.swing.JCheckBox();
+        this.displayJCheckBox = new javax.swing.JCheckBox();
+        this.jScrollPane1 = new javax.swing.JScrollPane();
+        this.itemTypesJList = new javax.swing.JList();
+        this.capturedImageActionJButton = new javax.swing.JButton();
+        this.jLabel1 = new javax.swing.JLabel();
+        this.capturedImageActionJDialog.setMinimumSize(new java.awt.Dimension(250, 250));
+        this.titleJLabel.setText('Image Output Options');
+        this.okJButton.setText('OK');
+        this.okJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    okJButtonActionPerformed(evt);
+                }
+
+            });
+        this.saveJCheckBox.setText('Save To File');
+        this.saveJCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        this.saveJCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        this.displayJCheckBox.setText('Display');
+        this.displayJCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        this.displayJCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        this.displayJCheckBox.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    displayJCheckBoxActionPerformed(evt);
+                }
+
+            });
+        this.itemTypesJList.setModel(new javax.swing.AbstractListModel() {
+                @groovy.transform.PackageScope String[] strings = new String[] {'Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'};
+
+                public int getSize() {
+                    return strings.length;
+                }
+
+                public Object getElementAt(int i) {
+                    return strings[i];
+                }
+
+            });
+        this.jScrollPane1.setViewportView(this.itemTypesJList);
+        javax.swing.GroupLayout capturedImageActionJDialogLayout = new javax.swing.GroupLayout(this.capturedImageActionJDialog.getContentPane());
+        this.capturedImageActionJDialog.getContentPane().setLayout(capturedImageActionJDialogLayout);
+        capturedImageActionJDialogLayout.setHorizontalGroup(capturedImageActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(capturedImageActionJDialogLayout.createSequentialGroup().addGroup(capturedImageActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(capturedImageActionJDialogLayout.createSequentialGroup().addGap(61, 61, 61).addComponent(titleJLabel)).addGroup(capturedImageActionJDialogLayout.createSequentialGroup().addContainerGap().addGroup(capturedImageActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(capturedImageActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(displayJCheckBox).addComponent(saveJCheckBox, javax.swing.GroupLayout.Alignment.TRAILING)).addGroup(capturedImageActionJDialogLayout.createSequentialGroup().addGap(84, 84, 84).addComponent(okJButton)))).addGroup(capturedImageActionJDialogLayout.createSequentialGroup().addContainerGap().addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))).addContainerGap()));
+        capturedImageActionJDialogLayout.setVerticalGroup(capturedImageActionJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(capturedImageActionJDialogLayout.createSequentialGroup().addComponent(titleJLabel).addGap(5, 5, 5).addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(saveJCheckBox).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(displayJCheckBox).addGap(9, 9, 9).addComponent(okJButton).addContainerGap()));
+        setMinimumSize(new java.awt.Dimension(100, 0));
+        this.capturedImageActionJButton.setText('Edit');
+        this.capturedImageActionJButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    capturedImageActionJButtonActionPerformed(evt);
+                }
+
+            });
+        this.jLabel1.setText('Capture Image:');
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(jLabel1).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(capturedImageActionJButton)));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel1).addComponent(capturedImageActionJButton)));
+    }
+
+    // </editor-fold>//GEN-END:initComponents
+    private void displayJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    //GEN-LAST:event_displayJCheckBoxActionPerformed
+    private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        this.update();
+        this.getCapturedImageActionJDialog().setVisible(false);
+    }
+
+    //GEN-LAST:event_okJButtonActionPerformed
+    private void capturedImageActionJButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        this.getCapturedImageActionJDialog().setVisible(true);
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton capturedImageActionJButton;
+
+    private javax.swing.JDialog capturedImageActionJDialog;
+
+    private javax.swing.JCheckBox displayJCheckBox;
+
+    private javax.swing.JList itemTypesJList;
+
+    private javax.swing.JLabel jLabel1;
+
+    private javax.swing.JScrollPane jScrollPane1;
+
+    private javax.swing.JButton okJButton;
+
+    private javax.swing.JCheckBox saveJCheckBox;
+
+    private javax.swing.JLabel titleJLabel;
+
+}
+
+

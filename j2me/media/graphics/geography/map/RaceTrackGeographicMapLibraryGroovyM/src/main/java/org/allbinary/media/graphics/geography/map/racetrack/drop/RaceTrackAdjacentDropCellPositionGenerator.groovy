@@ -1,0 +1,131 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.graphics.geography.map.racetrack.drop;
+
+import org.allbinary.game.identification.GroupCommonFactory;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.direction.Direction;
+import org.allbinary.direction.DirectionFactory;
+import org.allbinary.game.identification.BasicGroupFactory;
+import org.allbinary.game.layer.AllBinaryGameLayerManager;
+import org.allbinary.game.layer.geographic.map.LayerCoveringCellPositionsUtil;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMapCellPositionFactory;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellPosition;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellType;
+import org.allbinary.media.graphics.geography.map.GeographicMapDirectionUtil;
+import org.allbinary.media.graphics.geography.map.SimpleGeographicMapCellPositionFactory;
+import org.allbinary.media.graphics.geography.map.drop.DropCellPositionGeneratorInterface;
+import org.allbinary.media.graphics.geography.map.drop.DropCellPositionHistory;
+import org.allbinary.media.graphics.geography.map.racetrack.BaseRaceTrackGeographicMap;
+import org.allbinary.media.graphics.geography.map.racetrack.RaceTrackGeographicMapCellType;
+import org.allbinary.media.graphics.geography.map.racetrack.RaceTrackGeographicMapCellTypeFactory;
+import org.allbinary.util.ABHashtable;
+
+/**  *   * @author user  */
+@groovy.transform.CompileStatic
+public class RaceTrackAdjacentDropCellPositionGenerator extends RaceTrackDropCellPositionGenerator {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static RaceTrackAdjacentDropCellPositionGenerator SINGLETON = new RaceTrackAdjacentDropCellPositionGenerator();
+
+    public static DropCellPositionGeneratorInterface getInstance() {
+        return RaceTrackAdjacentDropCellPositionGenerator.SINGLETON;
+    }
+
+    private final LayerCoveringCellPositionsUtil layerCoveringCellPositionsUtil = LayerCoveringCellPositionsUtil.getInstance();
+
+    private final GroupCommonFactory groupCommonFactory = GroupCommonFactory.getInstance();
+
+    //private GeographicMapCellPosition[] surroundingCellPositions = new GeographicMapCellPosition[8];
+    private GeographicMapCellPosition[] surroundingCellPositions = new GeographicMapCellPosition[4];
+
+    private RaceTrackAdjacentDropCellPositionGenerator() {
+    }
+
+    private GeographicMapCellPosition getFirstNonRoadAdjacentCellPosition(final int column, final int row) throws Exception {
+        GeographicMapCellPosition nonRoadGeographicMapCellPosition = SimpleGeographicMapCellPositionFactory.NULL_GEOGRAPHIC_MAP_CELL_POSITION;
+        //tiledLayer.getRows()
+        final BasicGeographicMapCellPositionFactory geographicMapCellPositionFactory = this.raceTrackGeographicMap.getGeographicMapCellPositionFactory();
+        this.surroundingCellPositions[0] = geographicMapCellPositionFactory.getAt(column, row - 1);
+        this.surroundingCellPositions[1] = geographicMapCellPositionFactory.getAt(column, row + 1);
+        this.surroundingCellPositions[2] = geographicMapCellPositionFactory.getAt(column - 1, row);
+        this.surroundingCellPositions[3] = geographicMapCellPositionFactory.getAt(column + 1, row);
+        /*         this.surroundingCellPositions[0] =         geographicMapCellPositionFactory.getInstance(column - 1, row - 1);         this.surroundingCellPositions[1] =         geographicMapCellPositionFactory.getInstance(column, row - 1);         this.surroundingCellPositions[2] =         geographicMapCellPositionFactory.getInstance(column + 1, row - 1);         this.surroundingCellPositions[3] =         geographicMapCellPositionFactory.getInstance(column - 1, row);         this.surroundingCellPositions[4] =         geographicMapCellPositionFactory.getInstance(column + 1, row);         this.surroundingCellPositions[5] =         geographicMapCellPositionFactory.getInstance(column - 1, row + 1);         this.surroundingCellPositions[6] =         geographicMapCellPositionFactory.getInstance(column, row + 1);         this.surroundingCellPositions[7] =         geographicMapCellPositionFactory.getInstance(column + 1, row + 1);          */
+        final BaseRaceTrackGeographicMap baseRaceTrackGeographicMap = ((BaseRaceTrackGeographicMap) this.raceTrackGeographicMap);
+        final RaceTrackGeographicMapCellTypeFactory raceTrackGeographicMapCellTypeFactory = ((RaceTrackGeographicMapCellTypeFactory) baseRaceTrackGeographicMap.getGeographicMapCellTypeFactory());
+        GeographicMapCellPosition geographicMapCellPosition;
+        RaceTrackGeographicMapCellType raceTrackGeographicMapCellType;
+        for (int index = this.surroundingCellPositions.length; --index >= 0; ) {
+            geographicMapCellPosition = this.surroundingCellPositions[index];
+            raceTrackGeographicMapCellType = ((RaceTrackGeographicMapCellType) this.raceTrackGeographicMap.getCellTypeAt(geographicMapCellPosition));
+            if (!raceTrackGeographicMapCellTypeFactory.isPath(raceTrackGeographicMapCellType)) {
+                nonRoadGeographicMapCellPosition = geographicMapCellPosition;
+                break;
+            }
+        }
+        /*         if (nonRoadGeographicMapCellPosition == null)         {         throw new Exception("No non road adjacent: column: " + column + " row: " + row);         }          */
+        return nonRoadGeographicMapCellPosition;
+    }
+
+    private final ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+
+    @Override
+    public void update(final AllBinaryGameLayerManager allBinaryGameLayerManager, final BasicGeographicMap geographicMapInterface) throws Exception {
+        this.hashtable.put(AllBinaryGameLayerManager.ID, allBinaryGameLayerManager);
+        super.update(allBinaryGameLayerManager, geographicMapInterface);
+    }
+
+    private final GeographicMapDirectionUtil geographicMapDirectionUtil = GeographicMapDirectionUtil.getInstance();
+
+    @Override
+    protected void drop(final AllBinaryLayerManager allBinaryLayerManager, final int index) throws Exception {
+        final GeographicMapCellPosition geographicMapCellPosition = ((GeographicMapCellPosition) this.list.get(index));
+        //LogUtil.put(, this, this.commonStrings.DROP));
+        final GeographicMapCellPosition randomGeographicMapCellPosition = this.getFirstNonRoadAdjacentCellPosition(geographicMapCellPosition.getColumn(), geographicMapCellPosition.getRow());
+        if (randomGeographicMapCellPosition == null) {
+            return;
+        }
+        final DropCellPositionHistory dropCellPositionHistory = DropCellPositionHistory.getInstance();
+        if (!dropCellPositionHistory.isCellPositionWithDrop(geographicMapCellPosition)) {
+            final Direction direction = this.geographicMapDirectionUtil.getDirectionFromCellPositionToAdjacentCellPosition(randomGeographicMapCellPosition, geographicMapCellPosition);
+            //this.logUtil.putF(stringBuffer.toString(), this, this.commonStrings.DROP);
+            final Object objectCanBeNull = this.hashtable.get(this.groupCommonFactory.@ID);
+            if (objectCanBeNull != null) {
+            } else {
+                this.hashtable.put(this.groupCommonFactory.@ID, BasicGroupFactory.getInstance().@NONE_ARRAY);
+            }
+            this.hashtable.put(DirectionFactory.getInstance().@NAME, direction);
+            final GPoint point = randomGeographicMapCellPosition.getPoint();
+            final int x = point.getX();
+            final int y = point.getY();
+            final int z = point.getZ();
+            //this.logUtil.putF("Dropping: " + randomGeographicMapCellPosition.toString() + " = " + randomGeographicMapCellPosition.getPoint(), this, this.commonStrings.DROP);
+            final AllBinaryLayer layerInterface = RaceTrackAdjacentDropLayerFactory.getInstance().getRandomInstance().getNextInstance(hashtable, x, y, z);
+            final BaseRaceTrackGeographicMap baseRaceTrackGeographicMap = ((BaseRaceTrackGeographicMap) this.raceTrackGeographicMap);
+            final BasicArrayList list = this.layerCoveringCellPositionsUtil.getAll(baseRaceTrackGeographicMap, randomGeographicMapCellPosition, layerInterface, new BasicArrayListD());
+            if (dropCellPositionHistory.anyCellPositionWithDrop(list)) {
+                //PreLogUtil.put("Already Has A Drop", this, this.commonStrings.DROP);
+                return;
+            }
+            GeographicMapCellType geographicMapCellType;
+            for (int index2 = list.size(); --index2 >= 0; ) {
+                geographicMapCellType = this.raceTrackGeographicMap.getCellTypeAt(((GeographicMapCellPosition) list.get(index2)));
+                if (this.raceTrackGeographicMapCellTypeFactory.isPath(geographicMapCellType)) {
+                    //PreLogUtil.put("Can't Drop On a Road", this, this.commonStrings.DROP);
+                    return;
+                }
+            }
+            //PreLogUtil.put("Dropping: " + layerInterface, this, this.commonStrings.DROP);
+            dropCellPositionHistory.addAll(list, layerInterface);
+            allBinaryLayerManager.append(layerInterface);
+        }
+    }
+
+}
+
+

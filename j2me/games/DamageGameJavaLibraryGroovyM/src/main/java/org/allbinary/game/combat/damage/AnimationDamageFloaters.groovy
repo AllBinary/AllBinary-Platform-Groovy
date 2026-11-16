@@ -1,0 +1,75 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.combat.damage;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.animation.IndexedAnimation;
+import org.allbinary.graphics.displayable.CanvasStrings;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.CircularIndexUtil;
+import org.allbinary.view.ViewPosition;
+import org.allbinary.view.ViewPositionBase;
+
+@groovy.transform.CompileStatic
+public class AnimationDamageFloaters extends DamageFloaters {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private AllBinaryLayer layerInterface;
+
+    private IndexedAnimation[] animationInterfaceArray;
+
+    //private int[] lastDamage;
+    private final CircularIndexUtil circularIndexUtil;
+
+    private int dx;
+
+    private int dy;
+
+    public AnimationDamageFloaters(AllBinaryLayer layerInterface, IndexedAnimation[] animationInterfaceArray, int dx, int dy) {
+        this.animationInterfaceArray = animationInterfaceArray;
+        for (int index = this.animationInterfaceArray.length - 1; index >= 0; index--) {
+            this.animationInterfaceArray[index].setFrame(this.animationInterfaceArray[index].getSize() - 1);
+        }
+        //this.lastDamage = new int[animationInterfaceArray.length];
+        this.layerInterface = layerInterface;
+        this.circularIndexUtil = CircularIndexUtil.createInstance(this.animationInterfaceArray.length);
+        this.dx = dx;
+        this.dy = dy;
+    }
+
+    /*     public AnimationDamageFloaters(AllBinaryLayer layerInterface)     {         this.layerInterface = layerInterface;          this.circularIndexUtil = CircularIndexUtil.getInstance(0);     }     */
+    @Override
+    public void add(int damage) {
+        int i = this.circularIndexUtil.getIndex();
+        //this.lastDamage[i] = damage;
+        this.animationInterfaceArray[i].setFrame(0);
+        this.circularIndexUtil.next();
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        try {
+            final ViewPositionBase viewPosition = this.layerInterface.getViewPosition();
+            final int x = viewPosition.getX();
+            final int y = viewPosition.getY();
+            for (int index = 0; index < this.animationInterfaceArray.length; index++) {
+                IndexedAnimation animationInterface = this.animationInterfaceArray[index];
+                if (animationInterface.getFrame() < animationInterface.getAnimationSize() - 1) {
+                    int delta = animationInterface.getFrame() * 20;
+                    animationInterface.paintXY(graphics, x + this.dx, y - delta + this.dy);
+                    /*                     for(int index2 = 0; index2 < this.lastDamage[index2]; index2++)                     {                         animationInterface.paint(graphics, x + MyRandom.getAbsoluteNextInt(3 * animationInterface.getFrame()), y - delta);                     }                     */
+                    animationInterface.nextFrame();
+                }
+            }
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            final CanvasStrings canvasStrings = CanvasStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, canvasStrings.@PAINT, e);
+        }
+    }
+
+}
+
+

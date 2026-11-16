@@ -1,0 +1,39 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *  * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *  * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *  * Created By: Travis Berthelot  *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import org.allbinary.logic.io.StreamUtil;
+import org.allbinary.logic.system.security.crypt.jcehelper.AbCrypt;
+import org.allbinary.logic.system.security.crypt.jcehelper.KeySpecFactory;
+
+@groovy.transform.CompileStatic
+public class AbCryptUtil {
+    private static final AbCryptUtil instance = new AbCryptUtil();
+
+    public static AbCryptUtil getInstance() {
+        return AbCryptUtil.instance;
+    }
+
+    private final StreamUtil streamUtil = StreamUtil.getInstance();
+
+    private AbCryptUtil() {
+    }
+
+    public byte[] decrypt(final InputStream inputStream, final String key) throws Exception {
+        ByteArrayOutputStream outputStream = null;
+        try {
+            outputStream = ((ByteArrayOutputStream) this.streamUtil.get(inputStream, new ByteArrayOutputStream(), new byte[16384]));
+            final AbCrypt abCrypt = new AbCrypt(KeySpecFactory.getInstance().@DESEDE);
+            abCrypt.init(key);
+            return abCrypt.decrypt(outputStream.toByteArray());
+        } finally {
+            this.streamUtil.close(outputStream);
+            this.streamUtil.close(inputStream);
+        }
+    }
+
+}
+
+

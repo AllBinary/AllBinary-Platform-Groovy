@@ -1,0 +1,57 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2022 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.canvas.transition.progress;
+
+import org.allbinary.canvas.Processor;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.paint.NullPaintable;
+import org.allbinary.image.ImageCacheFactory;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class LazyProgressCanvas extends ProgressCanvas {
+    public LazyProgressCanvas(final String title, final BasicColor backgroundBasicColor, final BasicColor foregroundBasicColor) {
+        super(title, backgroundBasicColor, foregroundBasicColor);
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        this.hasPainted = false;
+    }
+
+    @Override
+    public void end() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@END_METHOD_NAME);
+            this.endActual();
+            this.paintable = this.GAUGE_PAINTABLE;
+            ImageCacheFactory.getInstance().runTask();
+            ImageCacheFactory.getInstance().progressEnded();
+        } catch (Exception e) {
+            this.logUtil.putF(this.commonStrings.@EXCEPTION, this, this.commonStrings.@END_METHOD_NAME);
+        }
+    }
+
+    @Override
+    public void inGame() {
+        this.inGameProcessor = Processor.getInstance();
+    }
+
+    @Override
+    public void endFromInitialLazyLoadingComplete() {
+        super.endFromInitialLazyLoadingComplete();
+        //this.logUtil.putF(this.commonStrings.START, this, END_FROM_INITIAL_LAZY_LOADING_COMPLETE);
+        this.paintable = NullPaintable.getInstance();
+    }
+
+    @Override
+    public void endIfPaintedSinceStart() {
+        if (this.paintable === this.GAUGE_PAINTABLE && this.hasPainted) {
+            this.endFromInitialLazyLoadingComplete();
+        }
+    }
+
+}
+
+

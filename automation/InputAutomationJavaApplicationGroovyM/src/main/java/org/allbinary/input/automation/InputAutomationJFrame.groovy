@@ -1,0 +1,526 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation;
+
+import org.allbinary.thread.ARunnable;
+import java.net.URI;
+import java.net.URL;
+import java.awt.Desktop;
+import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.help.HelpSet;
+import javax.help.event.HelpSetEvent;
+import javax.help.event.HelpSetListener;
+import bundle.input.automation.InputAutomationBundleActivatorListenerInterface;
+import bundle.input.automation.module.configuration.InputAutomationConfigurationModuleChangeListener;
+import bundle.input.automation.robot.InputAutomationRobotChangeListener;
+import org.allbinary.globals.AppUrlGlobals;
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.gui.dialog.BasicTextJDialog;
+import org.allbinary.gui.swing.workers.JListSwingWorker;
+import org.allbinary.input.automation.configuration.InputAutomationConfiguration;
+import org.allbinary.input.automation.configuration.InputAutomationConfigurationFactory;
+import org.allbinary.input.automation.configuration.InputAutomationConfigurationModuleChangeEvent;
+import org.allbinary.input.automation.module.InputAutomationModuleFactoryFactory;
+import org.allbinary.input.automation.module.InputAutomationModuleFactoryInterface;
+import org.allbinary.input.automation.module.configuration.InputAutomationModuleConfiguration;
+import org.allbinary.input.automation.module.configuration.InputAutomationModuleConfigurations;
+import org.allbinary.input.automation.osgi.DesktopBundle;
+import org.allbinary.input.automation.robot.InputRobotFactory;
+import org.allbinary.input.automation.robot.osgi.InputAutomationRobotChangeEvent;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory;
+import org.allbinary.logic.java.help.JavaHelpUtil;
+import org.allbinary.logic.system.loader.WebappClassLoaderInfo;
+import org.allbinary.logic.system.security.licensing.InputAutomationClientInformationFactory;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.thread.RunnableInterface;
+
+@groovy.transform.CompileStatic
+public class InputAutomationJFrame extends javax.swing.JFrame implements InputAutomationConfigurationModuleChangeListener, InputAutomationRobotChangeListener, HelpSetListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private InputAutomationModuleConfigurations inputAutomationModuleConfigurations = new InputAutomationModuleConfigurations();
+
+    private InputAutomationModuleFactoryFactory inputAutomationModuleFactory;
+
+    private InputAutomationModuleFactoryInterface inputAutomationModuleInterface;
+
+    private RunnableInterface runnableInterface;
+
+    private Thread thread;
+
+    private HelpSet helpSet;
+
+    private final URI uri = new URI('http://geocities.com/allbinary/');
+
+    public InputAutomationJFrame() throws Exception {
+        this.initComponents();
+        //fileJDialog.addFinishedListener(this);
+        URL url = this.getClass().getResource('/help/Help.hs');
+        this.logUtil.putF('URL: ' + url, this, this.commonStrings.@CONSTRUCTOR);
+        this.helpSet = JavaHelpUtil.getInstance().getHelpSet(url);
+        url = this.getClass().getResource('/resources/allbinaryicon8bit.jpg');
+        final ImageIcon imageIcon = new ImageIcon(url);
+        this.setIconImage(imageIcon.getImage());
+        this.init();
+    }
+
+    public void helpSetAdded(final HelpSetEvent helpSetEvent) {
+        this.helpSet.add(helpSetEvent.getHelpSet());
+    }
+
+    public void helpSetRemoved(final HelpSetEvent helpSetEvent) {
+        this.helpSet.remove(helpSetEvent.getHelpSet());
+    }
+
+    private void init() throws Exception {
+        final InputAutomationConfigurationFactory inputAutomationConfigurationFactory = InputAutomationConfigurationFactory.getInstance();
+        inputAutomationConfigurationFactory.init(InputAutomationClientInformationFactory.getInstance());
+        final List<InputAutomationModuleConfiguration> inputAutomationModuleConfigurationList = inputAutomationConfigurationFactory.@inputAutomationConfiguration.getInputAutomationModuleConfigurationList();
+        if (inputAutomationModuleConfigurationList == null) {
+        } else {
+            this.inputAutomationModuleConfigurations = new InputAutomationModuleConfigurations(inputAutomationModuleConfigurationList);
+        }
+        this.inputAutomationModuleFactory = new InputAutomationModuleFactoryFactory(inputAutomationModuleConfigurations, this);
+        (new JListSwingWorker(this.inputAutomationModuleJList, this.inputAutomationModuleFactory.getListModel())).execute();
+        this.gameRobotJTabbedPane.setEnabledAt(1, false);
+        this.gameRobotJTabbedPane.setSelectedIndex(0);
+    }
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        this.noModuleSelectedJDialog = new javax.swing.JDialog();
+        this.noModuleSelectedJLabel = new javax.swing.JLabel();
+        this.gameRobotJTabbedPane = new javax.swing.JTabbedPane();
+        this.inputAutomationModuleJPanel = new javax.swing.JPanel();
+        this.jScrollPane1 = new javax.swing.JScrollPane();
+        this.inputAutomationModuleJList = new javax.swing.JList();
+        this.automationModuleConfigurationJPanel = new javax.swing.JPanel();
+        this.mainJMenuBar = new javax.swing.JMenuBar();
+        this.processingJMenu = new javax.swing.JMenu();
+        this.startJMenuItem = new javax.swing.JMenuItem();
+        this.stopJMenuItem = new javax.swing.JMenuItem();
+        this.optionsJMenu = new javax.swing.JMenu();
+        this.stopOnFocusJCheckBoxMenuItem = new javax.swing.JCheckBoxMenuItem();
+        this.toolsJMenu = new javax.swing.JMenu();
+        this.helpJMenuItem = new javax.swing.JMenuItem();
+        this.updatesJMenuItem = new javax.swing.JMenuItem();
+        this.subscriptionJMenuItem = new javax.swing.JMenuItem();
+        this.modulesJMenuItem = new javax.swing.JMenuItem();
+        this.aboutJMenuItem = new javax.swing.JMenuItem();
+        this.noModuleSelectedJDialog.setMinimumSize(new java.awt.Dimension(200, 100));
+        this.noModuleSelectedJLabel.setText('Please Select A Module');
+        javax.swing.GroupLayout noModuleSelectedJDialogLayout = new javax.swing.GroupLayout(this.noModuleSelectedJDialog.getContentPane());
+        this.noModuleSelectedJDialog.getContentPane().setLayout(noModuleSelectedJDialogLayout);
+        noModuleSelectedJDialogLayout.setHorizontalGroup(noModuleSelectedJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(noModuleSelectedJDialogLayout.createSequentialGroup().addContainerGap().addComponent(noModuleSelectedJLabel).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        noModuleSelectedJDialogLayout.setVerticalGroup(noModuleSelectedJDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(noModuleSelectedJLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        this.setMinimumSize(new java.awt.Dimension(325, 215));
+        setResizable(false);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+                public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                    formWindowGainedFocus(evt);
+                }
+
+                public void windowLostFocus(java.awt.event.WindowEvent evt) {
+                    formWindowLostFocus(evt);
+                }
+
+            });
+        addFocusListener(new java.awt.event.FocusAdapter() {
+                public void focusGained(java.awt.event.FocusEvent evt) {
+                    formFocusGained(evt);
+                }
+
+                public void focusLost(java.awt.event.FocusEvent evt) {
+                    formFocusLost(evt);
+                }
+
+            });
+        this.gameRobotJTabbedPane.setMinimumSize(new java.awt.Dimension(320, 200));
+        this.inputAutomationModuleJList.setMinimumSize(new java.awt.Dimension(200, 0));
+        this.inputAutomationModuleJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                    inputAutomationModuleJListValueChanged(evt);
+                }
+
+            });
+        this.jScrollPane1.setViewportView(this.inputAutomationModuleJList);
+        javax.swing.GroupLayout inputAutomationModuleJPanelLayout = new javax.swing.GroupLayout(this.inputAutomationModuleJPanel);
+        this.inputAutomationModuleJPanel.setLayout(inputAutomationModuleJPanelLayout);
+        inputAutomationModuleJPanelLayout.setHorizontalGroup(inputAutomationModuleJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(inputAutomationModuleJPanelLayout.createSequentialGroup().addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(367, Short.MAX_VALUE)));
+        inputAutomationModuleJPanelLayout.setVerticalGroup(inputAutomationModuleJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(inputAutomationModuleJPanelLayout.createSequentialGroup().addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        this.gameRobotJTabbedPane.addTab('Modules', inputAutomationModuleJPanel);
+        javax.swing.GroupLayout automationModuleConfigurationJPanelLayout = new javax.swing.GroupLayout(this.automationModuleConfigurationJPanel);
+        this.automationModuleConfigurationJPanel.setLayout(automationModuleConfigurationJPanelLayout);
+        automationModuleConfigurationJPanelLayout.setHorizontalGroup(automationModuleConfigurationJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 566, Short.MAX_VALUE));
+        automationModuleConfigurationJPanelLayout.setVerticalGroup(automationModuleConfigurationJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 334, Short.MAX_VALUE));
+        this.gameRobotJTabbedPane.addTab('Configuration', automationModuleConfigurationJPanel);
+        this.processingJMenu.setText('Processing');
+        this.processingJMenu.setToolTipText('Set module processing state');
+        this.startJMenuItem.setText(this.commonStrings.@START);
+        this.startJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    startJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.processingJMenu.add(this.startJMenuItem);
+        this.stopJMenuItem.setText('Stop');
+        this.stopJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    stopJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.processingJMenu.add(this.stopJMenuItem);
+        this.mainJMenuBar.add(this.processingJMenu);
+        this.optionsJMenu.setText('Options');
+        this.optionsJMenu.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    optionsJMenuActionPerformed(evt);
+                }
+
+            });
+        this.stopOnFocusJCheckBoxMenuItem.setSelected(true);
+        this.stopOnFocusJCheckBoxMenuItem.setEnabled(false);
+        this.stopOnFocusJCheckBoxMenuItem.setLabel('Stop Module On Focus');
+        this.stopOnFocusJCheckBoxMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    stopOnFocusJCheckBoxMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.optionsJMenu.add(this.stopOnFocusJCheckBoxMenuItem);
+        this.mainJMenuBar.add(this.optionsJMenu);
+        this.toolsJMenu.setText('Help');
+        this.helpJMenuItem.setText('Help');
+        this.helpJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    helpJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.toolsJMenu.add(this.helpJMenuItem);
+        this.updatesJMenuItem.setText('Updates');
+        this.updatesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    updatesJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.toolsJMenu.add(this.updatesJMenuItem);
+        this.subscriptionJMenuItem.setText('Subscription');
+        this.subscriptionJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    subscriptionJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.toolsJMenu.add(this.subscriptionJMenuItem);
+        this.modulesJMenuItem.setText('Module Manager');
+        this.modulesJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    modulesJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.toolsJMenu.add(this.modulesJMenuItem);
+        this.aboutJMenuItem.setText('About');
+        this.aboutJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    aboutJMenuItemActionPerformed(evt);
+                }
+
+            });
+        this.toolsJMenu.add(this.aboutJMenuItem);
+        this.mainJMenuBar.add(this.toolsJMenu);
+        setJMenuBar(this.mainJMenuBar);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(gameRobotJTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE));
+        layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(gameRobotJTabbedPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE));
+        pack();
+    }
+
+    // </editor-fold>//GEN-END:initComponents
+    private void subscriptionJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_subscriptionJMenuItemActionPerformed
+        try {
+            Desktop.getDesktop().browse(this.uri);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'subscriptionJMenuItemActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_subscriptionJMenuItemActionPerformed
+    private void updatesJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_updatesJMenuItemActionPerformed
+        try {
+            Desktop.getDesktop().browse(this.uri);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'updatesJMenuItemActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_updatesJMenuItemActionPerformed
+    private void aboutJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_aboutJMenuItemActionPerformed
+        JDialog textJDialog = new BasicTextJDialog('Copyright (c) 2002-2007 AllBinary');
+        textJDialog.setVisible(true);
+        textJDialog.setLocationRelativeTo(this);
+    }
+
+    //GEN-LAST:event_aboutJMenuItemActionPerformed
+    private void modulesJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_modulesJMenuItemActionPerformed
+        try {
+            new DesktopBundle().start();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'modulesJMenuItemActionPerformed', e);
+        }
+    }
+
+    /*    private void addModuleJMenuItemActionPerformed(java.awt.event.ActionEvent evt)    {    this.fileJDialog.setVisible(true);    }     */
+    private void helpJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_helpJMenuItemActionPerformed
+        JavaHelpUtil.getInstance().show(this.helpSet);
+    }
+
+    //GEN-LAST:event_helpJMenuItemActionPerformed
+    private void stopOnFocusJCheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    //GEN-LAST:event_stopOnFocusJCheckBoxMenuItemActionPerformed
+    private void optionsJMenuActionPerformed(java.awt.event.ActionEvent evt) {
+    }
+
+    //GEN-LAST:event_optionsJMenuActionPerformed
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {
+        // TODO add your handling code here:
+        this.logUtil.putF('Nothing', this, 'focusLost');
+    }
+
+    //GEN-LAST:event_formWindowLostFocus
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {
+        // TODO add your handling code here:
+        if (this.stopOnFocusJCheckBoxMenuItem.isSelected()) {
+            this.logUtil.putF('Stopping', this, 'focusGained');
+            if (this.runnableInterface != null) {
+                this.runnableInterface.setRunning(false);
+            }
+        }
+    }
+
+    //GEN-LAST:event_formWindowGainedFocus
+    private void formFocusLost(java.awt.event.FocusEvent evt) {
+    }
+
+    //GEN-LAST:event_formFocusLost
+    private void formFocusGained(java.awt.event.FocusEvent evt) {
+    }
+
+    //GEN-LAST:event_formFocusGained
+    private void inputAutomationModuleJListValueChanged(javax.swing.event.ListSelectionEvent evt) {
+        //GEN-HEADEREND:event_inputAutomationModuleJListValueChanged
+        try {
+            String gameAutomationRobotModuleNameString = ((String) this.inputAutomationModuleJList.getSelectedValue());
+            if (gameAutomationRobotModuleNameString != null) {
+                this.inputAutomationModuleInterface = this.inputAutomationModuleFactory.getInstance(gameAutomationRobotModuleNameString);
+                this.getAutomationModuleConfigurationJPanel().removeAll();
+                javax.swing.GroupLayout layout = ((javax.swing.GroupLayout) this.getAutomationModuleConfigurationJPanel().getLayout());
+                layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 395, Short.MAX_VALUE).addComponent(this.inputAutomationModuleInterface.getConfigurationJPanel(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE));
+                layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 256, Short.MAX_VALUE).addComponent(this.inputAutomationModuleInterface.getConfigurationJPanel(), javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE));
+                this.gameRobotJTabbedPane.setEnabledAt(1, true);
+                this.logUtil.putF('Setting Module: ' + gameAutomationRobotModuleNameString + ' and Configuration JPanel', this, 'gameAutomationRobotModuleJListValueChanged');
+            } else {
+                this.logUtil.putF('Module name was null', this, 'gameAutomationRobotModuleJListValueChanged');
+                this.gameRobotJTabbedPane.setEnabledAt(1, false);
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'gameAutomationRobotModuleJListValueChanged', e);
+        }
+    }
+
+    //GEN-LAST:event_inputAutomationModuleJListValueChanged
+    private void stopJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_stopJMenuItemActionPerformed
+        if (this.runnableInterface != null) {
+            this.runnableInterface.setRunning(false);
+        } else {
+            this.noModuleSelectedJDialog.setVisible(true);
+            this.noModuleSelectedJDialog.setLocationRelativeTo(this);
+        }
+    }
+
+    //GEN-LAST:event_stopJMenuItemActionPerformed
+    private void startJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+        //GEN-HEADEREND:event_startJMenuItemActionPerformed
+        try {
+            this.logUtil.putF('Starting', this, 'startJMenuItemActionPerformed');
+            if (this.inputAutomationModuleInterface != null) {
+                this.runnableInterface = this.inputAutomationModuleInterface.getInstance();
+                if (this.runnableInterface != null) {
+                    this.thread = new Thread(this.runnableInterface);
+                    this.thread.setPriority(Thread.MIN_PRIORITY + 1);
+                    this.thread.start();
+                } else {
+                    this.logUtil.putF('Runnnable was null', this, 'startJMenuItemActionPerformed');
+                    this.noModuleSelectedJDialog.setVisible(true);
+                    this.noModuleSelectedJDialog.setLocationRelativeTo(this);
+                }
+            } else {
+                this.logUtil.putF('InputAutomationModuleInterface was null', this, 'startJMenuItemActionPerformed');
+                this.noModuleSelectedJDialog.setVisible(true);
+                this.noModuleSelectedJDialog.setLocationRelativeTo(this);
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'startJMenuItemActionPerformed', e);
+        }
+    }
+
+    //GEN-LAST:event_startJMenuItemActionPerformed
+    private static InputAutomationJFrame INPUTAUTOMATION_JFRAME;
+
+    public static InputAutomationJFrame getInstance() {
+        return InputAutomationJFrame.INPUTAUTOMATION_JFRAME;
+    }
+
+    public static void destroy() {
+        InputAutomationJFrame.INPUTAUTOMATION_JFRAME.setVisible(false);
+    }
+
+    public static void create(final InputAutomationBundleActivatorListenerInterface inputAutomationBundleActivatorListenerInterface) {
+        LogConfigTypeFactory.getInstance();
+        final AppUrlGlobals appUrlGlobals = new AppUrlGlobals();
+        appUrlGlobals.setWebappPath('G:/mnt/bc/mydev/work_automation/automation/run/');
+        URLGLOBALS.init(appUrlGlobals);
+        WebappClassLoaderInfo.setLoader(appUrlGlobals.getClass().getClassLoader());
+        java.awt.EventQueue.invokeLater(new ARunnable() {
+                public void run() {
+                    final LogUtil logUtil = LogUtil.getInstance();
+                    final CommonStrings commonStrings = CommonStrings.getInstance();
+                    try {
+                        logUtil.putF('Running', this, commonStrings.@RUN);
+                        INPUTAUTOMATION_JFRAME = new InputAutomationJFrame();
+                        InputRobotFactory.getInstance().addListener(InputAutomationJFrame.getInstance());
+                        if (inputAutomationBundleActivatorListenerInterface != null) {
+                            inputAutomationBundleActivatorListenerInterface.registerAsService();
+                            inputAutomationBundleActivatorListenerInterface.useServices();
+                        }
+                        INPUTAUTOMATION_JFRAME.setVisible(true);
+                    } catch (Exception e) {
+                        logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@RUN, e);
+                    }
+                }
+
+            });
+    }
+
+    public static void main(final String[] args) throws Exception {
+        InputAutomationJFrame.create(null);
+    }
+
+    public javax.swing.JPanel getAutomationModuleConfigurationJPanel() {
+        return this.automationModuleConfigurationJPanel;
+    }
+
+    public void setAutomationModuleConfigurationJPanel(final javax.swing.JPanel automationModuleConfigurationJPanel) {
+        this.automationModuleConfigurationJPanel = automationModuleConfigurationJPanel;
+    }
+
+    public void onAdd(final InputAutomationRobotChangeEvent inputAutomationRobotChangeEvent) {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'onAdd');
+            InputRobotFactory.getInstance().add(inputAutomationRobotChangeEvent.getInputAutomationRobotInterfaceWrapper().getInputRobotInterface());
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'onAdd', e);
+        }
+    }
+
+    public void onRemove(final InputAutomationRobotChangeEvent inputAutomationRobotChangeEvent) {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'onRemove');
+            InputRobotFactory.getInstance().add(inputAutomationRobotChangeEvent.getInputAutomationRobotInterfaceWrapper().getInputRobotInterface());
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'onRemove', e);
+        }
+    }
+
+    public void onAdd(final InputAutomationConfigurationModuleChangeEvent inputAutomationConfigurationChangeEvent) {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'onAdd');
+            this.inputAutomationModuleConfigurations.add(inputAutomationConfigurationChangeEvent.getInputAutomationModuleConfiguration());
+            //inputAutomationConfiguration.save();
+            this.init();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'onAdd', e);
+        }
+    }
+
+    public void onRemove(final InputAutomationConfigurationModuleChangeEvent inputAutomationConfigurationChangeEvent) {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, 'onRemove');
+            final InputAutomationConfiguration inputAutomationConfiguration = InputAutomationConfigurationFactory.getInstance().@inputAutomationConfiguration;
+            final java.util.List<InputAutomationModuleConfiguration> inputAutomationModuleConfigurationList = inputAutomationConfiguration.getInputAutomationModuleConfigurationList();
+            if (inputAutomationModuleConfigurationList == null) {
+                final LogUtil logUtil = LogUtil.getInstance();
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                logUtil.putF('inputAutomationModuleConfigurationList: ' + inputAutomationModuleConfigurationList, this, commonStrings.@INIT);
+                throw new Exception();
+            }
+            final InputAutomationModuleConfigurations inputAutomationModuleConfigurations = new InputAutomationModuleConfigurations(inputAutomationConfiguration.getInputAutomationModuleConfigurationList());
+            inputAutomationModuleConfigurations.remove(inputAutomationConfigurationChangeEvent.getInputAutomationModuleConfiguration());
+            //inputAutomationConfiguration.save();
+            this.init();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'onRemove', e);
+        }
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutJMenuItem;
+
+    private javax.swing.JPanel automationModuleConfigurationJPanel;
+
+    private javax.swing.JTabbedPane gameRobotJTabbedPane;
+
+    private javax.swing.JMenuItem helpJMenuItem;
+
+    private javax.swing.JList inputAutomationModuleJList;
+
+    private javax.swing.JPanel inputAutomationModuleJPanel;
+
+    private javax.swing.JScrollPane jScrollPane1;
+
+    private javax.swing.JMenuBar mainJMenuBar;
+
+    private javax.swing.JMenuItem modulesJMenuItem;
+
+    private javax.swing.JDialog noModuleSelectedJDialog;
+
+    private javax.swing.JLabel noModuleSelectedJLabel;
+
+    private javax.swing.JMenu optionsJMenu;
+
+    private javax.swing.JMenu processingJMenu;
+
+    private javax.swing.JMenuItem startJMenuItem;
+
+    private javax.swing.JMenuItem stopJMenuItem;
+
+    private javax.swing.JCheckBoxMenuItem stopOnFocusJCheckBoxMenuItem;
+
+    private javax.swing.JMenuItem subscriptionJMenuItem;
+
+    private javax.swing.JMenu toolsJMenu;
+
+    private javax.swing.JMenuItem updatesJMenuItem;
+
+}
+
+

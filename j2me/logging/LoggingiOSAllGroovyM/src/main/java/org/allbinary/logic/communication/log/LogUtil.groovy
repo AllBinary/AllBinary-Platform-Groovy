@@ -1,0 +1,68 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.log;
+
+import org.allbinary.logic.TsUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+
+//ActualPlatform
+@groovy.transform.CompileStatic
+public class LogUtil {
+    private static final LogUtil instance = new LogUtil();
+
+    //ActualPlatform
+    public static final LogUtil getInstance() {
+        return LogUtil.instance;
+    }
+
+    private final LogFormatUtil logFormatUtil = LogFormatUtil.getInstance();
+
+    private LogUtil() {
+    }
+
+    //ActualPlatform
+    public void putL(Log log) {
+        final String specialMessage = log.getSpecialMessage();
+        final Object anyType = log.getObject();
+        final String functionName = log.getFunctionName();
+        final Object exception = log.getThrowable();
+        this.put(specialMessage, anyType, functionName, exception);
+    }
+
+    //ActualPlatform
+    public void putF(final String specialMessage, final Object anyType, final String functionName) {
+        String className = CommonStrings.getInstance().@EMPTY;
+        if (anyType.getClass().getName() != null) {
+            className = new String(new StringMaker().append(anyType.getClass().getName()).append(CommonSeps.getInstance().@COLON).append(Integer.toHexString(TsUtil.getInstance().hashCode(anyType))).toString());
+        }
+        final String message = this.logFormatUtil.getS(className, functionName, specialMessage);
+        System.out.print(LogUtil.LOG_SUCCESS);
+        System.out.println(message);
+    }
+
+    //ActualPlatform
+    public void putFS(final String specialMessage, String className, final String functionName) {
+        className = new String(new StringMaker().append(className).append(CommonSeps.getInstance().@COLON).append(Integer.toHexString(TsUtil.getInstance().hashCode(anyType))).toString());
+        final String message = this.logFormatUtil.getS(className, functionName, specialMessage);
+        System.out.print(LogUtil.LOG_SUCCESS);
+        System.out.println(message);
+    }
+
+    private final static String LOG_SUCCESS = 'org.allbinary: ';
+
+    //ActualPlatform
+    public void put(final String specialMessage, final Object anyType, final String functionName, final Object exception) {
+        String className = CommonStrings.getInstance().@EMPTY;
+        if (anyType.getClass().getName() != null) {
+            className = new String(new StringMaker().append(anyType.getClass().getName()).append(CommonSeps.getInstance().@COLON).append(Integer.toHexString(TsUtil.getInstance().hashCode(anyType))).toString());
+        }
+        final String message = this.logFormatUtil.get(className, functionName, specialMessage, exception);
+        System.out.print(LogUtil.LOG_SUCCESS);
+        System.out.println(message);
+    }
+
+}
+
+

@@ -1,0 +1,43 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Image;
+import org.allbinary.animation.AnimationBehavior;
+import org.allbinary.math.AngleInfo;
+
+@groovy.transform.CompileStatic
+public class ImageArrayRotationAnimation extends ImageArrayBaseRotationAnimation {
+    protected static ImageArrayRotationAnimation createAnimation(final Object anyType, final AnimationBehavior animationBehavior) throws Exception {
+        final ImageArrayRotationAnimationInfo imageRotationAnimationInfo = ((ImageArrayRotationAnimationInfo) anyType);
+        return new ImageArrayRotationAnimation(imageRotationAnimationInfo.getImageArray(), imageRotationAnimationInfo.getAngleInfoP(), imageRotationAnimationInfo.getTotalAngle(), animationBehavior);
+    }
+
+    // , 10, AngleIncrementInfo.TOTAL_ANGLE, angleIncrement, AngleIncrementInfo.TOTAL_ANGLE
+    private int expectedTotalFrames;
+
+    public ImageArrayRotationAnimation(final Image[] imageArray, final AngleInfo angleInfo, final int totalAngle, final AnimationBehavior animationBehavior) throws Exception {
+        super(imageArray, angleInfo, animationBehavior);
+        // this.logUtil.putF(this.commonStrings.START, this, this.commonStrings.CONSTRUCTOR);
+        this.initImageArray(imageArray, angleInfo, totalAngle);
+    }
+
+    //    }
+    private void initImageArray(final Image[] imageArray, final AngleInfo angleInfo, final int totalAngle) throws Exception {
+        // this.logUtil.putF(this.commonStrings.START, // this, "AllBinaryImageRotationAnimation");
+        this.expectedTotalFrames = Math.divideExact(totalAngle, ((int) this.angleInfo.getAngleIncrementInfo().getAngleIncrement()));
+        this.angleInfo.adjustAngle(0);
+        if (this.expectedTotalFrames != this.getSize()) {
+            throw new Exception('Wrong Number of Frames');
+        }
+    }
+
+    @Override
+    public void setImageArray(final Image[] imageArray) {
+        super.setImageArray(imageArray);
+        this.angleInfo.adjustAngle(0);
+    }
+
+}
+
+

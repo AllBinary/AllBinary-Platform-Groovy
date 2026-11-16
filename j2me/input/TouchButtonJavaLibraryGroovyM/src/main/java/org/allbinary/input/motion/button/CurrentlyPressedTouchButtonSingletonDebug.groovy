@@ -1,0 +1,108 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.motion.button;
+
+import org.allbinary.graphics.GPoint;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonSeps;
+
+@groovy.transform.CompileStatic
+public class CurrentlyPressedTouchButtonSingletonDebug extends CurrentlyPressedTouchButtonSingleton {
+    private static final CurrentlyPressedTouchButtonSingletonDebug instanceC = new CurrentlyPressedTouchButtonSingletonDebug();
+
+    public static CurrentlyPressedTouchButtonSingleton getInstance() {
+        return CurrentlyPressedTouchButtonSingletonDebug.instanceC;
+    }
+
+    private String string = StringUtil.getInstance().@EMPTY_STRING;
+
+    private String listString = StringUtil.getInstance().@EMPTY_STRING;
+
+    private String appendText = StringUtil.getInstance().@EMPTY_STRING;
+
+    private final String PRESSED_AND_FIRED = 'pressed & fired';
+
+    private final String PRESSED_AND_NOT_FIRED = 'pressed in button but not fired';
+
+    private final String ASSOCIATED_RELEASED_AND_FIRED = 'assoc. rel & fired';
+
+    private final String RELEASED_AND_FIRED = 'rel & fired 1';
+
+    private final String RELEASED_AND_FIRED_2 = 'rel & fired 2';
+
+    private final String RELEASED_AND_NOT_FIRED = 'rel & not fired';
+
+    private void appendTouchButtonInput(String append, TouchButtonInput touchButtonInput) {
+        StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(touchButtonInput.toString());
+        stringBuffer.append(CommonSeps.getInstance().@SPACE);
+        stringBuffer.append(append);
+        this.appendText = stringBuffer.toString();
+        this.string = new StringMaker().append(this.listString).append(this.appendText).toString();
+    }
+
+    private void append(String append) {
+        this.appendText = new StringMaker().append(this.appendText).append(append).toString();
+        this.string = new StringMaker().append(this.listString).append(this.appendText).toString();
+    }
+
+    public void clearLog(int x, int y) {
+        this.appendText = new StringMaker().append(GPoint.toStringStatic(x, y, 0)).append(CommonSeps.getInstance().@SPACE).toString();
+        this.string = new StringMaker().append(this.listString).append(this.appendText).toString();
+    }
+
+    public void releaseAndNotFired() {
+        this.append(this.RELEASED_AND_NOT_FIRED);
+    }
+
+    public void releaseAndFired(TouchButtonInput touchButtonInput) {
+        this.appendTouchButtonInput(this.RELEASED_AND_FIRED, touchButtonInput);
+    }
+
+    public void releaseAndFired2(TouchButtonInput touchButtonInput) {
+        this.appendTouchButtonInput(this.RELEASED_AND_FIRED_2, touchButtonInput);
+    }
+
+    public void releaseAndFiredAssociated(TouchButtonInput touchButtonInput) {
+        this.appendTouchButtonInput(this.ASSOCIATED_RELEASED_AND_FIRED, touchButtonInput);
+    }
+
+    public void pressedAndFired(TouchButtonInput touchButtonInput) {
+        this.appendTouchButtonInput(this.PRESSED_AND_FIRED, touchButtonInput);
+    }
+
+    public void pressedAndNotFired(TouchButtonInput touchButtonInput) {
+        this.appendTouchButtonInput(this.PRESSED_AND_NOT_FIRED, touchButtonInput);
+    }
+
+    @Override
+    public TouchButtonInput removeAt(int index) {
+        TouchButtonInput touchButtonInput = super.removeAt(index);
+        this.listString = this.list.toString();
+        this.string = new StringMaker().append(this.listString).append(this.appendText).toString();
+        return touchButtonInput;
+    }
+
+    @Override
+    public boolean remove(TouchButtonInput touchButtonInput) {
+        boolean isRemoved = super.remove(touchButtonInput);
+        this.listString = this.list.toString();
+        this.string = new StringMaker().append(this.listString).append(this.appendText).toString();
+        return isRemoved;
+    }
+
+    @Override
+    public void add(TouchButtonInput touchButtonInput) {
+        super.add(touchButtonInput);
+        this.listString = this.list.toString();
+        this.string = new StringMaker().append(this.listString).append(this.appendText).toString();
+    }
+
+    public String toString() {
+        return this.string;
+    }
+
+}
+
+

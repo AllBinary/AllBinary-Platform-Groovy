@@ -1,0 +1,192 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.allbinary</groupId>
+  <artifactId>GameJ2MELibraryPOMGroovy</artifactId>
+  <packaging>pom</packaging>
+  <!-- AllBinary Platform Version Start -->
+  <version>1.0.0-SNAPSHOT</version>
+  <!-- AllBinary Platform Version End -->
+
+  <name>GameJ2MELibraryPOMGroovy</name>
+  <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+
+
+    <modules>
+
+        <!--
+        NoGyroSensorLibrary
+
+        -->
+        <module>../../android/AndroidUtilJavaLibraryGroovyM</module>
+
+        <module>../../../allbinary_src/security/SimpleCryptLibraryGroovyM</module>
+        <!--
+        <module>../../../../working_thirdpartygroovy/security/BouncyCastleDESJavaLibraryGroovyM</module>
+        <module>../../../../working_thirdpartygroovy/communication/XmlRpc/XmlRpcJavaLibraryGroovyM</module>
+        -->
+        <module>../../../allbinary_src/TokenizerJavaLibraryGroovyM</module>
+        <module>../../../allbinary_src/security/BasicSecurityJavaLibraryGroovyM</module>
+        <module>../../../replace_these_stub_projects/security/YourCryptFileJavaLibraryGroovyM</module>
+        <module>../../../replace_these_stub_projects/security/YourSecurityJavaLibraryGroovyM</module>
+        <module>../../../replace_these_stub_projects/communication/YourXmlRpcJavaLibraryGroovyM</module>
+        <module>../../../replace_these_stub_projects/allbinary_src/J2MEOnlyJavaLibraryGroovyM</module>
+        <module>../../../replace_these_stub_projects/allbinary_src/J2MECompatibilityJavaLibraryGroovyM</module>
+        <module>../../../replace_these_stub_projects/allbinary_src/J2MEJsInteropCompatibilityJavaLibraryGroovyM</module>
+
+        <module>../../DebugJavaLibraryGroovyM</module>             
+        <module>../../ResourceLibraryGroovyM</module>
+        <module>../../ResourceJ2MEJavaLibraryGroovyM</module>
+        <module>../../AndroidResourceLibraryGroovyM</module>
+        <module>../../../allbinary_src/hardware/AndroidSystemJavaLibraryGroovyM</module>
+
+        <module>../../../game/behavior/ArtificialIntelligenceLibraryGroovyM</module>
+
+        <module>../../media/graphics/PlatformNullImageJavaLibraryGroovyM</module>
+        <module>../../media/graphics/ImageCacheBaseJ2MEJavaLibraryGroovyM</module>
+        <module>../../media/graphics/ImageCacheJ2MEJavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/OpenGLJ2MENoneJavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/OpenGLNoneJavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/OpenGLNoneOtherJavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/OpenGLNoneOther2JavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/OpenGLESBaseJ2MEJavaLibraryGroovyM</module>
+
+        <module>../../media/graphics/animation/AnimationLibraryGroovyM</module>
+        <module>../../media/graphics/animation/RotationAnimationJavaLibraryGroovyM</module>
+
+        <module>../../games/GameInputLibraryGroovyM</module>
+
+        <module>../../games/GameScoresBaseJavaLibraryGroovyM</module>
+        <module>../../games/GameScoresBaseJ2MELibraryGroovyM</module>
+
+        <module>../../statistics/ApplicationStatisticsHTMLLibraryGroovyM</module>
+        <!--
+        <module>../../games/GameConfigurationHTMLJavaLibraryGroovyM</module>
+        -->
+        <module>../../games/GameConfigurationJ2MEJavaLibraryGroovyM</module>   
+        <module>../../games/GameConfigurationJavaLibraryGroovyM</module>
+
+        <module>../../games/GameIntermissionLibraryGroovyM</module>
+
+        <module>../../GroupLibraryGroovyM</module>
+
+        <module>../../input/NoSensorJavaLibraryGroovyM</module>
+
+        <module>../../input/AllBinarySensorJavaLibraryGroovyM</module>
+
+        <module>../../input/platform/me/GameInputMEJavaLibraryGroovyM</module>
+        <module>../../input/platform/me/GameInputMEKeyOnlyJavaLibraryGroovyM</module>
+        <module>../../input/platform/me/GameInputMEMotionJavaLibraryGroovyM</module>
+        <module>../../input/platform/pc/GameInputPCBaseJavaLibraryGroovyM</module>
+        <module>../../input/platform/pc/GameInputPCJavaLibraryGroovyM</module>
+        <module>../../input/platform/pc/GameInputPCKeyOnlyJavaLibraryGroovyM</module>
+        <module>../../input/platform/pc/GameInputPCMotionJavaLibraryGroovyM</module>
+        <module>../../input/platform/pc/GameInputSwtJavaLibraryGroovyM</module>
+
+        <module>../../input/AllBinaryGyroSensorJavaLibraryGroovyM</module>
+        <module>../../input/MotionGestureJavaLibraryGroovyM</module>
+        
+        <module>../../input/MotionGestureBaseJavaLibraryGroovyM</module>
+
+        <module>../../games/GameInputPersistanceLibraryGroovyM</module>
+        <module>../../games/GameInputNoPersistanceLibraryGroovyM</module>
+        
+        <module>../../lib/VectorThreeDimensionalLibraryGroovyM</module>
+        <module>../../input/AllBinaryAccelerometerSensorJavaLibraryGroovyM</module>
+        <module>../../input/NoGyroSensorJavaLibraryGroovyM</module>
+        <module>../../input/JSEGyroSensorJavaLibraryGroovyM</module>
+        <!--
+        <module>../../input/android/</module>
+        <module>../../input/platform/android/GameInputAndroidBaseJavaLibraryGroovyM</module>
+        -->
+
+        <module>../../media/sound/BasicPlayerJavaLibraryGroovyM</module>
+        <module>../../media/sound/BasicPlayerMIDP2JavaLibraryGroovyM</module>
+        <module>../../media/sound/NoPlayerJavaLibraryGroovyM</module>
+        <module>../../media/sound/SoundJ2MELibraryGroovyM</module>
+
+        <module>../../media/motion/AllBinaryVibrationJavaLibraryGroovyM</module>
+        <module>../../media/motion/NoVibrateJavaLibraryGroovyM</module>
+        <module>../../media/motion/VibrateAndroidJavaLibraryGroovyM</module>
+
+        <module>../../media/graphics/NullCustomUIJavaLibraryGroovyM</module>
+        <module>../../media/graphics/NullCustomUIBaseJavaLibraryGroovyM</module>
+
+        <module>../../media/graphics/FormValidationJavaLibraryGroovyM</module>
+        
+        <module>../../media/graphics/FormJavaLibraryGroovyM</module>
+        <module>../../media/graphics/FormBaseJavaLibraryGroovyM</module>
+        <!--
+        <module>../../media/graphics/FormJMEJavaLibraryGroovyM</module>
+        -->
+        <module>../../../j2me/media/graphics/FormJMEJavaLibraryGroovyM</module>
+
+        <module>../../media/graphics/animation/AnimationResourceJavaLibraryGroovyM</module>
+        <module>../../media/graphics/animation/TransitionAnimationJavaLibraryGroovyM</module>
+        <module>../../media/graphics/animation/NoTransitionAnimationJavaLibraryGroovyM</module>
+        <!--
+        AndroidTransitionAnimationJavaLibraryM
+        -->
+        <module>../../media/graphics/animation/GameAnimationJavaLibraryGroovyM</module>
+        <module>../../games/GameResourceJavaLibraryGroovyM</module>
+        <module>../../games/GameSoundsJavaLibraryGroovyM</module>
+
+        <module>../../input/TouchInputLibraryGroovyP</module>
+
+        <module>../../media/MediaDataGroovyM</module>
+        <module>../../media/sound/NotDeviceSpecificNoMediaMIDP1LibraryGroovyM</module>
+
+        <module>../../../allbinary_src/content/ContentNoneJavaLibraryGroovyM</module>
+        <module>../../../allbinary_src/content/ContentAndroidJavaLibraryGroovyM</module>
+
+        <module>../../games/GameConfigurationFormJavaLibraryGroovyM</module>
+
+        <module>../../FullScreenNoneJavaLibraryGroovyM</module>
+        <!--
+        <module>../../FullScreenJavaLibraryGroovyM</module>
+        -->
+
+        <module>../../../physics/VelocityLibraryGroovyM</module>
+
+        <module>../../games/weapon/SoundsBasicWeaponsJavaLibraryGroovyM</module>
+
+        <module>../../lib/TrigJ2MELibraryGroovyM</module>
+
+        <module>../../media/graphics/geography/map/LayerPlacementLibraryGroovyM</module>
+        <module>../../media/graphics/layer/AllBinaryLayerJavaLibraryGroovyM</module>
+
+        <module>../../ScreenCaptureNoneJavaLibraryGroovyM</module>
+        
+        <module>../licensing/GameLicensingNullJavaLibraryGroovyM</module>
+        
+        <module>../../business/advertisement/AllBinaryAdvertisementClientJavaLibraryGroovyM</module>
+        <module>../../business/advertisement/AdvertisementClientNoneJavaLibraryGroovyM</module>
+
+        <module>../GameNotificationJavaLibraryGroovyM</module>
+
+        <module>../../../graphics/opengl/NoSWTJavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/SWTWithoutJOGLJavaLibraryGroovyM</module>
+        <module>../SWTJavaLibraryGroovyM</module>
+        <module>../GameJ2MELibraryGroovyM</module>
+        
+        <!--
+        <module>../GameJ2MEOptionalLibraryPOGroovyM</module>
+        -->
+    
+    </modules>
+
+</project>
+

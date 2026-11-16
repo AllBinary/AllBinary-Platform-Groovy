@@ -1,0 +1,76 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.actions.script.condition.processors.output;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.data.tree.dom.DomNodeHelper;
+import org.allbinary.data.tree.dom.ModDomHelper;
+import org.allbinary.input.media.image.InputImageType;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+@groovy.transform.CompileStatic
+public class ImageTypes {
+    private BasicArrayList vector = new BasicArrayListD();
+
+    public ImageTypes() {
+    }
+
+    public ImageTypes(Node node) throws Exception {
+        NodeList nodeList = node.getChildNodes();
+        for (int index = 0; index < nodeList.getLength(); index++) {
+            Node childNode = nodeList.item(index);
+            if (childNode.getNodeName().compareTo(ImageActionScriptOutputData.TYPE) == 0) {
+                String nextImageTypeString = DomNodeHelper.getTextNodeValue(childNode);
+                this.getVector().add(InputImageType.getInstance(nextImageTypeString));
+            } else {
+                throw new Exception('ImageTypes Unknown Node');
+            }
+        }
+    }
+
+    //String[] selectedImageTypeStringArray
+    public static ImageTypes valueOf(Object[] anyType) {
+        ImageTypes imageTypes = new ImageTypes();
+        for (int index = 0; index < anyType.length; index++) {
+            InputImageType imageType = InputImageType.getInstance(((String) anyType[index]));
+            imageTypes.getVector().add(imageType);
+        }
+        return imageTypes;
+    }
+
+    public BasicArrayList getVector() {
+        return this.vector;
+    }
+
+    public Node toXmlNode(Document document) throws Exception {
+        final Node newNode = document.createElement(ImageActionScriptOutputData.TYPES);
+        final int size = this.vector.size();
+        for (int index = 0; index < size; index++) {
+            InputImageType imageType = ((InputImageType) this.vector.get(index));
+            newNode.appendChild(ModDomHelper.createTextNode(document, ImageActionScriptOutputData.TYPE, imageType.getName()));
+        }
+        return newNode;
+    }
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('ImageTypes: ');
+        final int size = this.vector.size();
+        for (int index = 0; index < size; index++) {
+            InputImageType imageType = ((InputImageType) this.vector.get(index));
+            stringBuffer.append(imageType.getName());
+            if (index < size - 1) {
+                stringBuffer.append(', ');
+            }
+        }
+        return stringBuffer.toString();
+    }
+
+}
+
+

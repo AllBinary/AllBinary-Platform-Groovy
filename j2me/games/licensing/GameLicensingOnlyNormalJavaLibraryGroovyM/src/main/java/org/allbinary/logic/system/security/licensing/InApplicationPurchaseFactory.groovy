@@ -1,0 +1,61 @@
+/*  * To change this license header, choose License Headers in Project Properties.  * To change this template file, choose Tools | Templates  * and open the template in the editor.  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.licensing;
+
+import org.allbinary.logic.string.StringUtil;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class InApplicationPurchaseFactory {
+    private static final InApplicationPurchaseFactory instance = new InApplicationPurchaseFactory();
+
+    /**      * @return the instance      */
+    public static InApplicationPurchaseFactory getInstance() {
+        return InApplicationPurchaseFactory.instance;
+    }
+
+    private InApplicationPurchaseFactory() {
+    }
+
+    public void init(Object anyType, Object stateObject) {
+    }
+
+    public void onCreate(Object anyType, Object stateObject) {
+    }
+
+    public void onStart() {
+    }
+
+    public void onResult(final int requestCode, final int resultCode, final Object data) {
+    }
+
+    public void onSaveState(final Object anyType) {
+    }
+
+    public void onStop() {
+    }
+
+    public void onDestroy() {
+    }
+
+    public void purchase(LockableFeature lockableFeature) {
+    }
+
+    public boolean isPurchased(LockableFeature lockableFeature) {
+        return true;
+    }
+
+    public void add(LockableFeature lockableFeature) {
+    }
+
+    public String getUserName() {
+        return StringUtil.getInstance().@EMPTY_STRING;
+    }
+
+    public boolean isEnabled() {
+        return false;
+    }
+
+}
+
+

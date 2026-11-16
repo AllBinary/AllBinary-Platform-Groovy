@@ -1,0 +1,111 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.displayable.canvas;
+
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.NullCommandListener;
+import org.allbinary.game.init.BasicBuildGameInitializerFactory;
+import org.allbinary.game.layer.AllBinaryGameLayerManager;
+import org.allbinary.game.score.NoHighScoresFactory;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class NullGameCanvas extends AllBinaryGameCanvas {
+    private static NullGameCanvas createNull() {
+        try {
+            return new NullGameCanvas(AllBinaryGameLayerManager.getNullInstance());
+        } catch (Exception e) {
+            LogUtil.getInstance().put(CommonStrings.getInstance().@EXCEPTION, 'NullGameCanvas', CommonStrings.getInstance().@GET_INSTANCE, e);
+            throw new RuntimeException();
+        }
+    }
+
+    private static Object instance = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static NullGameCanvas getInstance() {
+        if (NullGameCanvas.instance === NullUtil.getInstance().@NULL_OBJECT) {
+            NullGameCanvas.instance = NullGameCanvas.createNull();
+        }
+        return ((NullGameCanvas) NullGameCanvas.instance);
+    }
+
+    public static NullGameCanvas createCanvas(final AllBinaryGameLayerManager gameLayerManager) throws Exception {
+        final NullGameCanvas nullGameCanvas = new NullGameCanvas(gameLayerManager);
+        nullGameCanvas.setInitialized(true);
+        nullGameCanvas.setTitle(NullGameCanvas.NO_GAME);
+        return nullGameCanvas;
+    }
+
+    public static final String NO_GAME = 'No Background Game';
+
+    protected NullGameCanvas(final AllBinaryGameLayerManager gameLayerManager) throws Exception {
+        super(NullCommandListener.NULL_COMMAND_LISTENER, gameLayerManager, NoHighScoresFactory.getInstance(), BasicBuildGameInitializerFactory.NULL_BASE_BUILD_GMAE_INITIALIZER_FACTORY, false);
+        super.setWait(1200);
+    }
+
+    @Override
+    public synchronized boolean isGameOver() {
+        return false;
+    }
+
+    private boolean runningNull = true;
+
+    @Override
+    public void setRunning(boolean running) {
+        this.runningNull = running;
+    }
+
+    @Override
+    public synchronized boolean isRunning() {
+        return this.runningNull;
+    }
+
+    @Override
+    public synchronized void pause() {
+        this.setPaused(true);
+    }
+
+    @Override
+    public synchronized void unPause() {
+        this.setPaused(false);
+    }
+
+    @Override
+    public void initCommands(final CommandListener cmdListener) {
+        this.removeAllCommands();
+        // this.addCommand(GameCommands.RESTART_COMMAND);
+        this.setCommandListener(cmdListener);
+    }
+
+    @Override
+    public void buildGameInit(final boolean isProgress) throws Exception {
+    }
+
+    @Override
+    public void draw(final Graphics graphics) {
+    }
+
+    @Override
+    public void run() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START_RUNNABLE, this, this.commonStrings.@RUN);
+            //this.setRunning(false);
+            this.logUtil.putF(this.commonStrings.@END_RUNNABLE, this, this.commonStrings.@RUN);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@RUN, e);
+        }
+    }
+
+    public static final int TYPE = 1;
+
+    @Override
+    public int getType() {
+        return NullGameCanvas.TYPE;
+    }
+
+}
+
+

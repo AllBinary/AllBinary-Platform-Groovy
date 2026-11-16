@@ -1,0 +1,150 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.opengles;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.lcdui.Image;
+import org.allbinary.device.LoadTextures;
+import org.allbinary.device.OpenGLESGraphics;
+import org.allbinary.graphics.canvas.transition.progress.ProgressCanvas;
+import org.allbinary.graphics.canvas.transition.progress.ProgressCanvasFactory;
+import org.allbinary.graphics.displayable.CanvasStrings;
+import org.allbinary.graphics.displayable.DisplayInfoSingleton;
+import org.allbinary.graphics.opengles.renderer.RendererStrings;
+import org.allbinary.image.PreResourceImageUtil;
+import org.allbinary.image.opengles.OpenGLESImage;
+import org.allbinary.image.opengles.OpenGLImageCache;
+import org.allbinary.image.opengles.OpenGLImageCacheFactory;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.thread.SynchObject;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class OpenGLUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final OpenGLUtil instance = new OpenGLUtil();
+
+    public static OpenGLUtil getInstance() {
+        return OpenGLUtil.instance;
+    }
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final RendererStrings renderStrings = RendererStrings.getInstance();
+
+    protected final CanvasStrings canvasStrings = CanvasStrings.getInstance();
+
+    protected final DisplayInfoSingleton displayInfoSingleton = DisplayInfoSingleton.getInstance();
+
+    private final PreResourceImageUtil preResourceImageUtil = PreResourceImageUtil.getInstance();
+
+    private final SynchObject lockObject = new SynchObject();
+
+    private final SynchObject anyType = new SynchObject();
+
+    private final BasicArrayList list = new BasicArrayListD();
+
+    public final BasicArrayList runnableList = new BasicArrayListD();
+
+    private boolean created = false;
+
+    public void onSurfaceCreated(final GL10 gl) {
+        try {
+            if (!this.created) {
+                this.created = true;
+                PreLogUtil.put(CommonLabels.getInstance().@START_LABEL + OpenGLCapabilities.getInstance().toString(), this, this.renderStrings.@ON_SURFACE_CREATED);
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.renderStrings.@ON_SURFACE_CREATED, e);
+        }
+    }
+
+    public void onSurfaceCreated(final GL10 gl, final LoadTextures loadTextures) {
+        try {
+            // gl.glMatrixMode(GL10.GL_MODELVIEW);
+            loadTextures.load(gl);
+            OpenGLLogUtil.getInstance().logError(gl);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.renderStrings.@ON_SURFACE_CREATED, e);
+        }
+    }
+
+    private boolean surfaceCreatedAndInitialized = false;
+
+    public void onSurfaceChanged(final GL10 gl, final OpenGLESGraphics graphics) throws Exception {
+        if (!this.surfaceCreatedAndInitialized) {
+            graphics.init();
+            this.surfaceCreatedAndInitialized = true;
+        }
+        //Seems that mutable images must be reloaded on graphics change?
+        graphics.update();
+        final ProgressCanvas progressCanvas = ProgressCanvasFactory.getInstance();
+        progressCanvas.update(graphics);
+        //        choiceGroupImageUtil.update(graphics);
+        (((OpenGLImageCache) OpenGLImageCacheFactory.getInstance())).update(gl);
+        this.processRunnables();
+        this.set(gl);
+    }
+
+    public Image addImage(final Image image) {
+        final Image encapsulateImage = this.preResourceImageUtil.encapsulate(image);
+        if (encapsulateImage !== image) {
+            //            this.logUtil.putF(new StringMaker().append("add image ").append(thread.getName()).toString(), this, this.renderStrings.ON_SURFACE_CHANGED);
+            synchronized (this.anyType) {
+                this.list.add(encapsulateImage);
+            }
+            //this.logUtil.putF(new StringMaker().append("add image: ").append(encapsulateImage).append(CommonSeps.getInstance().SPACE).append(thread.getName()).toString(), this, this.renderStrings.ON_SURFACE_CHANGED);
+            return encapsulateImage;
+        }
+        return image;
+    }
+
+    public void clear() {
+        //        this.logUtil.putF(new StringMaker().append("clear: ").append(thread.getName()).toString(), this, RendererStrings.getInstance().ON_SURFACE_CHANGED);
+        synchronized (this.anyType) {
+            this.list.clear();
+        }
+    }
+
+    public void addRunnable(final Runnable runnable) {
+        synchronized (this.lockObject) {
+            //this.logUtil.putF("try to add", this, RendererStrings.getInstance().ON_SURFACE_CHANGED);
+            if (!this.runnableList.contains(runnable)) {
+                //this.logUtil.putF("add", this, RendererStrings.getInstance().ON_SURFACE_CHANGED);
+                this.runnableList.add(runnable);
+                this.displayInfoSingleton.add(this.canvasStrings.@SCALED_IMAGES);
+            }
+        }
+    }
+
+    private void processRunnables() {
+        synchronized (this.lockObject) {
+            Runnable runnable;
+            final int size = this.runnableList.size();
+            //this.logUtil.putF(new StringMaker().append("size: ").append(size).toString(), this, RendererStrings.getInstance().ON_SURFACE_CHANGED);
+            for (int index = 0; index < size; index++) {
+                runnable = ((Runnable) this.runnableList.get(index));
+                runnable.run();
+            }
+            this.runnableList.clear();
+        }
+    }
+
+    private void set(GL10 gl) throws Exception {
+        final int size = this.list.size();
+        //        final String IMAGE = "image: ";
+        OpenGLESImage image;
+        for (int index2 = 0; index2 < size; index2++) {
+            image = ((OpenGLESImage) this.list.get(index2));
+            //            this.logUtil.putF(stringMaker.append(index2).append(IMAGE).append(image).append(CommonSeps.getInstance().SPACE).append(thread.getName()).toString(), this, this.renderStrings.ON_SURFACE_CHANGED);
+            image.set(gl);
+        }
+    }
+
+}
+
+

@@ -1,0 +1,88 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2002 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.displayable.screen;
+
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.NullCommandListener;
+import org.allbinary.canvas.Processor;
+import org.allbinary.game.displayable.canvas.MenuListener;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.graphics.displayable.command.MyCommandInterface;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.util.ABStack;
+
+@groovy.transform.CompileStatic
+public class CommandForm extends Form implements MyCommandInterface, MenuListener {
+    private static Object NULL_COMMAND_FORM = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static CommandForm getNullCommandForm() {
+        if (CommandForm.NULL_COMMAND_FORM === NullUtil.getInstance().@NULL_OBJECT) {
+            CommandForm.NULL_COMMAND_FORM = new CommandForm(NullCommandListener.NULL_COMMAND_LISTENER, StringUtil.getInstance().@EMPTY_STRING, BasicColorFactory.getInstance().@BLACK, BasicColorFactory.getInstance().@WHITE);
+        }
+        return ((CommandForm) CommandForm.NULL_COMMAND_FORM);
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final Processor repaintProcessor = ScreenRepaintProcessorFactory.getInstance().create(this);
+
+    private ABStack<Object> commandStack;
+
+    public CommandForm(CommandListener commandListener, String formTitle, BasicColor backgrounBasicColor, BasicColor foregroundBasicColor) {
+        super(formTitle);
+        this.commandStack = StdUtil.getInstance().createStack();
+        try {
+            this.repaintProcessor.process();
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@CONSTRUCTOR, e);
+        }
+    }
+
+    public void initCommands(final CommandListener cmdListener) {
+    }
+
+    @Override
+    public void open() {
+        this.logUtil.putF(this.commonStrings.@START, this, 'open');
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CLOSE);
+    }
+
+    public void update() throws Exception {
+        this.repaintProcessor.process();
+    }
+
+    @Override
+    public int getSourceId() {
+        return 0;
+    }
+
+    @Override
+    public void addCommand(Command command) {
+        this.commandStack.push(command);
+        super.addCommand(command);
+    }
+
+    @Override
+    public void removeAllCommands() {
+        final int size = this.commandStack.size();
+        for (int index = 0; index < size; index++) {
+            super.removeCommand(((Command) this.commandStack.pop()));
+        }
+    }
+
+}
+
+

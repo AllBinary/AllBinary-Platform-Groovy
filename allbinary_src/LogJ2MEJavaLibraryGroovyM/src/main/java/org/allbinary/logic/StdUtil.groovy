@@ -1,0 +1,39 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2025 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic;
+
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.ABStack;
+import org.allbinary.util.ABVector;
+
+//ActualPlatform
+@groovy.transform.CompileStatic
+public class StdUtil {
+    private static final StdUtil instance = new StdUtil();
+
+    //ActualPlatform
+    public static StdUtil getInstance() {
+        return StdUtil.instance;
+    }
+
+    //ActualPlatform
+    public final ABVector<Object> EMPTY_VECTOR = this.createVector();
+
+    //ActualPlatform
+    public final ABHashtable<Object, Object> NULL_TABLE = this.createHashtable();
+
+    public final ABStack<Object> createStack() {
+        return new ABStack<Object>();
+    }
+
+    public final ABVector<Object> createVector() {
+        return new ABVector<Object>();
+    }
+
+    public final ABHashtable<Object, Object> createHashtable() {
+        return new ABHashtable<Object, Object>();
+    }
+
+}
+
+

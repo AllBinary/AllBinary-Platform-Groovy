@@ -1,0 +1,113 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonLabels;
+
+@groovy.transform.CompileStatic
+public class ImagesRatioUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final ImagesRatioUtil instance = new ImagesRatioUtil();
+
+    /**      * @return the instance      */
+    public static ImagesRatioUtil getInstance() {
+        return ImagesRatioUtil.instance;
+    }
+
+    private ImagesRatioUtil() {
+    }
+
+    private final ImageUtil imageUtil = ImageUtil.getInstance();
+
+    public boolean isEqual(final BufferedImage[] bufferedImageArray, final int totalImages) {
+        int end = totalImages;
+        if (bufferedImageArray.length < totalImages) {
+            end = bufferedImageArray.length;
+        }
+        final double ratio = (((double) bufferedImageArray[0].getWidth()) / bufferedImageArray[0].getHeight());
+        for (int index = 1; index < end; index++) {
+            if (ratio != (((double) bufferedImageArray[index].getWidth()) / bufferedImageArray[index].getHeight())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public double getAverage(final BufferedImage[] bufferedImageArray, final int totalImages) {
+        double ratio = 0;
+        int end = totalImages;
+        if (bufferedImageArray.length < totalImages) {
+            end = bufferedImageArray.length;
+        }
+        for (int index = 0; index < end; index++) {
+            ratio += (((double) bufferedImageArray[index].getWidth()) / bufferedImageArray[index].getHeight());
+        }
+        return (((double) ratio) / end);
+    }
+
+    public BufferedImage fudge(BufferedImage bufferedImage, double ratio) throws Exception {
+        double imageRatio = (((double) bufferedImage.getWidth()) / bufferedImage.getHeight());
+        Point point = new Point();
+        //need a larger height
+        int newHeight = bufferedImage.getHeight();
+        int newWidth = bufferedImage.getWidth();
+        if (ratio > imageRatio) {
+            //need a larger width
+            newWidth = ((int) (((double) bufferedImage.getHeight()) * ratio));
+            point.@x = Math.divideExact((newWidth - bufferedImage.getWidth()), 2);
+        } else {
+            //need a larger height
+            newHeight = ((int) (((double) bufferedImage.getWidth()) / ratio));
+            point.@y = Math.divideExact((newHeight - bufferedImage.getHeight()), 2);
+        }
+        final CommonLabels commonLabels = CommonLabels.getInstance();
+        this.logUtil.putF(commonLabels.@WIDTH_LABEL + bufferedImage.getWidth() + ' newWidth: ' + newWidth + commonLabels.@HEIGHT_LABEL + bufferedImage.getHeight() + ' newHeight: ' + newHeight + ' needed ratio: ' + (((double) newWidth) / newHeight), this, 'fudge');
+        BufferedImage newBufferedImage = this.imageUtil.create(newWidth, newHeight);
+        Graphics2D g = newBufferedImage.createGraphics();
+        if (point.@x > 0) {
+            /*             final int[] data = new int[bufferedImage.getHeight()];             final byte[] bytes = new byte[data.length * 4];                       this.logUtil.putF("Get the first column of the original of: " + bytes.length, this, "fudge");              bufferedImage.getRGB(                 0, //startX                 0, //startY                 1, //w                 bufferedImage.getHeight(), //h                 data, 0, 0);              for(int index = 0; index < data.length; index++)             {                 int intValue = Color.YELLOW.getRGB(); //data[index];                 bytes[(index * 4)] = (byte) ((intValue >>> 24)); //& 0xFF);                 bytes[(index * 4) + 1] = (byte) ((intValue >>> 16)); //& 0xFF);                 bytes[(index * 4) + 2] = (byte) ((intValue >>> 8)); //& 0xFF);                 bytes[(index * 4) + 3] = (byte) ((intValue >>> 0)); //& 0xFF);             }             */
+            BufferedImage firstColumnBufferedImage = bufferedImage.getSubimage(0, 0, 1, bufferedImage.getHeight());
+            BufferedImage lastColumnBufferedImage = bufferedImage.getSubimage(bufferedImage.getWidth() - 1, 0, 1, bufferedImage.getHeight());
+            this.logUtil.putF('Draw some columns to fill in gap', this, 'fudge');
+            //g.setColor(Color.RED);
+            for (int index = 0; index < point.@x; index++) {
+                //g.drawLine(newWidth - index, 0, newWidth - index, bufferedImage.getHeight());
+                g.drawImage(firstColumnBufferedImage, index, 0, null);
+                g.drawImage(lastColumnBufferedImage, newWidth - index, 0, null);
+            }
+        }
+        if (point.@y > 0) {
+            /*             final int[] data = new int[bufferedImage.getWidth()];             final byte[] bytes = new byte[data.length * 4];                       this.logUtil.putF("Get the first row of the original of: " + bytes.length, this, "fudge");              bufferedImage.getRGB(                 0, //startX                 0, //startY                 bufferedImage.getWidth(), //w                 1, //h                 data, 0, 0);                          for(int index = 0; index < data.length; index++)             {                 int intValue = Color.YELLOW.getRGB(); //data[index];                                  bytes[(index * 4)] = (byte) ((intValue >>> 24)); //& 0xFF);                 bytes[(index * 4) + 1] = (byte) ((intValue >>> 16)); //& 0xFF);                 bytes[(index * 4) + 2] = (byte) ((intValue >>> 8)); //& 0xFF);                 bytes[(index * 4) + 3] = (byte) ((intValue >>> 0)); //& 0xFF);             }              */
+            BufferedImage firstRowBufferedImage = bufferedImage.getSubimage(0, 0, bufferedImage.getWidth(), 1);
+            BufferedImage lastRowBufferedImage = bufferedImage.getSubimage(0, bufferedImage.getHeight() - 1, bufferedImage.getWidth(), 1);
+            this.logUtil.putF('Draw some rows to fill in gap', this, 'fudge');
+            //g.setColor(Color.RED);
+            for (int index = 0; index < point.@y; index++) {
+                //g.drawLine(0, newHeight - index, bufferedImage.getWidth(), newHeight - index);
+                g.drawImage(firstRowBufferedImage, 0, index, null);
+                g.drawImage(lastRowBufferedImage, 0, newHeight - index, null);
+            }
+        }
+        g.drawImage(bufferedImage, point.@x, point.@y, bufferedImage.getWidth(), bufferedImage.getHeight(), null);
+        return newBufferedImage;
+    }
+
+    public BufferedImage[] fudge(final BufferedImage[] bufferedImageArray, final int totalImages, final double ratio) throws Exception {
+        int end = totalImages;
+        if (bufferedImageArray.length < totalImages) {
+            end = bufferedImageArray.length;
+        }
+        final BufferedImage[] fudgedBufferedImageArray = new BufferedImage[end];
+        for (int index = 0; index < end; index++) {
+            fudgedBufferedImageArray[index] = fudge(bufferedImageArray[index], ratio);
+        }
+        return fudgedBufferedImageArray;
+    }
+
+}
+
+

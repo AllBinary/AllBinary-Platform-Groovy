@@ -1,0 +1,86 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.paint;
+
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.AppletUtil;
+import org.allbinary.graphics.Anchor;
+import org.allbinary.graphics.displayable.DisplayInfoSingleton;
+import org.allbinary.graphics.font.MyFontProcessor;
+import org.allbinary.graphics.font.UpdateMyFontInterface;
+import org.allbinary.graphics.font.UpdateMyFontProcessor;
+import org.allbinary.graphics.paint.Paintable;
+import org.allbinary.input.motion.button.TouchScreenFactory;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.time.TimeDelayHelper;
+
+/**  *   * @author Berthelot, Travis  * @version 1.0  */
+@groovy.transform.CompileStatic
+public class PressStartMenuPaintable extends Paintable implements UpdateMyFontInterface {
+    private final DisplayInfoSingleton displayInfo = DisplayInfoSingleton.getInstance();
+
+    private final String PRESS_START = 'Press Screen To Start';
+
+    private final String KEY_START = 'Press or Click F2 To Begin';
+
+    private final String MENU_START = 'Press Start From The Menu To Begin';
+
+    private MyFontProcessor myFontProcessor = new UpdateMyFontProcessor(this);
+
+    private String startString = StringUtil.getInstance().@EMPTY_STRING;
+
+    private TimeDelayHelper timeDelayHelper = new TimeDelayHelper(1100);
+
+    private boolean flash;
+
+    public PressStartMenuPaintable() {
+        if (TouchScreenFactory.getInstance().isTouch()) {
+            this.startString = this.PRESS_START;
+        } else if (AppletUtil.isAppletLoader(this)) {
+            this.startString = this.KEY_START;
+        } else {
+            this.startString = this.MENU_START;
+        }
+    }
+
+    private int anchor = Anchor.TOP_LEFT;
+
+    private int beginWidth;
+
+    private int line;
+
+    @Override
+    public void updateMeasurement(final Graphics graphics) {
+        final Font font = graphics.getFont();
+        this.beginWidth = (graphics.getFont().stringWidth(this.startString) >> 1);
+        this.line = (4 * MyFontProcessor.defaultCharWidth(font)) + (font.getHeight() >> 1);
+        this.myFontProcessor = MyFontProcessor.getInstance();
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        if (this.timeDelayHelper.isTimeTNT()) {
+            if (this.isFlash()) {
+                this.setFlash(false);
+            } else {
+                this.setFlash(true);
+            }
+        }
+        if (this.isFlash()) {
+            this.myFontProcessor.process(graphics);
+            graphics.drawString(this.startString, displayInfo.getLastHalfWidth() - beginWidth, displayInfo.getLastHeight() - line, this.anchor);
+        }
+    }
+
+    private void setFlash(boolean flash) {
+        this.flash = flash;
+    }
+
+    private boolean isFlash() {
+        return this.flash;
+    }
+
+}
+
+

@@ -1,0 +1,36 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.licensing.registration;
+
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.canvas.SpecialMessageUtil;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class LicenseRegistrationUtil {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private LicenseRegistrationUtil() {
+    }
+
+    public synchronized static void process(final AbeClientInformationInterface abeClientInformation, final String registrationId) {
+        try {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            PreLogUtil.put(CommonLabels.getInstance().@START_LABEL + 'License Registration', 'LicenseRegistrationUtil', commonStrings.@PROCESS);
+            final RegistrationConfiguration registrationConfiguration = RegistrationConfiguration.getInstance();
+            registrationConfiguration.setRegistrationCode(registrationId);
+            registrationConfiguration.write();
+            final ABHashtable<Object, Object> hashtable = abeClientInformation.toHashtable();
+            hashtable.put(RegistrationConfiguration.getInstance().@NAME, registrationId);
+            hashtable.put('message', SpecialMessageUtil.getInstance().get());
+            new XmlRpcRemoteLicenseRegistrationClient(abeClientInformation).get(hashtable);
+        } catch (Exception e) {
+            PreLogUtil.putOE('License Registration Exception', 'LicenseRegistrationUtil', 'License Registration', e);
+        }
+    }
+
+}
+
+

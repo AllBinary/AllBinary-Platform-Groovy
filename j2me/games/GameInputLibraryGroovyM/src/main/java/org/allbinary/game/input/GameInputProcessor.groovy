@@ -1,0 +1,36 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import org.allbinary.game.input.event.GameKeyEvent;
+import org.allbinary.layer.AllBinaryLayerManager;
+
+@groovy.transform.CompileStatic
+public class GameInputProcessor {
+    private static final GameInputProcessor instance = new GameInputProcessor();
+
+    public static GameInputProcessor getInstance() {
+        return GameInputProcessor.instance;
+    }
+
+    protected GameInputProcessor() {
+    }
+
+    public void processEvent(final AllBinaryLayerManager allbinaryLayerManager, final GameKeyEvent gameKeyEvent) throws Exception {
+    }
+
+    public void processReleasedEvent(final AllBinaryLayerManager allbinaryLayerManager, final GameKeyEvent gameKeyEvent) throws Exception {
+    }
+
+    public void processAnalog(final AllBinaryLayerManager allbinaryLayerManager, final GameKeyEvent gameKeyEvent, final int analogValue) throws Exception {
+    }
+
+    public void process(final AllBinaryLayerManager allbinaryLayerManager, final Integer keyAsInteger) throws Exception {
+    }
+
+    public void processReleased(final AllBinaryLayerManager allbinaryLayerManager, final Integer keyAsInteger) throws Exception {
+    }
+
+}
+
+

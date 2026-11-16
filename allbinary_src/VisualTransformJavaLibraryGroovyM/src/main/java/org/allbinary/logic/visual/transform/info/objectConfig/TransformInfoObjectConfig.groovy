@@ -1,0 +1,293 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.transform.info.objectConfig;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.data.tree.dom.DomNodeHelper;
+import org.allbinary.data.tree.dom.DomSearchHelper;
+import org.allbinary.data.tree.dom.document.DomDocumentHelper;
+import org.allbinary.data.tree.dom.document.XmlDocumentHelper;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.InputOutputTypeData;
+import org.allbinary.logic.io.OutputTypeData;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.visual.transform.info.TransformInfoData;
+import org.allbinary.logic.visual.transform.info.TransformInfoDomNode;
+import org.allbinary.logic.visual.transform.info.TransformInfoInterface;
+import org.allbinary.logic.visual.transform.info.TransformInfosData;
+import org.allbinary.logic.visual.transform.template.XslData;
+import org.allbinary.string.CommonStrings;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+@groovy.transform.CompileStatic
+public class TransformInfoObjectConfig implements TransformInfoObjectConfigInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final TransformInfoInterface ownerTransformInfoInterface;
+
+    /**     * <OBJECTCONFIG_NAME OBJECTCONFIG_NAME="GenericStoreCompoundTransformInfoConfig" >     * <OBJECTCONFIG_TEMPLATE_NAME TRANSFORM_INFO_NAME="a Contact" >     * </OBJECTCONFIG_TEMPLATE_NAME>     * <TRANSFORM_COMPONENTS_NAME>     * <COMPONENT_NAME TRANSFORM_INFO_NAME="a Contact Body" >     * </COMPONENT_NAME>     * </TRANSFORM_COMPONENTS_NAME>     * </OBJECTCONFIG_NAME>     */
+    private Document document;
+
+    private String outputTypeName;
+
+    /*    private String inputOutputTypeName;    private String inputOutputTypeFile;     private String importUriPath;    */
+    public TransformInfoObjectConfig(TransformInfoInterface transformInfoInterface) throws Exception {
+        this.ownerTransformInfoInterface = transformInfoInterface;
+        this.createDocument();
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append('TransformInfo: ');
+            if (this.ownerTransformInfoInterface != null) {
+                stringBuffer.append(this.ownerTransformInfoInterface.getName());
+            } else {
+                stringBuffer.append('No Owner!?#@');
+            }
+            stringBuffer.append('\nConstructed with document: ');
+            stringBuffer.append(this.toString());
+            this.logUtil.putF(stringBuffer.toString(), this, 'Constructor(TransformInfoInterface)');
+        }
+    }
+
+    public TransformInfoObjectConfig(TransformInfoInterface transformInfoInterface, Document document) throws Exception {
+        this.ownerTransformInfoInterface = transformInfoInterface;
+        this.document = document;
+        Node node = DomSearchHelper.getNodeNoThrow(OutputTypeData.getInstance().@NAME, this.getRootNode().getChildNodes());
+        if (node != null) {
+            this.setOutputTypeName(DomNodeHelper.getTextNodeValue(node));
+        }
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append('TransformInfo: ');
+            if (this.ownerTransformInfoInterface != null) {
+                stringBuffer.append(this.ownerTransformInfoInterface.getName());
+            } else {
+                stringBuffer.append('No Owner!?#@');
+            }
+            stringBuffer.append('\nConstructed with document: ');
+            stringBuffer.append(this.toString());
+            this.logUtil.putF(stringBuffer.toString(), this, 'Constructor(TransformInfoInterface, Document)');
+        }
+    }
+
+    public TransformInfoObjectConfig(TransformInfoInterface transformInfoInterface, String name, String type) throws Exception {
+        this.ownerTransformInfoInterface = transformInfoInterface;
+        this.createDocument();
+        Attr configNameAttr = this.document.createAttribute(TransformInfoObjectConfigData.getInstance().@NAME);
+        configNameAttr.setValue(name);
+        Node objectConfigNode = this.document.getElementsByTagName(TransformInfoObjectConfigData.getInstance().@NAME).item(0);
+        objectConfigNode.appendChild(configNameAttr);
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append('TransformInfo: ');
+            if (this.ownerTransformInfoInterface != null) {
+                stringBuffer.append(this.ownerTransformInfoInterface.getName());
+            } else {
+                stringBuffer.append('No Owner!?#@');
+            }
+            stringBuffer.append('\nConstructed with document: ');
+            stringBuffer.append(this.toString());
+            this.logUtil.putF(stringBuffer.toString(), this, 'Constructor(TransformInfoInterface, name, type)');
+        }
+    }
+
+    private void createDocument() {
+        this.document = DomDocumentHelper.create();
+        Node objectConfigNode = this.document.createElement(TransformInfoObjectConfigData.getInstance().@NAME);
+        this.document.appendChild(objectConfigNode);
+    }
+
+    protected TransformInfoInterface getTransformInfoInterface() {
+        return this.ownerTransformInfoInterface;
+    }
+
+    public Document toXmlDoc() throws Exception {
+        return this.document;
+    }
+
+    protected void setDocument(Document document) {
+        this.document = document;
+    }
+
+    //Usually used for updating a sites templates
+    public boolean containsView(TransformInfoInterface transformInfoInterface) {
+        Node objectConfigNode = this.document.getElementsByTagName(TransformInfoObjectConfigData.getInstance().@NAME).item(0);
+        NodeList viewNodeList = objectConfigNode.getChildNodes();
+        int numberOfViews = viewNodeList.getLength();
+        for (int index = 0; index < numberOfViews; index++) {
+            Node viewNode = viewNodeList.item(index);
+            NamedNodeMap viewAttributes = viewNode.getAttributes();
+            Attr attrNode = ((Attr) viewAttributes.getNamedItem(TransformInfoData.getInstance().@NAME));
+            if (transformInfoInterface.getName().compareTo(attrNode.getValue()) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private NamedNodeMap getTemplateAttributes() throws Exception {
+        Node componentNode = this.document.getElementsByTagName(TransformInfoObjectConfigData.getInstance().@NAME).item(0);
+        return componentNode.getAttributes();
+    }
+
+    public String getName() throws Exception {
+        Attr attrNode = ((Attr) this.getTemplateAttributes().getNamedItem(TransformInfoObjectConfigData.getInstance().@NAME));
+        return attrNode.getValue();
+    }
+
+    public void setName(String name) throws Exception {
+        Attr attrNode = ((Attr) this.getTemplateAttributes().getNamedItem(TransformInfoObjectConfigData.getInstance().@NAME));
+        attrNode.setValue(name);
+    }
+
+    private BasicArrayList getNodeVector(String nodeName) throws Exception {
+        NodeList componentsNodeList = this.document.getElementsByTagName(nodeName);
+        if (componentsNodeList != null && componentsNodeList.getLength() > 0) {
+            BasicArrayList viewNodeVector = DomSearchHelper.getAllNodes(TransformInfoData.getInstance().@NAME, componentsNodeList.item(0).getChildNodes());
+            int numberOfViews = viewNodeVector.size();
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                StringMaker stringBuffer = new StringMaker();
+                stringBuffer.append('Number Of ');
+                stringBuffer.append(nodeName);
+                stringBuffer.append(' Nodes: ');
+                stringBuffer.appendint(numberOfViews);
+                this.logUtil.putF(stringBuffer.toString(), this, 'getNodeVector(nodename)');
+            }
+            return viewNodeVector;
+        }
+        return new BasicArrayListD();
+    }
+
+    //Best to not use this
+    private BasicArrayList getTransformDomNodes(String nodeName) throws Exception {
+        BasicArrayList viewVector = new BasicArrayListD();
+        BasicArrayList viewNodeVector = this.getNodeVector(nodeName);
+        final int size = viewNodeVector.size();
+        for (int index = 0; index < size; index++) {
+            Node viewNode = ((Node) viewNodeVector.get(index));
+            viewVector.add(new TransformInfoDomNode(viewNode));
+        }
+        return viewVector;
+    }
+
+    public BasicArrayList getTransforms(String nodeName) throws Exception {
+        BasicArrayList viewVector = new BasicArrayListD();
+        BasicArrayList viewNodeVector = this.getNodeVector(nodeName);
+        final int size = viewNodeVector.size();
+        for (int index = 0; index < size; index++) {
+            Node viewNode = ((Node) viewNodeVector.get(index));
+            viewVector.add(new TransformInfoDomNode(viewNode).getTransformInfoInterface());
+        }
+        return viewVector;
+    }
+
+    public BasicArrayList getTransformsGroup(String group) throws Exception {
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('Started: ' + group, this, 'getTransformsGroup()');
+        }
+        BasicArrayList viewVector = new BasicArrayListD();
+        final String GROUP = TransformInfosData.getInstance().@GROUP;
+        NodeList componentsNodeList = this.document.getElementsByTagName(GROUP);
+        if (componentsNodeList != null && componentsNodeList.getLength() > 0) {
+            Node componentsNode = componentsNodeList.item(0);
+            int length = componentsNodeList.getLength();
+            for (int index = 0; index < length; index++) {
+                Node node = componentsNodeList.item(index);
+                NamedNodeMap attributes = node.getAttributes();
+                Attr attrNode = ((Attr) attributes.getNamedItem(GROUP));
+                String value = attrNode.getValue();
+                if (value.compareTo(group) == 0) {
+                    componentsNode = node;
+                    break;
+                }
+            }
+            BasicArrayList viewNodeVector = DomSearchHelper.getAllNodes(TransformInfoData.getInstance().@NAME, componentsNode.getChildNodes());
+            int numberOfViews = viewNodeVector.size();
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.putF('Number Of Nodes: ' + numberOfViews, this, 'getTransformsGroup()');
+            }
+            final int size = viewNodeVector.size();
+            for (int index = 0; index < size; index++) {
+                Node viewNode = ((Node) viewNodeVector.get(index));
+                viewVector.add(new TransformInfoDomNode(viewNode));
+            }
+        } else {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                if (componentsNodeList == null) {
+                    this.logUtil.putF('Number Of Nodes: NULL', this, 'getTransformsGroup()');
+                } else {
+                    this.logUtil.putF('Number Of Nodes: 0', this, 'getTransformsGroup()');
+                }
+            }
+        }
+        return viewVector;
+    }
+
+    public BasicArrayList getTransformDomNodes() throws Exception {
+        return this.getTransformDomNodes(TransformInfosData.getInstance().@GROUP);
+    }
+
+    public BasicArrayList getTransforms() throws Exception {
+        return this.getTransforms(TransformInfosData.getInstance().@NAME);
+    }
+
+    public BasicArrayList getGroupTransforms() throws Exception {
+        return this.getTransforms(TransformInfosData.getInstance().@GROUP);
+    }
+
+    public BasicArrayList getParentTransforms() throws Exception {
+        return this.getTransforms(TransformInfoData.getInstance().@PARENT);
+    }
+
+    private Node getRootNode() {
+        return this.document.getElementsByTagName(TransformInfoObjectConfigData.getInstance().@NAME).item(0);
+    }
+
+    public void setOutputTypeName(String outputTypeName) {
+        this.outputTypeName = outputTypeName;
+    }
+
+    public String getOutputTypeName() throws Exception {
+        return this.outputTypeName;
+    }
+
+    public String getInputOutputTypeName() throws Exception {
+        Node node = DomSearchHelper.getNode(InputOutputTypeData.getInstance().@NAME, this.getRootNode().getChildNodes());
+        return DomNodeHelper.getTextNodeValue(node);
+    }
+
+    public String getInputOutputTypeFile() throws Exception {
+        Node node = DomSearchHelper.getNode(InputOutputTypeData.getInstance().@FILE, this.getRootNode().getChildNodes());
+        return DomNodeHelper.getTextNodeValue(node);
+    }
+
+    public String getImportUriPath() throws Exception {
+        Node node = DomSearchHelper.getNode(XslData.getInstance().@ROOT_IMPORT_URI, this.getRootNode().getChildNodes());
+        return DomNodeHelper.getTextNodeValue(node);
+    }
+
+    /*    public void setImportUriPath(String importUriPath)    {       this.importUriPath = importUriPath;    }       */
+    public String toString() {
+        try {
+            if (this.document != null) {
+                return XmlDocumentHelper.toString(this.document);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEWERROR)) {
+                this.logUtil.putF('DOM Document error', this, this.commonStrings.@TOSTRING);
+            }
+            return null;
+        }
+    }
+
+}
+
+

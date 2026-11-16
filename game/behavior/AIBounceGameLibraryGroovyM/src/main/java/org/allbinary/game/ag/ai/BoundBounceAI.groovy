@@ -1,0 +1,41 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.bounds.BoundsVisitorInterface;
+import org.allbinary.bounds.LayerBounds;
+import org.allbinary.game.ai.BasicAI;
+import org.allbinary.game.input.GameInput;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+
+@groovy.transform.CompileStatic
+public class BoundBounceAI extends BasicAI {
+    protected int currentRelativeAngle = 0;
+
+    //private int currentSpeed;
+    private LayerBounds layerBounds;
+
+    private BoundsVisitorInterface boundsVisitorInterface;
+
+    public BoundBounceAI(AllBinaryLayer ownerLayerInterface, GameInput gameInput, LayerBounds layerBounds, BoundsVisitorInterface boundsVisitorInterface) throws Exception {
+        super(ownerLayerInterface, gameInput);
+        this.layerBounds = layerBounds;
+        this.boundsVisitorInterface = boundsVisitorInterface;
+    }
+
+    public void paint(Graphics graphics) {
+        final Rectangle rectange = this.layerBounds.getRectangleP();
+        graphics.drawRect(rectange.getPoint().getX(), rectange.getPoint().getY(), rectange.getWidth(), rectange.getHeight());
+    }
+
+    @Override
+    public void processAI(AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        this.layerBounds.visit(this.boundsVisitorInterface);
+    }
+
+}
+
+

@@ -1,0 +1,366 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.game.input.form.RTSFormInput;
+import org.allbinary.game.layer.MultiSelectPaintable;
+import org.allbinary.game.layer.RTSGameStrings;
+import org.allbinary.game.layer.RTSLayer;
+import org.allbinary.game.layer.RTSLayerInfoPaintable;
+import org.allbinary.game.layer.RTSPlayerLayerInterface;
+import org.allbinary.game.state.GameStateFactory;
+import org.allbinary.input.motion.button.EndLevelNoBuildingSelectedTouchButtonsBuilder;
+import org.allbinary.input.motion.button.EndLevelTouchButtonsBuilder;
+import org.allbinary.input.motion.button.NoBuildingSelectedTouchButtonsBuilder;
+import org.allbinary.input.motion.button.RTSTouchButtonsBuilder;
+import org.allbinary.media.audio.SelectBuildingSound;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.java.bool.BooleanFactory;
+import org.allbinary.game.displayable.canvas.AllBinaryGameCanvas;
+import org.allbinary.game.layer.AllBinaryGameLayerManager;
+import org.allbinary.game.layer.hud.event.GameNotificationEvent;
+import org.allbinary.game.layer.hud.event.GameNotificationEventHandler;
+import org.allbinary.game.layer.special.CollidableDestroyableDamageableLayer;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.PointFactory;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.graphics.form.ScrollSelectionForm;
+import org.allbinary.graphics.form.item.ABCustomItem;
+import org.allbinary.graphics.paint.NullInitUpdatePaintable;
+import org.allbinary.input.motion.button.TouchButtonsBuilderFactory;
+import org.allbinary.input.motion.gesture.MotionGestureInput;
+import org.allbinary.input.motion.gesture.TouchMotionGestureFactory;
+import org.allbinary.input.motion.gesture.observer.BaseMotionGestureEventListener;
+import org.allbinary.input.motion.gesture.observer.BasicMotionGesturesHandler;
+import org.allbinary.input.motion.gesture.observer.MotionGestureEvent;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.math.RectangleCollisionUtil;
+import org.allbinary.media.audio.ErrorSound;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellPosition;
+import org.allbinary.media.graphics.geography.map.GeographicMapCompositeInterface;
+import org.allbinary.view.ViewPositionBase;
+
+/**  *   * @author user  */
+@groovy.transform.CompileStatic
+public class HumanRTSPlayerGameInput extends RTSPlayerGameInput implements BaseMotionGestureEventListener {
+    private boolean isDragging = false;
+
+    protected final GameStateFactory gameStateFactory = GameStateFactory.getInstance();
+
+    //private final GameInputStrings gameInputStrings = GameInputStrings.getInstance();
+    private final RectangleCollisionUtil rectangleCollisionUtil = RectangleCollisionUtil.getInstance();
+
+    private final TouchMotionGestureFactory touchMotionGestureFactory = TouchMotionGestureFactory.getInstance();
+
+    private final MotionGestureInput PRESSED = this.touchMotionGestureFactory.@PRESSED;
+
+    private final MotionGestureInput RELEASED = this.touchMotionGestureFactory.@RELEASED;
+
+    private final TouchButtonsBuilderFactory touchButtonsBuilderFactory;
+
+    private final GameNotificationEvent notYoursGameNotificationEvent;
+
+    private CollidableDestroyableDamageableLayer selectedRtsLayer = CollidableDestroyableDamageableLayer.getNullInstance();
+
+    public HumanRTSPlayerGameInput(final AllBinaryGameCanvas gameCanvas, final BasicArrayList inputList, final int playerInputId, final RTSLayerInfoPaintable towerInfoPaintable, final RTSPlayerLayerInterface rtsPlayerLayerInterface, final LayerPositionFinderInterface layerPositionFinderInterface, final SelectRTSLayerVisitorFactoryInterface selectRTSLayerVisitorFactoryInterface, final TouchButtonsBuilderFactory touchButtonsBuilderFactory) {
+        super(gameCanvas, inputList, playerInputId, towerInfoPaintable, rtsPlayerLayerInterface, layerPositionFinderInterface, selectRTSLayerVisitorFactoryInterface);
+        this.touchButtonsBuilderFactory = touchButtonsBuilderFactory;
+        final BasicColorFactory basicColorFactory = BasicColorFactory.getInstance();
+        this.notYoursGameNotificationEvent = new GameNotificationEvent(this, RTSGameStrings.getInstance().@NOT_YOURS, SmallIntegerSingletonFactory.getInstance().getAt(2), basicColorFactory.@PINK, BooleanFactory.getInstance().@FALSE);
+        BasicMotionGesturesHandler.getInstance().addListenerInterface(this);
+    }
+
+    @Override
+    public void setAllBinaryGameLayerManager(final AllBinaryGameLayerManager allBinaryGameLayerManager) throws Exception {
+        final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) allBinaryGameLayerManager);
+        final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+        this.notYoursGameNotificationEvent.setBasicColorP(geographicMapInterface.getForegroundBasicColor());
+    }
+
+    private boolean processDraggingMotionInput(final AllBinaryLayerManager layerManager) throws Exception {
+        final MotionGestureEvent motionGestureEvent = ((MotionGestureEvent) this.getMotionGestureInputList().get(this.getMotionGestureInputList().size() - 1));
+        final MotionGestureInput motionGestureInput = motionGestureEvent.getMotionGesture();
+        final RTSFormInput rtsFormInput = this.getSelectedRtsFormInput();
+        if (motionGestureInput === this.PRESSED) {
+            final GPoint point = motionGestureEvent.getCurrentPoint();
+            if (this.getRtsPlayerLayerInterface().getCurrentScrollSelectionForm().isInForm(point)) {
+                this.isDragging = rtsFormInput.processSticky(this.getSelectedRtsLayer(), this.getRtsPlayerLayerInterface(), layerManager, point);
+            }
+        } else if (motionGestureInput === this.RELEASED) {
+            final GPoint point = motionGestureEvent.getCurrentPoint();
+            if (this.getRtsPlayerLayerInterface().getCurrentScrollSelectionForm().isInForm(point)) {
+                rtsFormInput.processAtPoint(this.getSelectedRtsLayer(), this.getRtsPlayerLayerInterface(), layerManager, point);
+            } else if (rtsFormInput.isStickyItemSelected()) {
+                final RTSFormInput previousRtsFormInput = rtsFormInput;
+                this.select(motionGestureEvent);
+                this.getSelectedBuildingPlayerGameInput().selectAllPreselected();
+                previousRtsFormInput.processAtPoint(this.getSelectedRtsLayer(), this.getRtsPlayerLayerInterface(), layerManager, point);
+                this.getSelectedBuildingPlayerGameInput().deselectAllPreselected();
+            } else {
+                this.select(motionGestureEvent);
+            }
+            rtsFormInput.setStickyItemSelected(false);
+            rtsFormInput.setSelectedStickyItem(ABCustomItem.getNullInstance());
+            rtsFormInput.setSelectedStickyItemIndex(-1);
+            return true;
+        }
+        return false;
+    }
+
+    private GPoint startPoint = PointFactory.getInstance().@ZERO_ZERO;
+
+    private GPoint endPoint = PointFactory.getInstance().@ZERO_ZERO;
+
+    @groovy.transform.PackageScope final String POSSIBLE = 'Possible: ';
+
+    @groovy.transform.PackageScope final String AT = 'At: ';
+
+    @groovy.transform.PackageScope final String METHOD = 'makeSelection';
+
+    @groovy.transform.PackageScope final String ADDING = 'Adding: ';
+
+    @groovy.transform.PackageScope final String SPACE = CommonSeps.getInstance().@SPACE;
+
+    private void makeSelection() {
+        final BasicArrayList rtsLayerList = this.getRtsPlayerLayerInterface().getPlayerOwnedRTSLayers().@rtsLayerList;
+        int rectX1 = this.startPoint.getX();
+        int rectY1 = this.startPoint.getY();
+        int rectX2 = this.endPoint.getX();
+        int rectY2 = this.endPoint.getY();
+        if (rectX1 > rectX2) {
+            rectX2 = rectX1;
+            rectX1 = this.endPoint.getX();
+        }
+        if (rectY1 > rectY2) {
+            rectY2 = rectY1;
+            rectY1 = this.endPoint.getY();
+        }
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(this.AT);
+        stringBuffer.appendint(rectX1);
+        stringBuffer.append(this.SPACE);
+        stringBuffer.appendint(rectY1);
+        stringBuffer.append(this.SPACE);
+        stringBuffer.appendint(rectX2);
+        stringBuffer.append(this.SPACE);
+        stringBuffer.appendint(rectY2);
+        this.logUtil.putF(stringBuffer.toString(), this, this.METHOD);
+        RTSLayer rtsLayer;
+        for (int index = rtsLayerList.size() - 1; index >= 0; index--) {
+            rtsLayer = ((RTSLayer) rtsLayerList.get(index));
+            stringBuffer.delete(0, stringBuffer.length());
+            final ViewPositionBase viewPosition = rtsLayer.getViewPosition();
+            stringBuffer.append(this.POSSIBLE);
+            stringBuffer.append(rtsLayer.getName());
+            stringBuffer.append(this.SPACE);
+            stringBuffer.append(this.AT);
+            stringBuffer.appendint((viewPosition.getX() + rtsLayer.getHalfWidth()));
+            stringBuffer.append(this.SPACE);
+            stringBuffer.appendint((viewPosition.getY() + rtsLayer.getHalfHeight()));
+            this.logUtil.putF(stringBuffer.toString(), this, this.METHOD);
+            if (this.rectangleCollisionUtil.isInside(rectX1, rectY1, rectX2, rectY2, viewPosition.getX() + rtsLayer.getHalfWidth(), viewPosition.getY() + rtsLayer.getHalfHeight())) {
+                this.logUtil.putF(new StringMaker().append(this.ADDING).append(rtsLayer.getName()).toString(), this, this.METHOD);
+                rtsLayer.select();
+                this.getSelectedBuildingPlayerGameInput().addSelectedRTSLayer(rtsLayer);
+            }
+        }
+        //for now update on the last selected item
+        final CollidableDestroyableDamageableLayer gameLayer = this.getSelectedBuildingPlayerGameInput().getLastSelectedRtsLayer();
+        if (gameLayer !== CollidableDestroyableDamageableLayer.getNullInstance()) {
+            final RTSLayer lastRTSLayer = ((RTSLayer) gameLayer);
+            if (lastRTSLayer.getScrollSelectionForm() !== ScrollSelectionForm.getNullScrollSelectionForm()) {
+                this.updateForm(lastRTSLayer.getScrollSelectionForm(), lastRTSLayer.getRTSFormInput());
+                this.setSelectedRtsLayer(lastRTSLayer);
+            }
+        }
+        this.updatePaintable();
+    }
+
+    private void processSelectionBoxMotionInput(final AllBinaryLayerManager layerManager) throws Exception {
+        for (int index = this.getMotionGestureInputList().size() - 1; index >= 0; index--) {
+            final MotionGestureEvent motionGestureEvent = ((MotionGestureEvent) this.getMotionGestureInputList().get(index));
+            final MotionGestureInput motionGestureInput = motionGestureEvent.getMotionGesture();
+            final GPoint point = motionGestureEvent.getCurrentPoint();
+            if (motionGestureInput === this.touchMotionGestureFactory.@PRESSED) {
+                //Start selection box
+                this.startPoint = point;
+                this.endPoint = point;
+            } else if (motionGestureInput === this.touchMotionGestureFactory.@RELEASED) {
+                this.endPoint = point;
+                //Make selection
+                this.makeSelection();
+                this.startPoint = PointFactory.getInstance().@ZERO_ZERO;
+                this.endPoint = PointFactory.getInstance().@ZERO_ZERO;
+            } else {
+                //Adjust selection box
+                this.endPoint = point;
+            }
+        }
+    }
+
+    @Override
+    public void processMotionInput(final AllBinaryLayerManager layerManager) throws Exception {
+        //this.logUtil.putF(this.commonStrings.START, this, gameInputStrings.PROCESS_MOTION_INPUT);
+        if (this.getMotionGestureInputList().size() > 0) {
+            boolean endDrag = this.processDraggingMotionInput(layerManager);
+            //If Not dragging item then go ahead and create selection box
+            if (!this.isDragging) {
+                this.processSelectionBoxMotionInput(layerManager);
+            }
+            if (endDrag) {
+                this.isDragging = false;
+            }
+        }
+        this.getMotionGestureInputList().clear();
+    }
+
+    /**      * @param selectedRtsFormInput the selectedRtsFormInput to set      */
+    @Override
+    public void setSelectedRtsFormInput(final RTSFormInput selectedRtsFormInput) {
+        final LogUtil logUtil = LogUtil.getInstance();
+        this.logUtil.putF(new StringMaker().append(CommonLabels.getInstance().@START).append(StringUtil.getInstance().toString(selectedRtsFormInput)).toString(), this, 'setSelectedRtsFormInput');
+        super.setSelectedRtsFormInput(selectedRtsFormInput);
+        this.setSelectedRtsLayer(CollidableDestroyableDamageableLayer.getNullInstance());
+    }
+
+    private void updateFormForLayer(final RTSLayer rtsLayer) {
+        final ScrollSelectionForm scrollSelectionForm = rtsLayer.getScrollSelectionForm();
+        // Waypoints are the only games objects still without menus currently
+        if (scrollSelectionForm !== ScrollSelectionForm.getNullScrollSelectionForm() && this.getRtsPlayerLayerInterface().getGroupInterface()[0] === rtsLayer.getGroupInterface()[0]) {
+            this.updateForm(scrollSelectionForm, rtsLayer.getRTSFormInput());
+            this.getSelectedBuildingPlayerGameInput().setSelectedRTSLayer(CollidableDestroyableDamageableLayer.getNullInstance());
+            this.setSelectedRtsLayer(rtsLayer);
+        } else {
+            this.getRtsPlayerLayerInterface().setCurrentScrollSelectionForm(this.getRtsPlayerLayerInterface().getBuildingScrollSelectionForm());
+            // geographicMapCellPosition);
+            this.setSelectedRtsFormInput(this.getRtsPlayerLayerInterface().getRTSFormInput());
+            this.getSelectedBuildingPlayerGameInput().setSelectedRTSLayer(CollidableDestroyableDamageableLayer.getNullInstance());
+        }
+    }
+
+    private void updateForm(final ScrollSelectionForm scrollSelectionForm, final RTSFormInput rtfFormInput) {
+        // Waypoints are the only games objects still without menus
+        this.getRtsPlayerLayerInterface().setCurrentScrollSelectionForm(scrollSelectionForm);
+        // rtsLayer.getRTSFormInput().setSelectedGeographicCellPosition(geographicMapCellPosition);
+        this.setSelectedRtsFormInput(rtfFormInput);
+    }
+
+    @Override
+    public void setSelectedRTSLayer(final CollidableDestroyableDamageableLayer rtSLayer, final GeographicMapCellPosition geographicMapCellPosition) throws Exception {
+        if (rtSLayer !== CollidableDestroyableDamageableLayer.getNullInstance() && this.getRtsPlayerLayerInterface().getGroupInterface()[0] !== rtSLayer.getGroupInterface()[0]) {
+            this.getRtsPlayerLayerInterface().add(ErrorSound.getInstance());
+            GameNotificationEventHandler.getInstance().fireEvent(this.notYoursGameNotificationEvent);
+            return;
+        }
+        //deselect all?
+        final AllBinaryGameCanvas gameCanvas = this.getGameCanvas();
+        if (rtSLayer !== CollidableDestroyableDamageableLayer.getNullInstance()) {
+            this.getRtsPlayerLayerInterface().add(SelectBuildingSound.getInstance());
+            final RTSLayer rtsLayer = ((RTSLayer) rtSLayer);
+            rtsLayer.select();
+            this.updateFormForLayer(rtsLayer);
+            if (gameCanvas.getGameState() === this.gameStateFactory.@PLAYING_GAME_STATE) {
+                if (rtsLayer.isSelfUpgradeable()) {
+                    gameCanvas.updateCurrentTouchInputFactory(new RTSTouchButtonsBuilder());
+                } else {
+                    gameCanvas.updateCurrentTouchInputFactory(new NoBuildingSelectedTouchButtonsBuilder());
+                }
+            } else {
+                final EndLevelTouchButtonsBuilder endLevelTouchButtonsBuilder = new EndLevelTouchButtonsBuilder();
+                if (this.touchButtonsBuilderFactory != null) {
+                    endLevelTouchButtonsBuilder.add(this.touchButtonsBuilderFactory.getInstance());
+                }
+                gameCanvas.updateCurrentTouchInputFactory(endLevelTouchButtonsBuilder);
+            }
+        } else {
+            this.logUtil.putF('Set Player Default Form', this, 'setSelectedRTSLayer');
+            this.getRtsPlayerLayerInterface().setCurrentScrollSelectionForm(this.getRtsPlayerLayerInterface().getBuildingScrollSelectionForm());
+            //   geographicMapCellPosition);
+            this.setSelectedRtsFormInput(this.getRtsPlayerLayerInterface().getRTSFormInput());
+            this.getSelectedBuildingPlayerGameInput().setSelectedRTSLayer(CollidableDestroyableDamageableLayer.getNullInstance());
+            if (gameCanvas.getGameState() === this.gameStateFactory.@PLAYING_GAME_STATE) {
+                gameCanvas.updateCurrentTouchInputFactory(new NoBuildingSelectedTouchButtonsBuilder());
+            } else {
+                final EndLevelNoBuildingSelectedTouchButtonsBuilder endLevelNoBuildingSelectedTouchButtonsBuilder = new EndLevelNoBuildingSelectedTouchButtonsBuilder();
+                if (this.touchButtonsBuilderFactory != null) {
+                    endLevelNoBuildingSelectedTouchButtonsBuilder.add(this.touchButtonsBuilderFactory.getInstance());
+                }
+                gameCanvas.updateCurrentTouchInputFactory(endLevelNoBuildingSelectedTouchButtonsBuilder);
+            }
+        }
+        this.getSelectedRtsFormInput().setSelectedGeographicCellPosition(geographicMapCellPosition);
+        this.getSelectedBuildingPlayerGameInput().setSelectedRTSLayer(rtSLayer);
+        this.updatePaintable();
+    }
+
+    private final MultiSelectPaintable multiSelectPaintable = new MultiSelectPaintable();
+
+    @Override
+    public void updatePaintable() {
+        final BasicArrayList list = this.getSelectedBuildingPlayerGameInput().getSelectedBasicArrayList();
+        if (list.size() > 1) {
+            final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) this.getGameCanvas());
+            final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+            this.multiSelectPaintable.setBasicColorP(geographicMapInterface.getForegroundBasicColor());
+            this.multiSelectPaintable.update(list);
+            this.getRTSLayerInfoPaintable().updateRTSLayerInfoSelection(this.multiSelectPaintable);
+        } else if (list.size() == 1) {
+            RTSLayer rtsLayer = ((RTSLayer) list.get(0));
+            this.getRTSLayerInfoPaintable().updateRTSLayerInfoSelection(rtsLayer.createHudPaintable());
+        } else {
+            this.getRTSLayerInfoPaintable().updateRTSLayerInfoInit(NullInitUpdatePaintable.getInstance());
+        }
+    }
+
+    @Override
+    public void paint(final Graphics graphics) {
+        super.paint(graphics);
+        if (this.startPoint !== PointFactory.getInstance().@ZERO_ZERO && this.endPoint !== PointFactory.getInstance().@ZERO_ZERO) {
+            graphics.setColor(BasicColorFactory.getInstance().@RED.intValue());
+            int rectX1 = this.startPoint.getX();
+            int rectY1 = this.startPoint.getY();
+            int rectX2 = this.endPoint.getX();
+            int rectY2 = this.endPoint.getY();
+            if (rectX1 > rectX2) {
+                rectX2 = rectX1;
+                rectX1 = this.endPoint.getX();
+            }
+            if (rectY1 > rectY2) {
+                rectY2 = rectY1;
+                rectY1 = this.endPoint.getY();
+            }
+            graphics.drawRect(rectX1, rectY1, rectX2 - rectX1, rectY2 - rectY1);
+        }
+    }
+
+    @Override
+    public void onMotionGestureEvent(final MotionGestureEvent motionGestureEvent) {
+        //this.logUtil.putF("motionGestureEvent: ").append(motionGestureEvent, this, "onMotionGestureEvent");
+        this.getMotionGestureInputList().add(motionGestureEvent);
+    }
+
+    @Override
+    public void onScrolledMotionGestureEvent(MotionGestureEvent motionGestureEvent) {
+    }
+
+    /**      * @return the selectedRtsLayer      */
+    private CollidableDestroyableDamageableLayer getSelectedRtsLayer() {
+        return this.selectedRtsLayer;
+    }
+
+    /**      * @param selectedRtsLayer the selectedRtsLayer to set      */
+    private void setSelectedRtsLayer(final CollidableDestroyableDamageableLayer selectedRtsLayer) {
+        this.selectedRtsLayer = selectedRtsLayer;
+    }
+
+}
+
+

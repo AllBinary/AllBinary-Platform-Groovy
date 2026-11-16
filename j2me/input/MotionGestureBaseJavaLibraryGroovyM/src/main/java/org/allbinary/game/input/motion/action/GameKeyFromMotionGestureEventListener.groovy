@@ -1,0 +1,55 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input.motion.action;
+
+import org.allbinary.game.input.CompleteMotionGestureInputEvent;
+import org.allbinary.game.input.CompleteMotionGestureInputEventListener;
+import org.allbinary.game.input.event.DownGameKeyEventHandler;
+import org.allbinary.game.input.event.GameKeyEvent;
+import org.allbinary.game.input.event.UpGameKeyEventHandler;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class GameKeyFromMotionGestureEventListener extends CompleteMotionGestureInputEventListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private GameKeyEvent previousGameKeyEvent = GameKeyEvent.NONE;
+
+    @Override
+    public void onEvent(AllBinaryEventObject eventObject) {
+        ForcedLogUtil.log(EventStrings.getInstance().@PERFORMANCE_MESSAGE, this);
+    }
+
+    //ReleaseTouchInputToGameKeyEventAction.getInstance().getGameKeyEvent();
+    @Override
+    public void onCompleteMotionGestureInputEvent(CompleteMotionGestureInputEvent completeMotionGestureInputEvent) {
+        try {
+            GameKeyCompleteMotionGestureInputEvent gameKeyCompleteMotionGestureInputEvent = ((GameKeyCompleteMotionGestureInputEvent) completeMotionGestureInputEvent);
+            //PreLogUtil.put(commonStrings.START_LABEL + gameKeyCompleteMotionGestureInputEvent.getGameKey(), this, "onCompleteMotionGestureInputEvent");
+            GameKeyEvent gameKeyEvent = gameKeyCompleteMotionGestureInputEvent.getGameKeyEvent();
+            if (gameKeyEvent !== this.previousGameKeyEvent) {
+                if (this.previousGameKeyEvent !== GameKeyEvent.NONE) {
+                    //this.logUtil.putF("Up: " + previousGameKeyEvent.toString(), this, "onCompleteMotionGestureInputEvent");
+                    UpGameKeyEventHandler.getInstance().fireEvent(this.previousGameKeyEvent);
+                }
+                /*                 else                 {                     this.logUtil.putF("No Key", this, "onCompleteMotionGestureInputEvent");                 }                 */
+                this.previousGameKeyEvent = gameKeyEvent;
+                //if(gameKeyEvent != releaseGameKeyEvent)
+                if (gameKeyEvent != null && gameKeyEvent !== GameKeyEvent.NONE) {
+                    //this.logUtil.putF("Down: " + gameKeyCompleteMotionGestureInputEvent.getGameKey(), this, "onCompleteMotionGestureInputEvent");
+                    DownGameKeyEventHandler.getInstance().fireEvent(gameKeyEvent);
+                }
+            }
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, 'onCompleteMotionGestureInputEvent', e);
+        }
+    }
+
+}
+
+

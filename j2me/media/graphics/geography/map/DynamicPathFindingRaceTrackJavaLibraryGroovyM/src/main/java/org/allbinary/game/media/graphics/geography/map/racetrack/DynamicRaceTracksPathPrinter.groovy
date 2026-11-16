@@ -1,0 +1,38 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.media.graphics.geography.map.racetrack;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.racetrack.RaceTrackGeographicMapInterfaceFactoryInterface;
+import org.allbinary.media.graphics.geography.map.racetrack.RaceTrackRoadsGeographicMapCellHistoryFactory;
+import org.allbinary.media.graphics.geography.map.racetrack.RaceTracksPathPrinter;
+import org.allbinary.media.graphics.geography.pathfinding.PathFindingInfo;
+import org.allbinary.media.graphics.geography.pathfinding.PathGenerator;
+
+/**  *  * @author user  * Used for generating static paths.  Use in the build game method  */
+@groovy.transform.CompileStatic
+public class DynamicRaceTracksPathPrinter extends RaceTracksPathPrinter {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public void printAllPaths(RaceTrackGeographicMapInterfaceFactoryInterface raceTrackGeographicMapInterfaceFactoryInterface, PathFindingInfo pathFindingInfo, int size) {
+        try {
+            //ImageCacheFactory.init();
+            for (int index = 0; index < size; index++) {
+                BasicGeographicMap geographicMapInterface = raceTrackGeographicMapInterfaceFactoryInterface.getTrackInstance(SmallIntegerSingletonFactory.getInstance().getAt(index));
+                BasicArrayList list = PathGenerator.getInstance().createList(geographicMapInterface, RaceTrackRoadsGeographicMapCellHistoryFactory.getInstance(), pathFindingInfo, 10);
+                System.out.println('Track ' + index);
+                this.printPaths(list);
+            }
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@PROCESS, e);
+        }
+    }
+
+}
+
+

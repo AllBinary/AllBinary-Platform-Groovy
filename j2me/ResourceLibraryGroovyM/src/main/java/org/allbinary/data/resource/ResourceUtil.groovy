@@ -1,0 +1,82 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.data.resource;
+
+import java.io.InputStream;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+
+//J2SE - J2ME
+@groovy.transform.CompileStatic
+public class ResourceUtil {
+    private static Object classLoader = NullUtil.getInstance().@NULL_OBJECT;
+
+    private static final ResourceUtil instance = new ResourceUtil();
+
+    public static ResourceUtil getInstance() {
+        return ResourceUtil.instance;
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private ResourceUtil() {
+    }
+
+    public void setLoadingPaths(String path, String ext) {
+        this.logUtil.putF(CommonStrings.getInstance().@NOT_IMPLEMENTED, this, 'setLoadingPaths');
+    }
+
+    //    }
+    public void setClassLoader(final ClassLoader classLoader) {
+        this.logUtil.putF(new StringMaker().append('Resource Loader: ').append(classLoader.getClass().getName()).toString(), this, 'setClassLoader');
+        ResourceUtil.classLoader = classLoader;
+    }
+
+    public InputStream getResourceAsStream(final String resource) throws Exception {
+        InputStream inputStream = this.getResourceAsStreamAtStart(resource, 2);
+        if (inputStream == null) {
+            inputStream = this.getResourceAsStreamAtStart(resource, 1);
+            if (inputStream == null) {
+                throw new Exception(new StringMaker().append('Unable to obtain: ').append(resource).toString());
+            }
+        }
+        return inputStream;
+    }
+
+    //private final String METHOD_NAME = "getResourceAsStream";
+    private InputStream getResourceAsStreamAtStart(final String resource, final int startIndex) throws Exception {
+        //final StringMaker stringMaker = new StringMaker();
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final int index = resource.indexOf(commonSeps.@COLON);
+        final String resourcePath = resource.substring(index + startIndex);
+        //Try getting resource with normal resource access
+        InputStream inputStream = resource.getClass().getResourceAsStream(resourcePath);
+        if (inputStream != null) {
+            //            this.logUtil.putF(stringMaker.append(RESOURCE_FOUND).append(resourcePath).toString(), this, METHOD_NAME);
+            return inputStream;
+        }
+        //Try getting resource with ClassLoader
+        final ClassLoader classLoader = ((ClassLoader) ResourceUtil.classLoader);
+        inputStream = classLoader.getResourceAsStream(resourcePath);
+        if (inputStream != null) {
+            //            this.logUtil.putF(stringMaker.append(RESOURCE_FOUND_WITH).append(resourcePath).append(commonSeps.COMMA).append(ResourceUtil.classLoader.getClass().getName()).toString(), this, METHOD_NAME);
+            return inputStream;
+        }
+        inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+        if (inputStream != null) {
+            //            this.logUtil.putF(stringMaker.append(RESOURCE_FOUND_WITH_CONTEXT_CLASS_LOADER).append(resourcePath).append(commonSeps.COMMA).append(Thread.currentThread().getContextClassLoader().getClass().getName()).toString(), this, METHOD_NAME);
+            return inputStream;
+        }
+        /*       if(inputStream != null)       {          this.logUtil.putF("Resource Found In Specified Jar", this, METHOD_NAME);           return inputStream;       }              //Try getting the resource from the jar again using the custom Imp       //inputStream = JarResourceUtil.getResourceAsStream(resourcePath);        if(inputStream != null)       {          this.logUtil.putF("Resource Found In Jar", this, METHOD_NAME);           return inputStream;       }        //Try getting the resource from a normal file outside of the jar       //inputStream = FileResourceUtil.getResourceAsStream(".").append(resourcePath);        if(inputStream != null)       {          this.logUtil.putF("Resource Found In File", this, METHOD_NAME);           return inputStream;       }        //inputStream = FileResourceUtil.getResourceAsStream(resourcePath);        if(inputStream != null)       {          this.logUtil.putF("Resource Found In File - Absolute Path", this, METHOD_NAME);       }          */
+        return inputStream;
+    }
+
+    public void addResource(final String resource, final Integer value) {
+    }
+
+}
+
+

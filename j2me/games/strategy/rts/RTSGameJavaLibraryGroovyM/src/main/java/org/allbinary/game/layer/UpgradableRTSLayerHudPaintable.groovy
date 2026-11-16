@@ -1,0 +1,120 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.game.layer.special.CollidableDestroyableDamageableLayer;
+import org.allbinary.logic.java.character.CharArrayFactory;
+import org.allbinary.graphics.displayable.DisplayInfoSingleton;
+import org.allbinary.graphics.font.MyFontProcessor;
+import org.allbinary.input.motion.button.CommonButtons;
+
+@groovy.transform.CompileStatic
+public class UpgradableRTSLayerHudPaintable extends SelectionHudPaintable {
+    private static final UpgradableRTSLayerHudPaintable instance = new UpgradableRTSLayerHudPaintable();
+
+    public static UpgradableRTSLayerHudPaintable getInstance() {
+        return UpgradableRTSLayerHudPaintable.instance;
+    }
+
+    //private final String PERCENT_COMPLETE = "% Complete";
+    private final String PERCENT = '%';
+
+    private CollidableDestroyableDamageableLayer rtsLayer = CollidableDestroyableDamageableLayer.getNullInstance();
+
+    protected int costY;
+
+    protected int costY1;
+
+    private int percentCompleteX2;
+
+    private RTSLayerCompositePaintable rtsLayerCompositePaintableLateInit;
+
+    private int charHeight;
+
+    private int charWidth;
+
+    private UpgradableRTSLayerHudPaintable() {
+    }
+
+    @Override
+    public void updateMeasurement(final Graphics graphics) {
+        super.updateMeasurement(graphics);
+        final Font font = graphics.getFont();
+        this.charHeight = font.getHeight();
+        this.charWidth = MyFontProcessor.defaultCharWidth(font);
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        final CommonButtons commonButtons = CommonButtons.getInstance();
+        this.costY = (this.y + commonButtons.@STANDARD_BUTTON_SIZE);
+        this.costY1 = (this.y + commonButtons.@STANDARD_BUTTON_SIZE - this.charHeight);
+        /*          * probably not needed anymore         if(!AndroidUtil.isAndroid())         {             this.costY1 = this.costY;         } else         {             this.costY1 = (this.y + TouchButtonInput.STANDARD_BUTTON_SIZE - (charHeight));         }         */
+        this.percentCompleteX2 = this.imageX + commonButtons.@STANDARD_BUTTON_SIZE - this.charWidth;
+        final DisplayInfoSingleton displayInfoSingleton = DisplayInfoSingleton.getInstance();
+        //!AndroidUtil.isAndroid()
+        if (displayInfoSingleton.getLastWidth() > 320) {
+            this.rtsLayerCompositePaintableLateInit = new UpgradableWideRTSLayerPaintable(this);
+        } else {
+            this.rtsLayerCompositePaintableLateInit = new RTSLayerCompositePaintable(this);
+        }
+    }
+
+    @Override
+    public void updateSelectionInfo() {
+        final RTSLayer rtsLayer = ((RTSLayer) this.getRtsLayer());
+        this.rtsLayerCompositePaintableLateInit.update(rtsLayer);
+        this.setAnimationInterface(rtsLayer.getVerticleBuildAnimationInterface());
+        this.setName(rtsLayer.getName());
+    }
+
+    private int percentComplete;
+
+    private int percentCompleteX;
+
+    //private String percentComplete = StringUtil.getInstance();
+    private char[] percentCompleteArray = CharArrayFactory.getInstance().getZeroCharArray();
+
+    private int currentTotalDigits;
+
+    @Override
+    public void updateInfo() {
+        final RTSLayer rtsLayer = ((RTSLayer) this.getRtsLayer());
+        this.percentComplete = rtsLayer.getPercentComplete();
+        if (this.percentComplete < 10) {
+            this.percentCompleteX = 32;
+        } else if (this.percentComplete < 100) {
+            this.percentCompleteX = 24;
+        } else {
+            this.percentCompleteX = 16;
+        }
+        this.percentCompleteArray = this.getPrimitiveLongUtil().getCharArray(this.percentComplete);
+        //this.primitiveLongUtil.getString(pc);
+        this.currentTotalDigits = this.getPrimitiveLongUtil().getCurrentTotalDigits();
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        super.paint(graphics);
+        this.rtsLayerCompositePaintableLateInit.paint(graphics);
+        graphics.drawChars(this.percentCompleteArray, 0, this.currentTotalDigits, this.imageX + this.percentCompleteX, this.costY, 0);
+        //(myFont.DEFAULT_CHAR_WIDTH * 4)
+        graphics.drawString(this.PERCENT, this.percentCompleteX2, this.costY, 0);
+        // myFont.DEFAULT_CHAR_HEIGHT), 0);
+        this.getAnimationInterface().paintXY(graphics, this.imageX, this.y);
+    }
+
+    public void setRtsLayer(RTSLayer rtsLayer) {
+        this.rtsLayer = rtsLayer;
+    }
+
+    protected CollidableDestroyableDamageableLayer getRtsLayer() {
+        return this.rtsLayer;
+    }
+
+}
+
+

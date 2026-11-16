@@ -1,0 +1,907 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2006 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.unit;
+
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.J2MEUtil;
+import org.allbinary.ag.weapon.media.audio.ExplosionBasicSound;
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationInterfaceFactoryInterface;
+import org.allbinary.animation.FeaturedAnimationInterfaceFactoryInterfaceFactory;
+import org.allbinary.animation.IndexedAnimation;
+import org.allbinary.animation.NullAnimationFactory;
+import org.allbinary.animation.NullIndexedAnimationFactory;
+import org.allbinary.animation.ProceduralAnimationInterfaceFactoryInterface;
+import org.allbinary.animation.RotationAnimation;
+import org.allbinary.animation.caption.CaptionAnimationHelper;
+import org.allbinary.animation.caption.CaptionAnimationHelperBase;
+import org.allbinary.animation.vector.AdjustedCircleAnimation;
+import org.allbinary.direction.Direction;
+import org.allbinary.game.combat.damage.DamageFloaters;
+import org.allbinary.game.combat.damage.PtsDamageFloaters;
+import org.allbinary.game.combat.weapon.WeaponProperties;
+import org.allbinary.game.configuration.feature.Features;
+import org.allbinary.game.configuration.feature.GameFeatureFactory;
+import org.allbinary.game.graphics.hud.BasicHudFactory;
+import org.allbinary.game.health.Health;
+import org.allbinary.game.health.HealthBar;
+import org.allbinary.game.health.HealthBarTwodAnimation;
+import org.allbinary.game.identification.Group;
+import org.allbinary.game.identification.GroupCommonFactory;
+import org.allbinary.game.input.event.GameKeyEvent;
+import org.allbinary.game.input.event.GameKeyEventFactory;
+import org.allbinary.game.input.event.GameKeyEventUtil;
+import org.allbinary.game.input.form.VisibleCellPositionsSingleton;
+import org.allbinary.game.input.form.WaypointRTSFormInput;
+import org.allbinary.game.layer.AdvancedRTSGameLayer;
+import org.allbinary.game.layer.AdvancedRTSProperties;
+import org.allbinary.game.layer.AllBinaryGameLayerManager;
+import org.allbinary.game.layer.AllBinaryTiledLayer;
+import org.allbinary.game.layer.LayerCaptionResources;
+import org.allbinary.game.layer.LinePathRelativeAnimation;
+import org.allbinary.game.layer.PathAnimation;
+import org.allbinary.game.layer.PathFindingLayerInterface;
+import org.allbinary.game.layer.RTSLayer2LogHelper;
+import org.allbinary.game.layer.RTSLayer2SelectedLogHelper;
+import org.allbinary.game.layer.RTSLayerEvent;
+import org.allbinary.game.layer.RTSLayerHudPaintable;
+import org.allbinary.game.layer.RTSLayerLogHelper;
+import org.allbinary.game.layer.RTSLayerSelectedLogHelper;
+import org.allbinary.game.layer.RTSPlayerLayerInterface;
+import org.allbinary.game.layer.SelectionHudPaintable;
+import org.allbinary.game.layer.SensorActionFactory;
+import org.allbinary.game.layer.SteeringVisitor;
+import org.allbinary.game.layer.TiledLayerUtil;
+import org.allbinary.game.layer.VehicleFrictionProperties;
+import org.allbinary.game.layer.VehicleProperties;
+import org.allbinary.game.layer.WaypointBehaviorBase;
+import org.allbinary.game.layer.building.BuildingLayer;
+import org.allbinary.game.layer.building.event.BuildingEventHandler;
+import org.allbinary.game.layer.building.event.BuildingEventListenerInterface;
+import org.allbinary.game.layer.capital.event.CapitalEvent;
+import org.allbinary.game.layer.capital.event.CapitalEventHandlerFactory;
+import org.allbinary.game.layer.geographic.map.LayerPartialCellPositionsUtil;
+import org.allbinary.game.layer.special.SpecialDownGameInputProcessor;
+import org.allbinary.game.layer.special.SpecialFireGameInputProcessor;
+import org.allbinary.game.layer.special.SpecialLeftGameInputProcessor;
+import org.allbinary.game.layer.special.SpecialRightGameInputProcessor;
+import org.allbinary.game.layer.special.SpecialUpGameInputProcessor;
+import org.allbinary.game.layer.waypoint.MultipassNoCacheWaypoint;
+import org.allbinary.game.layer.waypoint.NoCacheWaypoint;
+import org.allbinary.game.layer.waypoint.WaypointBase;
+import org.allbinary.game.layer.waypoint.event.WaypointEventHandlerFactory;
+import org.allbinary.game.multiplayer.layer.RemoteInfo;
+import org.allbinary.game.part.weapon.BasicWeaponPart;
+import org.allbinary.game.part.weapon.SalvoInterface;
+import org.allbinary.game.physics.velocity.VelocityProperties;
+import org.allbinary.game.tracking.TrackingEvent;
+import org.allbinary.game.tracking.TrackingEventHandler;
+import org.allbinary.game.tracking.TrackingEventListenerInterface;
+import org.allbinary.graphics.CellPositionFactory;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.graphics.paint.NullPaintable;
+import org.allbinary.graphics.paint.Paintable;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.layer.Layer;
+import org.allbinary.layer.LayerInterfaceFactoryInterface;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.math.BasicDecimal;
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.math.FrameUtil;
+import org.allbinary.math.LayerDistanceUtil;
+import org.allbinary.math.NamedAngle;
+import org.allbinary.media.audio.AttackSound;
+import org.allbinary.media.audio.SecondaryPlayerQueueFactory;
+import org.allbinary.media.audio.Sound;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMapCellPositionFactory;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellHistory;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellPosition;
+import org.allbinary.media.graphics.geography.map.GeographicMapCompositeInterface;
+import org.allbinary.media.graphics.geography.map.SimpleGeographicMapCellPositionFactory;
+import org.allbinary.media.graphics.geography.map.drop.DropCellPositionHistory;
+import org.allbinary.media.graphics.geography.map.racetrack.RaceTrackGeographicMap;
+import org.allbinary.string.CommonPhoneStrings;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.util.BasicArrayListS;
+import org.allbinary.view.ViewPositionBase;
+
+/**  *   * @author user  */
+@groovy.transform.CompileStatic
+public class UnitLayer extends AdvancedRTSGameLayer implements BuildingEventListenerInterface, TrackingEventListenerInterface {
+    //private final short ANGLE_INCREMENT = 10;
+    private final BasicColorFactory basicColorFactory = BasicColorFactory.getInstance();
+
+    private final GroupCommonFactory groupCommonFactory = GroupCommonFactory.getInstance();
+
+    private final LayerPartialCellPositionsUtil layerPartialCellPositionsUtil = LayerPartialCellPositionsUtil.getInstance();
+
+    private final LayerDistanceUtil layerDistanceUtil = LayerDistanceUtil.getInstance();
+
+    private final AngleFactory angleFactory = AngleFactory.getInstance();
+
+    private final CellPositionFactory cellPositionFactory = CellPositionFactory.getInstance();
+
+    //So set a dx dy that is still in
+    private final short maxResourceLoad;
+
+    private final VehicleProperties vehicleProperties;
+
+    //private int repair;
+    protected BasicDecimal accelerationBasicDecimal = new BasicDecimal(1600);
+
+    protected BasicDecimal decelerationBasicDecimal = new BasicDecimal(-1000);
+
+    private final TrackingEvent trackingEvent;
+
+    private final DamageFloaters damageFloaters;
+
+    private final Paintable damageFloatersPaintableInterface;
+
+    private final Paintable healthBar;
+
+    private final Sound moveSoundInterface;
+
+    private final RotationAnimation initResourceAnimation;
+
+    private IndexedAnimation resourceAnimation = ((IndexedAnimation) NullIndexedAnimationFactory.getFactoryInstance().getInstance(0));
+
+    private final PathAnimation initPathAnimation;
+
+    private Animation pathAnimation = NullAnimationFactory.getFactoryInstance().getInstance(0);
+
+    private final CaptionAnimationHelperBase captionAnimationHelper = new CaptionAnimationHelper(FeaturedAnimationInterfaceFactoryInterfaceFactory.getInstance().get(LayerCaptionResources.getInstance().@RESOURCE).getInstance(0), -23, -25, 6, 0);
+
+    private final RotationAnimation decalAnimation;
+
+    private final LayerInterfaceFactoryInterface waypointLayerInterfaceFactoryInterface;
+
+    private static final BasicArrayList partialPositionList = new BasicArrayListS(4);
+
+    private int resourceLoad = 0;
+
+    private int weaponRange;
+
+    protected RTSLayerLogHelper rtsLogHelper = RTSLayerLogHelper.getInstance();
+
+    //Same as parent Animation    
+    protected RotationAnimation rotationAnimationInterfaceP;
+
+    private NamedAngle movementAngle = this.angleFactory.@NOT_ANGLE;
+
+    private GeographicMapCellPosition steeringInsideGeographicMapCellPosition = SimpleGeographicMapCellPositionFactory.NULL_GEOGRAPHIC_MAP_CELL_POSITION;
+
+    protected UnitLayer(final RemoteInfo remoteInfo, final PathFindingLayerInterface parentLayer, final AdvancedRTSProperties advancedRTSProperties, final Group[] groupInterface, final String rootName, final String name, final VehicleProperties vehicleProperties, final Health healthInterface, final Integer maxResourceLoad, final Sound moveSoundInterface, final LayerInterfaceFactoryInterface waypointLayerInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface animationInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface emptyAnimationInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface baseAnimationInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface buildAnimationInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface verticleBuildAnimationInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface decalAnimationInterfaceFactoryInterface, final AnimationInterfaceFactoryInterface resourceAnimationInterfaceFactoryInterface, final ProceduralAnimationInterfaceFactoryInterface proceduralAnimationInterfaceFactoryInterface, final Rectangle rectangle, final Direction direction, final int x, final int y, final int z, final ViewPositionBase viewPosition) throws Exception {
+        super(remoteInfo, parentLayer, advancedRTSProperties, groupInterface, rootName, name, healthInterface, new WaypointRTSFormInput(groupInterface, true), animationInterfaceFactoryInterface, emptyAnimationInterfaceFactoryInterface, baseAnimationInterfaceFactoryInterface, buildAnimationInterfaceFactoryInterface, verticleBuildAnimationInterfaceFactoryInterface, proceduralAnimationInterfaceFactoryInterface, rectangle, x, y, viewPosition);
+        this.setCollidableInferface(new CollidableUnitBehavior(true));
+        this.waypointLayerInterfaceFactoryInterface = waypointLayerInterfaceFactoryInterface;
+        this.maxResourceLoad = maxResourceLoad.shortValue();
+        this.moveSoundInterface = moveSoundInterface;
+        if (Features.getInstance().isFeature(GameFeatureFactory.getInstance().@DAMAGE_FLOATERS)) {
+            this.damageFloaters = new PtsDamageFloaters(this);
+            this.damageFloatersPaintableInterface = this.damageFloaters;
+        } else {
+            this.damageFloatersPaintableInterface = NullPaintable.getInstance();
+            this.damageFloaters = new DamageFloaters();
+        }
+        if (Features.getInstance().isFeature(GameFeatureFactory.getInstance().@HEALTH_BARS)) {
+            this.healthBar = new HealthBar(this, this.getHealthInterface(), new HealthBarTwodAnimation(((AllBinaryLayer) this), BasicHudFactory.getInstance().@BOTTOMLEFT), -1);
+        } else {
+            this.healthBar = NullPaintable.getInstance();
+        }
+        //this.logUtil.putF("Direction: " + direction, this, this.commonStrings.CONSTRUCTOR);
+        this.decalAnimation = ((RotationAnimation) decalAnimationInterfaceFactoryInterface.getInstance(0));
+        this.initResourceAnimation = ((RotationAnimation) resourceAnimationInterfaceFactoryInterface.getInstance(0));
+        this.initResourceAnimation.setFrameByDirection(direction);
+        this.decalAnimation.setFrameByDirection(direction);
+        this.rotationAnimationInterfaceP = ((RotationAnimation) this.indexedButShouldBeRotationAnimationInterface);
+        this.rotationAnimationInterfaceP.setFrameByDirection(direction);
+        this.setMaxLevel(12);
+        this.vehicleProperties = vehicleProperties;
+        //this.repair = UnitTechnologySingletonFactory.getInstance().getRepair();
+        this.trackingEvent = new TrackingEvent(this);
+        this.initPathAnimation = new PathAnimation(this, LinePathRelativeAnimation.getInstance());
+    }
+
+    /*     protected UnitLayer()         throws Exception     {         super();  this.setCollidableInferface(new CollidableUnitBehavior(this, true));          this.moveSoundInterface = null;                  this.vehicleProperties = null;          this.trackingEvent = null;          this.damageFloaters = null;         this.damageFloatersPaintableInterface = null;         this.healthBar = null;     }     */
+    @Override
+    public void setAllBinaryGameLayerManager(final AllBinaryGameLayerManager allBinaryGameLayerManager) throws Exception {
+        super.setAllBinaryGameLayerManager(allBinaryGameLayerManager);
+        this.initPathAnimation.setAllBinaryGameLayerManager(allBinaryGameLayerManager);
+    }
+
+    @Override
+    public void updateWaypointBehavior(final BasicGeographicMap geographicMapInterface) throws Exception {
+        final ABHashtable<Object, Object> hashtable = StdUtil.getInstance().createHashtable();
+        hashtable.put(this.groupCommonFactory.@ID, this.getGroupInterface());
+        hashtable.put(Layer.ID, this);
+        hashtable.put(AllBinaryGameLayerManager.ID, this.allBinaryGameLayerManagerP);
+        this.setWaypointBehavior(new UnitWaypointBehavior2(this, ((AdvancedRTSGameLayer) this.waypointLayerInterfaceFactoryInterface.getNextInstance(hashtable, this.x, this.y, this.z))));
+        final Features features = Features.getInstance();
+        final WaypointBase waypoint = J2MEUtil.isHTML() ? new MultipassNoCacheWaypoint(this, AttackSound.getInstance()) : new NoCacheWaypoint(this, AttackSound.getInstance());
+        this.getWaypointBehavior().setWaypoint(waypoint);
+        super.updateWaypointBehavior(geographicMapInterface);
+        this.initRangeHack();
+    }
+
+    @Override
+    public void construct(RTSPlayerLayerInterface rtsPlayerLayerInterface) throws Exception {
+        super.construct(rtsPlayerLayerInterface);
+        TrackingEventHandler.getInstance().addListenerInterface(this);
+        WaypointEventHandlerFactory.getInstance(this.getGroupInterface()[0]).addListenerInterface(this.getUnitWaypointBehavior());
+        BuildingEventHandler.getInstance().addListenerInterface(this);
+        this.getUnitWaypointBehavior().setCurrentPathGeographicMapCellPosition(this.getCurrentGeographicMapCellPosition());
+        this.updateSensorGeographicMapCellPositionList();
+        this.getUnitWaypointBehavior().setLastPathGeographicMapCellPosition(this.getUnitWaypointBehavior().getCurrentPathGeographicMapCellPosition());
+    }
+
+    private final BasicArrayList sensorGeographicMapCellPositionList = new BasicArrayListD();
+
+    public void updateSensorGeographicMapCellPositionList() throws Exception {
+        if (VisibleCellPositionsSingleton.getInstance().shouldProcess()) {
+            //  (UnitWaypointBehavior) this.getWaypointBehavior();
+            final GeographicMapCellPosition currentGeographicMapCellPosition = this.getCurrentGeographicMapCellPosition();
+            //unitWaypointBehavior.getCurrentPathGeographicMapCellPosition()
+            this.sensorGeographicMapCellPositionList.clear();
+            this.sensorGeographicMapCellPositionList.add(currentGeographicMapCellPosition);
+            final int sensorRange = this.weaponRange * UnitLayer.SENSOR_RANGE_MULTIPLIER;
+            final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) this.allBinaryGameLayerManagerP);
+            final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+            final AllBinaryTiledLayer tiledLayer = geographicMapInterface.getAllBinaryTiledLayer();
+            final int totalCells = Math.divideExact((Math.divideExact(sensorRange, tiledLayer.getCellHeight())), 2);
+            final BasicGeographicMapCellPositionFactory geographicMapCellPositionFactory = geographicMapInterface.getGeographicMapCellPositionFactory();
+            final int column = currentGeographicMapCellPosition.getColumn();
+            final int row = currentGeographicMapCellPosition.getRow();
+            int lastColumn = column + totalCells;
+            int lastRow = row + totalCells;
+            if (lastColumn > tiledLayer.getColumns()) {
+                lastColumn = tiledLayer.getColumns();
+            }
+            if (lastRow > tiledLayer.getRows()) {
+                lastRow = tiledLayer.getRows();
+            }
+            int firstColumn = column - totalCells;
+            int firstRow = row - totalCells;
+            if (firstColumn < 0) {
+                firstColumn = 0;
+            }
+            if (firstRow < 0) {
+                firstRow = 0;
+            }
+            //PreLogUtil.put(stringBuffer.toString(), this, "updateSensorGeographicMapCellPositionList");
+            for (int index = lastColumn - 1; index >= firstColumn; index--) {
+                for (int index2 = lastRow - 1; index2 >= firstRow; index2--) {
+                    final GeographicMapCellPosition geographicMapCellPosition = geographicMapCellPositionFactory.getAt(index, index2);
+                    if (!this.sensorGeographicMapCellPositionList.contains(geographicMapCellPosition)) {
+                        this.sensorGeographicMapCellPositionList.add(geographicMapCellPosition);
+                    }
+                }
+            }
+        }
+    }
+
+    public BasicArrayList getSensorGeographicMapCellPositionList() {
+        return this.sensorGeographicMapCellPositionList;
+    }
+
+    @Override
+    public void select() {
+        this.pathAnimation = this.initPathAnimation;
+        super.select();
+    }
+
+    @Override
+    public void deselect() {
+        this.pathAnimation = NullAnimationFactory.getFactoryInstance().getInstance(0);
+        super.deselect();
+    }
+
+    @Override
+    protected void setSelected(boolean selected) {
+        super.setSelected(selected);
+        if (selected) {
+            if (this.debug) {
+                this.rtsLogHelper = RTSLayerSelectedLogHelper.getInstance();
+            }
+            this.rtsLayer2LogHelper = RTSLayer2SelectedLogHelper.getInstance();
+        } else {
+            if (this.debug) {
+                this.rtsLogHelper = RTSLayerLogHelper.getInstance();
+            }
+            this.rtsLayer2LogHelper = RTSLayer2LogHelper.getInstance();
+        }
+    }
+
+    @Override
+    public void setClosestGeographicMapCellHistory(final BasicArrayList pathsList) throws Exception {
+        this.rtsLogHelper.setClosestGeographicMapCellHistory(this, pathsList);
+        int closestIndex = -1;
+        int shortestDistance = Integer.MAX_VALUE;
+        int currentDistance = Integer.MAX_VALUE;
+        for (int index = pathsList.size() - 1; index >= 0; index--) {
+            final BasicArrayList geographicMapCellPositionBasicArrayList = ((BasicArrayList) pathsList.get(index));
+            final GeographicMapCellPosition geographicMapCellPosition = ((GeographicMapCellPosition) geographicMapCellPositionBasicArrayList.get(geographicMapCellPositionBasicArrayList.size() - 1));
+            currentDistance = this.layerDistanceUtil.getDistanceAt(this, geographicMapCellPosition.getMidPoint());
+            if (currentDistance < shortestDistance) {
+                shortestDistance = currentDistance;
+                closestIndex = index;
+            }
+        }
+        if (closestIndex >= 0) {
+            final BasicArrayList geographicMapCellPositionBasicArrayList = ((BasicArrayList) pathsList.get(closestIndex));
+            final GeographicMapCellPosition geographicMapCellPosition = ((GeographicMapCellPosition) geographicMapCellPositionBasicArrayList.get(0));
+            this.teleportTo(geographicMapCellPosition);
+        }
+    }
+
+    @Override
+    public void init(final GeographicMapCellHistory geographicMapCellHistory, final BasicArrayList geographicMapCellPositionBasicArrayList) throws Exception {
+        // this.logUtil.putF("Adding " + size + " path nodes for Tracking", this, this.commonStrings.INIT);
+        geographicMapCellHistory.trackAll(geographicMapCellPositionBasicArrayList);
+    }
+
+    @Override
+    public void onMovement(final TrackingEvent trackingEvent) {
+        try {
+            final AdvancedRTSGameLayer layerInterface = ((AdvancedRTSGameLayer) trackingEvent.getLayerInterface());
+            /*                 if(this.isSelected())                 {                     this.logUtil.putF("Possible Target: " + layerInterface.getName(), this, "selected: onMovement");                 }                 */
+            if (layerInterface.getGroupInterface()[0] !== this.getGroupInterface()[0]) {
+                this.getUnitWaypointBehavior().getPossibleTargetList().add(layerInterface);
+                //this.onEnemyMovement(layerInterface);
+                layerInterface.onMovementFound(this.getTrackingEvent());
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'onMovement', e);
+        }
+    }
+
+    @Override
+    public void onMovementFound(final TrackingEvent trackingEvent) throws Exception {
+        final AdvancedRTSGameLayer layerInterface = ((AdvancedRTSGameLayer) trackingEvent.getLayerInterface());
+        /*         if(this.isSelected())         {             this.logUtil.putF("Possible Target: " + layerInterface.getName(), this, "selected: onMovementFound");         }         */
+        if (layerInterface.getGroupInterface()[0] !== this.getGroupInterface()[0]) {
+            this.getUnitWaypointBehavior().getPossibleTargetList().add(layerInterface);
+        }
+    }
+
+    private static final int SENSOR_RANGE_MULTIPLIER = 6;
+
+    public void initRangeHack() {
+        final BasicWeaponPart basicWeaponPart = ((BasicWeaponPart) this.getPartInterfaceArray()[0]);
+        final WeaponProperties weaponProperties = basicWeaponPart.getWeaponProperties();
+        this.weaponRange = weaponProperties.getRange();
+        this.initRangeAnimation = AdjustedCircleAnimation.createW(this.weaponRange, this.weaponRange, this.getWidth(), this.basicColorFactory.@GREEN);
+        final int sensorRange = this.weaponRange * UnitLayer.SENSOR_RANGE_MULTIPLIER;
+        this.initSensorRangeAnimation = AdjustedCircleAnimation.createW(sensorRange, sensorRange, this.getWidth(), this.basicColorFactory.@RED);
+        this.getUnitWaypointBehavior().initRange(this.weaponRange);
+        this.fireTimeHelper.@delay = (((int) weaponProperties.getReloadTime()));
+    }
+
+    @Override
+    public void processBuiltTick(final AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        if (!this.getHealthInterface().isAlive()) {
+            if (this.isReadyForExplosion()) {
+                final int currentFrame = this.destroyAnimationInterface.getFrame();
+                final int size = this.destroyAnimationInterface.getSize() - 1;
+                // this.logUtil.putF("Explosion - Processing: " + currentFrame + "==" + size, this, "processTick");
+                if (currentFrame == size) {
+                    // this.logUtil.putF("Explosion - End", this, "processTick");
+                    if (!this.getHealthInterface().isAlive()) {
+                        this.setDestroyed(true);
+                    }
+                } else {
+                    // show next frame in explosion
+                    this.destroyAnimationInterface.nextFrame();
+                }
+            } else {
+                // this.logUtil.putF("Explosion - Begin", this, "processTick");
+                this.setAnimationInterface(this.destroyAnimationInterface);
+                // this.getVehicleProperties().getVelocityProperties().zero();
+                SecondaryPlayerQueueFactory.getInstance().add(ExplosionBasicSound.getInstance());
+                this.shakeListener.onSmallShakeEvent();
+                this.vibration.vibrate(this.duration, 0, 0);
+                // this.delayMovementTimeHelper.setStartTime();
+                this.setReadyForExplosion(true);
+            }
+        } else {
+            super.processBuiltTick(allBinaryLayerManager);
+        }
+        this.captionAnimationHelper.tick();
+        this.getUnitWaypointBehavior().processTick(allBinaryLayerManager);
+    }
+
+    @Override
+    public void teleportTo(final GeographicMapCellPosition geographicMapCellPosition) {
+        final GPoint point = geographicMapCellPosition.getMidPoint();
+        this.setPosition(point.getX() - this.getHalfWidth(), point.getY() - this.getHalfHeight(), this.z);
+    }
+
+    @Override
+    public GeographicMapCellPosition getCurrentGeographicMapCellPosition() throws Exception {
+        final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) this.allBinaryGameLayerManagerP);
+        final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+        final GeographicMapCellPosition geographicMapCellPosition = geographicMapInterface.getCellPositionAtXY(this.x + this.getHalfWidth(), this.y + this.getHalfHeight());
+        //This should never happen remove when bug is found
+        final RaceTrackGeographicMap raceTrackGeographicMap = ((RaceTrackGeographicMap) geographicMapInterface);
+        if (!raceTrackGeographicMap.isValid(geographicMapCellPosition)) {
+            throw new Exception('Position is not really on the map: ' + geographicMapCellPosition);
+        }
+        return geographicMapCellPosition;
+    }
+
+    @Override
+    public void fire(final AllBinaryLayerManager layerManager, final GameKeyEvent gameKeyEvent) throws Exception {
+        //this.logUtil.putF("fireAll", this, "fire");
+        if (this.fireTimeHelper.isTimeTNT()) {
+            //this.logUtil.putF("fire", this, gameInputStrings.PROCESS_INPUT);
+            this.fireAll(layerManager);
+        } else {
+            this.reload();
+        }
+    }
+
+    @Override
+    public void left() throws Exception {
+        this.initResourceAnimation.previousRotation();
+        this.decalAnimation.previousRotation();
+        this.rotationAnimationInterfaceP.previousRotation();
+    }
+
+    @Override
+    public void right() throws Exception {
+        /*         if(this.isChase())         {             this.logUtil.putF("Turning while chasing", this, "right");         }         */
+        this.initResourceAnimation.nextRotation();
+        this.decalAnimation.nextRotation();
+        this.rotationAnimationInterfaceP.nextRotation();
+    }
+
+    @Override
+    public void down() {
+        final VelocityProperties velocityProperties = this.getVehicleProperties().getVelocityProperties();
+        if (!velocityProperties.isOverXYMaxForwardVelocity()) {
+            this.accelerate(this.decelerationBasicDecimal);
+        }
+    }
+
+    //accelerate
+    @Override
+    public void up() {
+        final VelocityProperties velocityProperties = this.getVehicleProperties().getVelocityProperties();
+        if (!velocityProperties.isOverXYMaxForwardVelocity()) {
+            this.accelerate(this.accelerationBasicDecimal);
+        }
+    }
+
+    @Override
+    public void initInputProcessors() {
+        this.inputProcessorArray[Canvas.RIGHT] = new SpecialRightGameInputProcessor(this);
+        this.inputProcessorArray[Canvas.LEFT] = new SpecialLeftGameInputProcessor(this);
+        this.inputProcessorArray[Canvas.KEY_NUM0] = new SpecialFireGameInputProcessor(this);
+        this.inputProcessorArray[Canvas.KEY_POUND] = this.inputProcessorArray[Canvas.KEY_NUM0];
+        this.inputProcessorArray[Canvas.DOWN] = new SpecialDownGameInputProcessor(this);
+        this.inputProcessorArray[Canvas.UP] = new SpecialUpGameInputProcessor(this);
+        super.initInputProcessors();
+    }
+
+    @Override
+    public void processInput(AllBinaryLayerManager layerManager) throws Exception {
+        final BasicArrayList list = this.getGameKeyEventList();
+        final int size = list.size();
+        for (int index = 0; index < size; index++) {
+            Object anyType = list.get(index);
+            int key = GameKeyEventUtil.getKey(anyType);
+            this.inputProcessorArray[key].processEvent(layerManager, GameKeyEvent.NONE);
+        }
+        list.clear();
+        this.groundFriction();
+        this.move();
+    }
+
+    public void accelerate(final BasicDecimal accelerate) {
+        this.getVehicleProperties().getVelocityProperties().addVelocityi(accelerate.getUnscaled(), ((int) this.rotationAnimationInterfaceP.getAngleInfoP().getAngle()), 90);
+    }
+
+    protected void fireAll(final AllBinaryLayerManager layerManager) throws Exception {
+        final AngleInfo angleInfo = this.rotationAnimationInterfaceP.getAngleInfoP();
+        final int angle = ((int) (angleInfo.getAngle() + this.slightAngle));
+        this.hashtable.put(SmallIntegerSingletonFactory.getInstance().getAt(1), SmallIntegerSingletonFactory.getInstance().getAt(((int) AngleFactory.getInstance().getAt(angle).getValue())));
+        final SalvoInterface salvoInterface = ((SalvoInterface) this.getPartInterfaceArray()[0]);
+        salvoInterface.process(layerManager, ((short) angle), ((short) 90));
+    }
+
+    @Override
+    public void downgrade() {
+        if (this.getLevel() > 1) {
+            super.downgrade();
+        }
+    }
+
+    @Override
+    public void upgrade() {
+        super.upgrade();
+        this.initRangeHack();
+    }
+
+    protected void groundFriction() {
+        final VehicleFrictionProperties vehicleFrictionProperties = this.getVehicleProperties().getVehicleFrictionProperties();
+        this.getVehicleProperties().getVehicleFrictionProperties().friction(this.getVehicleProperties().getVelocityProperties(), vehicleFrictionProperties.getTireFrictionNominator());
+    }
+
+    @Override
+    public void trackTo(final String reason) throws Exception {
+        final WaypointBehaviorBase waypointBehaviorBase = ((WaypointBehaviorBase) this.waypointBehaviorBase);
+        final GeographicMapCellPosition nextUnvisitedPathGeographicMapCellPosition = waypointBehaviorBase.getNextUnvisitedPathGeographicMapCellPosition();
+        final GPoint point = nextUnvisitedPathGeographicMapCellPosition.getMidPoint();
+        final int dx = (this.getXP() + this.getHalfWidth()) - point.getX();
+        final int dy = (this.getYP() + this.getHalfHeight()) - point.getY();
+        this.rtsLogHelper.trackTo(this, nextUnvisitedPathGeographicMapCellPosition, dx, dy, reason);
+        this.trackToDXY(dx, dy);
+    }
+
+    //private final NoDecimalTrigTable noDecimalTrigTable = NoDecimalTrigTable.getInstance();
+    @Override
+    public void trackToDXY(final int dx, final int dy) throws Exception {
+        //final int angleOfTarget = -90 - noDecimalTrigTable.antiTan(dx, dy);
+        final int angleOfTarget = 0;
+        this.trackToDXYTargetAngle(dx, dy, angleOfTarget);
+    }
+
+    private boolean turnTo(final int dx, final int dy, int targetAngle) throws Exception {
+        // int angleOfTarget = NoDecimalTrigTable.antiTan(dx, dy);
+        final WaypointBehaviorBase waypointBehaviorBase = ((WaypointBehaviorBase) this.waypointBehaviorBase);
+        final GeographicMapCellPosition nextUnvisitedPathGeographicMapCellPosition = waypointBehaviorBase.getNextUnvisitedPathGeographicMapCellPosition();
+        boolean evading = false;
+        // Run until out of sensor range
+        if (this.getUnitWaypointBehavior().getSensorAction() === SensorActionFactory.getInstance().@EVADE) {
+            this.rtsLogHelper.evade(this);
+            evading = true;
+            targetAngle += 180;
+        }
+        //final int angleOfTarget2 = AngleFactory.getInstance().getClosestDirection(angleOfTarget).getValue();
+        final AngleInfo angleInfo = this.rotationAnimationInterfaceP.getAngleInfoP();
+        final int angle = FrameUtil.getInstance().adjustAngleToFrameAngle(angleInfo.getAngle() - 270);
+        //if (this.getUnitWaypointBehavior().isWaypointListEmptyOrOnlyTargets())
+        this.rtsLogHelper.turnTo(this, dx, dy, angleInfo, angle, this.movementAngle, evading, targetAngle);
+        final GameKeyEventFactory gameKeyEventFactory = GameKeyEventFactory.getInstance();
+        //() || 
+        if (dx == 0 && dy == 0) {
+            this.rtsLogHelper.doneMoving(this);
+            return true;
+        } else if ((((int) this.movementAngle.getValue())) == angle) {
+            if (dx > 0 && this.movementAngle === this.angleFactory.@LEFT) {
+                this.rtsLogHelper.movingLeft(this);
+                return false;
+            }
+            if (dx < 0 && this.movementAngle === this.angleFactory.@RIGHT) {
+                this.rtsLogHelper.movingRight(this);
+                return false;
+            }
+            if (dy > 0 && this.movementAngle === this.angleFactory.@UP) {
+                this.rtsLogHelper.movingUp(this);
+                return false;
+            }
+            if (dy < 0 && this.movementAngle === this.angleFactory.@DOWN) {
+                this.rtsLogHelper.movingDown(this);
+                return false;
+            }
+            this.rtsLogHelper.currentMoveEnded(this);
+            if (this.movementAngle === this.angleFactory.@LEFT || this.movementAngle === this.angleFactory.@RIGHT) {
+                this.handleDeltalY(dx, dy);
+            } else if (this.movementAngle === this.angleFactory.@UP || this.movementAngle === this.angleFactory.@DOWN) {
+                this.handleDeltalX(dx, dy);
+            }
+            return true;
+        } else {
+            //this.slightAngle = angleOfTarget - angle;
+            if (nextUnvisitedPathGeographicMapCellPosition !== SimpleGeographicMapCellPositionFactory.NULL_GEOGRAPHIC_MAP_CELL_POSITION) {
+                if (this.steeringInsideGeographicMapCellPosition !== nextUnvisitedPathGeographicMapCellPosition) {
+                    if (Math.abs(dx) > Math.abs(dy) && dy != 0) {
+                        this.handleDeltalY(dx, dy);
+                    } else if (dx != 0) {
+                        this.handleDeltalX(dx, dy);
+                    } else {
+                        this.handleDeltalY(dx, dy);
+                    }
+                }
+                int deltaAngle2 = this.movementAngle.getValue() - angle;
+                if (deltaAngle2 > 0) {
+                    this.rtsLogHelper.rotateRight(this);
+                    this.getGameKeyEventList().add(gameKeyEventFactory.getInstanceForKey(this, Canvas.RIGHT));
+                } else {
+                    this.rtsLogHelper.rotateLeft(this);
+                    this.getGameKeyEventList().add(gameKeyEventFactory.getInstanceForKey(this, Canvas.LEFT));
+                }
+                return true;
+            } else {
+                this.rtsLogHelper.noRotation(this);
+            }
+            return false;
+        }
+    }
+
+    private void handleDeltalX(final int dx, final int dy) {
+        final WaypointBehaviorBase waypointBehaviorBase = ((WaypointBehaviorBase) this.waypointBehaviorBase);
+        final GeographicMapCellPosition nextUnvisitedPathGeographicMapCellPosition = waypointBehaviorBase.getNextUnvisitedPathGeographicMapCellPosition();
+        if (dx > 0) {
+            this.movementAngle = this.angleFactory.@LEFT;
+            this.steeringInsideGeographicMapCellPosition = nextUnvisitedPathGeographicMapCellPosition;
+        } else {
+            this.movementAngle = this.angleFactory.@RIGHT;
+            this.steeringInsideGeographicMapCellPosition = nextUnvisitedPathGeographicMapCellPosition;
+        }
+        this.rtsLogHelper.handle(this, this.movementAngle);
+    }
+
+    private void handleDeltalY(final int dx, final int dy) {
+        final WaypointBehaviorBase waypointBehaviorBase = ((WaypointBehaviorBase) this.waypointBehaviorBase);
+        final GeographicMapCellPosition nextUnvisitedPathGeographicMapCellPosition = waypointBehaviorBase.getNextUnvisitedPathGeographicMapCellPosition();
+        if (dy > 0) {
+            this.movementAngle = this.angleFactory.@UP;
+            this.steeringInsideGeographicMapCellPosition = nextUnvisitedPathGeographicMapCellPosition;
+        } else {
+            this.movementAngle = this.angleFactory.@DOWN;
+            this.steeringInsideGeographicMapCellPosition = nextUnvisitedPathGeographicMapCellPosition;
+        }
+        this.rtsLogHelper.handle(this, this.movementAngle);
+    }
+
+    private void trackToDXYTargetAngle(final int dx, final int dy, final int targetAngle) throws Exception {
+        //If colliding with a game object then don't try to turn since in chase mode
+        final BasicArrayList list = this.getUnitWaypointBehavior().getSteeringVisitorList();
+        if (list.size() > 0) {
+            //this.logUtil.putF("Chasing", this, "trackTo");
+            for (int index = list.size() - 1; index >= 0; index--) {
+                final SteeringVisitor steeringVisitor = ((SteeringVisitor) list.get(index));
+                final Object anyType = steeringVisitor.visit(this);
+                if (anyType == null) {
+                    list.removeAt(index);
+                }
+            }
+            this.fireOrMove();
+        } else if (!this.turnTo(dx, dy, targetAngle)) {
+            this.fireOrMove();
+        }
+    }
+
+    private static final String MOVE = 'Moving';
+
+    protected void fireOrMove() throws Exception {
+        //this.logUtil.putF("Move/Attack: " +  " trackingWaypoint: " + this.trackingWaypoint + " sensorAction: " + this.sensorAction + " currentTargetDistance >= longWeaponRange " + this.currentTargetDistance + ">=" + this.longWeaponRange , this, "trackTo");
+        final GameKeyEventFactory gameKeyEventFactory = GameKeyEventFactory.getInstance();
+        // Move if going to waypoint, evading, or towards target
+        if (this.getUnitWaypointBehavior().needToMove()) {
+            this.rtsLayer2LogHelper.steeringUp(this);
+            if (this.showMoreCaptionStates && !this.captionAnimationHelper.isShowing()) {
+                this.captionAnimationHelper.update(UnitLayer.MOVE, this.basicColorFactory.@GREEN);
+            }
+            this.getGameKeyEventList().add(gameKeyEventFactory.getInstanceForKey(this, Canvas.UP));
+        } else {
+            this.captionAnimationHelper.update(CommonPhoneStrings.getInstance().@FIRE, this.basicColorFactory.@RED);
+            // int anotherTargetDistance = DistanceUtil.getDistance(this, this.currentTargetLayerInterface);
+            this.rtsLayer2LogHelper.steeringFireOrStop(this);
+            // this.currentTargetDistance + ">=" + this.longWeaponRange, // this, "processTargeting");
+            this.allStop();
+            this.getGameKeyEventList().add(gameKeyEventFactory.getInstanceForKey(this, Canvas.KEY_NUM0));
+            TrackingEventHandler.getInstance().fireEvent(this.getTrackingEvent());
+        }
+    }
+
+    @Override
+    public void move() {
+        try {
+            final VelocityProperties velocityProperties = this.getVehicleProperties().getVelocityProperties();
+            final long velocityXScaled = ((long) velocityProperties.getVelocityXBasicDecimalP().getScaled());
+            final long velocityYScaled = ((long) velocityProperties.getVelocityYBasicDecimalP().getScaled());
+            this.getUnitWaypointBehavior().move();
+            if (velocityXScaled != 0L || velocityYScaled != 0L) {
+                this.getUnitWaypointBehavior().setMoving(true);
+                final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) this.allBinaryGameLayerManagerP);
+                final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+                this.layerPartialCellPositionsUtil.getAllDXY(geographicMapInterface, this, ((int) velocityXScaled), ((int) velocityYScaled), UnitLayer.getPartialpositionlist());
+                //is building in path
+                final GeographicMapCellPosition cellPosition = ((GeographicMapCellPosition) DropCellPositionHistory.getInstance().getCellPositionWithDrop(UnitLayer.getPartialpositionlist()));
+                if (cellPosition === this.cellPositionFactory.@NONE) {
+                    final AllBinaryTiledLayer tiledLayer = geographicMapInterface.getAllBinaryTiledLayer();
+                    final TiledLayerUtil tiledLayerUtil = TiledLayerUtil.getInstance();
+                    int x = this.x + ((int) velocityXScaled);
+                    int y = this.y + ((int) velocityYScaled);
+                    x = tiledLayerUtil.keepOnMapX(tiledLayer, x, this.getWidth());
+                    y = tiledLayerUtil.keepOnMapY(tiledLayer, y, this.getHeight());
+                    this.setPosition(x, y, this.z);
+                } else {
+                    final AllBinaryLayer allbinaryLayer = DropCellPositionHistory.getInstance().getLayerInterface(cellPosition);
+                    this.getUnitWaypointBehavior().setMovingFromStopped(false);
+                    this.getUnitWaypointBehavior().addBuildingChase(allbinaryLayer, cellPosition);
+                }
+            }
+            if (this.getUnitWaypointBehavior().isMoving()) {
+                // this.logUtil.putF("moving", this, "move");
+                TrackingEventHandler.getInstance().fireEvent(this.getTrackingEvent());
+            } else {
+                this.getUnitWaypointBehavior().setMovingFromStopped(false);
+            }
+            if (this.getUnitWaypointBehavior().isMovingFromStopped() && this.isVisible()) {
+                SecondaryPlayerQueueFactory.getInstance().add(this.moveSoundInterface);
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'move', e);
+        }
+    }
+
+    @Override
+    public void allStop() {
+        final VelocityProperties velocityProperties = this.getVehicleProperties().getVelocityProperties();
+        velocityProperties.getVelocityXBasicDecimalP().setint(0);
+        velocityProperties.getVelocityYBasicDecimalP().setint(0);
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        if (this.isVisible()) {
+            // this.getAnimationInterface().paint(graphics, viewX, viewY);
+            super.paint(graphics);
+            final ViewPositionBase viewPosition = this.getViewPosition();
+            int viewX = viewPosition.getX();
+            int viewY = viewPosition.getY();
+            this.decalAnimation.paintXY(graphics, viewX, viewY);
+            this.rangeAnimation.paintXY(graphics, viewX, viewY);
+            this.sensorRangeAnimation.paintXY(graphics, viewX, viewY);
+            this.damageFloatersPaintableInterface.paint(graphics);
+            this.healthBar.paint(graphics);
+            this.captionAnimationHelper.paintXY(graphics, viewX, viewY);
+            this.pathAnimation.paintXY(graphics, viewX, viewY);
+            this.resourceAnimation.paintXY(graphics, viewX, viewY);
+        }
+    }
+
+    @Override
+    public void onBuildingEvent(RTSLayerEvent event) throws Exception {
+        BuildingLayer buildingLayer = ((BuildingLayer) event.getRtsLayer());
+        this.getUnitWaypointBehavior().moveAwayFromBuilding(buildingLayer);
+    }
+
+    /**      * @return the vehicleProperties      */
+    public VehicleProperties getVehicleProperties() {
+        return this.vehicleProperties;
+    }
+
+    @Override
+    public void damage(final int damage, final int damageType) throws Exception {
+        super.damage(damage, damageType);
+        this.damageFloaters.add(damage);
+        if (damage > 0) {
+            this.getHealthInterface().damage(damage);
+        }
+    }
+
+    @Override
+    public int getDamage(final int damageType) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public void setDestroyed(final boolean destroyed) throws Exception {
+        this.logUtil.putF(this.commonStrings.@START, this, 'setDestroyed');
+        super.setDestroyed(destroyed);
+        if (this.isDestroyed()) {
+            WaypointEventHandlerFactory.getInstance(this.getGroupInterface()[0]).removeListener(this.getUnitWaypointBehavior());
+            TrackingEventHandler.getInstance().removeListener(this);
+            BuildingEventHandler.getInstance().removeListener(this);
+            if (!this.getHealthInterface().isAlive()) {
+                final int damage = this.getHealthInterface().getMaxHealth();
+                if (damage > 10) {
+                    SecondaryPlayerQueueFactory.getInstance().add(ExplosionBasicSound.getInstance());
+                    if (damage < 100) {
+                        this.shakeListener.onSmallShakeEvent();
+                        this.vibration.vibrate(this.duration, 0, 0);
+                    } else if (damage < 1000) {
+                        this.shakeListener.onMediumShakeEvent();
+                        this.vibration.vibrate(this.duration * 2, 0, 0);
+                    } else if (damage < 3000) {
+                        this.shakeListener.onLargeShakeEvent();
+                        this.vibration.vibrate(this.duration * 4, 0, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    /**      * @return the resource      */
+    public int getLoad() {
+        return this.resourceLoad;
+    }
+
+    public void clearResourceAnimation() throws Exception {
+        this.resourceAnimation = ((IndexedAnimation) NullIndexedAnimationFactory.getFactoryInstance().getInstance(0));
+    }
+
+    /**      * @param resource      *            the resource to set      */
+    @Override
+    public void setLoad(int resource) throws Exception {
+        if (resource > 0) {
+            this.resourceAnimation = this.initResourceAnimation;
+        } else {
+            //Drop load... I could have yet another animation showing the load being dropped
+            this.clearResourceAnimation();
+        }
+        this.resourceLoad = resource;
+    }
+
+    /**      * @param resource      *            the resource add      */
+    public void addLoad(int resource) {
+        this.resourceLoad += resource;
+    }
+
+    private final CapitalEvent CAPITAL_EVENT = new CapitalEvent(this);
+
+    @Override
+    public void handleCost(PathFindingLayerInterface ownerLayer) throws Exception {
+        if (this.getLoad() > 0) {
+            //Add Capital
+            this.CAPITAL_EVENT.setValue(this.getLoad());
+            CapitalEventHandlerFactory.getInstance(ownerLayer.getGroupInterface()[0]).fireEvent(this.CAPITAL_EVENT);
+            this.setLoad(0);
+        }
+    }
+
+    @Override
+    public SelectionHudPaintable createHudPaintable() {
+        final RTSLayerHudPaintable rtsLayerHudPaintable = RTSLayerHudPaintable.getInstance();
+        rtsLayerHudPaintable.setBasicColorP(this.allBinaryGameLayerManagerP.getForegroundBasicColor());
+        rtsLayerHudPaintable.setRtsLayer(this);
+        return rtsLayerHudPaintable;
+    }
+
+    @Override
+    public SelectionHudPaintable getHudPaintable() {
+        final RTSLayerHudPaintable rtsLayerHudPaintable = RTSLayerHudPaintable.getInstance();
+        return rtsLayerHudPaintable;
+    }
+
+    @Override
+    public int getType() {
+        return 1;
+    }
+
+    public static int getStaticType() {
+        return 1;
+    }
+
+    protected UnitWaypointBehavior getUnitWaypointBehavior() {
+        return ((UnitWaypointBehavior) this.getWaypointBehavior());
+    }
+
+    @Override
+    public TrackingEvent getTrackingEvent() {
+        return this.trackingEvent;
+    }
+
+    @Override
+    public CaptionAnimationHelperBase getCaptionAnimationHelper() {
+        return this.captionAnimationHelper;
+    }
+
+    @Override
+    public boolean isSelfUpgradeable() {
+        return false;
+    }
+
+    public short getMaxResourceLoad() {
+        return this.maxResourceLoad;
+    }
+
+    public static BasicArrayList getPartialpositionlist() {
+        return UnitLayer.partialPositionList;
+    }
+
+}
+
+

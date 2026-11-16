@@ -1,0 +1,42 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation;
+
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.media.ScaleProperties;
+
+@groovy.transform.CompileStatic
+public class VectorAnimationInterfaceFactory implements AnimationInterfaceFactoryInterface {
+    private int[][][] currentPoints;
+
+    private BasicColor basicColor = BasicColorFactory.getInstance().@WHITE;
+
+    protected final AnimationBehaviorFactory animationBehaviorFactory;
+
+    public VectorAnimationInterfaceFactory(final int[][][] currentPoints, final BasicColor basicColor, final AnimationBehaviorFactory animationBehaviorFactory) {
+        this.currentPoints = currentPoints;
+        this.setBasicColorP(basicColor);
+        this.animationBehaviorFactory = animationBehaviorFactory;
+    }
+
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        return new VectorAnimation(this.currentPoints, this.getBasicColorP(), this.animationBehaviorFactory.getOrCreateInstance());
+    }
+
+    protected void setBasicColorP(BasicColor basicColor) {
+        this.basicColor = basicColor;
+    }
+
+    protected BasicColor getBasicColorP() {
+        return this.basicColor;
+    }
+
+    @Override
+    public void setInitialScale(final ScaleProperties scaleProperties) {
+    }
+
+}
+
+

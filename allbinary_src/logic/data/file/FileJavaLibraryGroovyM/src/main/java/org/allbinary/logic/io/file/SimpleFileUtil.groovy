@@ -1,0 +1,115 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2025 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.io.file;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.NullOutputStream;
+import org.allbinary.logic.io.NullReader;
+import org.allbinary.logic.io.NullWriter;
+import org.allbinary.logic.io.StreamUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class SimpleFileUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final SimpleFileUtil instance = new SimpleFileUtil();
+
+    /**      * @return the instance      */
+    public static SimpleFileUtil getInstance() {
+        return SimpleFileUtil.instance;
+    }
+
+    public static OutputStream nullOutputStream() {
+        return NullOutputStream.NULL_OUTPUT_STREAM;
+    }
+
+    public static Writer nullWriter() {
+        return NullWriter.NULL_WRITER;
+    }
+
+    public static Reader nullReader() {
+        return NullReader.NULL_READER;
+    }
+
+    public final Writer NULL_WRITER = SimpleFileUtil.nullWriter();
+
+    public final Reader NULL_READER = SimpleFileUtil.nullReader();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final NullUtil nullUtil = NullUtil.getInstance();
+
+    private final StreamUtil streamUtil = StreamUtil.getInstance();
+
+    public BasicArrayList loadFileAsList(final InputStream inputStream, final int max, final byte[] byteArray1) {
+        return this.loadFileAsListReturnLine(inputStream, max, byteArray1, 0);
+    }
+
+    public BasicArrayList loadFileAsListReturnLine(final InputStream inputStream, final int max, final byte[] byteArray1, final int includeReturnLine) {
+        final BasicArrayList stringList = new BasicArrayListD();
+        if (inputStream == null) {
+            return stringList;
+        }
+        byte[] byteArray = this.nullUtil.@NULL_BYTE_ARRAY;
+        try {
+            final ByteArrayOutputStream outputStream2 = new ByteArrayOutputStream(max);
+            byteArray = this.streamUtil.getByteArray(inputStream, outputStream2, byteArray1);
+            this.streamUtil.close(inputStream);
+        } catch (Exception e) {
+            this.streamUtil.close(inputStream);
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@ADD, e);
+        }
+        if (byteArray == null) {
+            return stringList;
+        }
+        //final CommonSeps commonSeps = CommonSeps.getInstance();
+        final int size = byteArray.length;
+        //this.logUtil.putF("size: " + size, this, this.commonStrings.PROCESS);
+        int index = 0;
+        int startIndex;
+        int returnLine = 0;
+        while (index < size) {
+            //this.logUtil.putF("index" + index, this, this.commonStrings.PROCESS);
+            startIndex = index;
+            while (index < size - 1 && byteArray[index] != ((byte) ('\n' as char))) {
+                index++;
+            }
+            if (includeReturnLine == 0) {
+                if (index > 0 && byteArray[index - 1] == ((byte) ('\r' as char))) {
+                    returnLine = 1;
+                } else {
+                    returnLine = 0;
+                }
+            }
+            final String s = new String(byteArray, startIndex, (index + includeReturnLine - returnLine - startIndex));
+            stringList.add(s);
+            //stringMaker.append(s).append(commonSeps.NEW_LINE);
+            index++;
+        }
+        //this.logUtil.putF("s: " + stringMaker.toString(), this, this.commonStrings.PROCESS);
+        return stringList;
+    }
+
+    public String createStringFromArrayOfStrings(final String[] stringArray) {
+        final StringMaker stringMaker = new StringMaker();
+        final int size = stringArray.length;
+        for (int index = 0; index < size; index++) {
+            stringMaker.append(stringArray[index]);
+        }
+        return stringMaker.toString();
+    }
+
+}
+
+

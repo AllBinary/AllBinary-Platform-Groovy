@@ -1,0 +1,129 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.motion.gesture.observer;
+
+import org.allbinary.input.motion.gesture.MotionGestureInput;
+import org.allbinary.input.motion.gesture.TouchMotionGestureFactory;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+/**  * This MotionGestureEventListener creates a list of gestures from press   * to release and then sends the list as a complete gesture.  *    * @author user  *  */
+@groovy.transform.CompileStatic
+public class ReleaseControlledMotionGestureListener implements MotionGestureEventListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private MotionGestureInput currentMotionGesture = TouchMotionGestureFactory.getInstance().@NO_MOTION;
+
+    private boolean isMouseGestureOccurring = false;
+
+    private BasicArrayList motionGestureCollection = new BasicArrayListD();
+
+    private CompleteMotionGestureListenerInterface signed;
+
+    public ReleaseControlledMotionGestureListener(CompleteMotionGestureListenerInterface signed) {
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        this.signed = signed;
+    }
+
+    @Override
+    public void onEvent(AllBinaryEventObject eventObject) {
+        ForcedLogUtil.log(this.commonStrings.@NOT_IMPLEMENTED, this);
+    }
+
+    @Override
+    public void onUpMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onDownMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onLeftMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onRightMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onDiagonalDownRightMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onDiagonalDownLeftMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onDiagonalUpRightMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onDiagonalUpLeftMotionGestureEvent(MotionGestureEvent ev) {
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onPressedMotionGestureEvent(MotionGestureEvent ev) {
+        this.isMouseGestureOccurring = true;
+        this.currentMotionGesture = TouchMotionGestureFactory.getInstance().@NO_MOTION;
+        this.onMotionGestureEvent(ev);
+    }
+
+    @Override
+    public void onScrolledMotionGestureEvent(MotionGestureEvent motionGestureEvent) {
+    }
+
+    @Override
+    public void released(MotionGestureEvent ev) {
+        try {
+            if (this.isMouseGestureOccurring == false) {
+                return;
+            }
+            this.isMouseGestureOccurring = false;
+            //this.logUtil.putF(this.commonStrings.START_LABEL).append(ev.getMotionGesture(), this, "release");
+            this.signed.onMotionGestureCompleted(this.motionGestureCollection);
+            //TWB - Although this could be dangerous
+            this.motionGestureCollection.clear();
+        } catch (Exception e) {
+            this.logUtil.put(new StringMaker().append(this.commonStrings.@EXCEPTION_LABEL).append(StringUtil.getInstance().toString(ev.getMotionGesture())).toString(), this, 'release', e);
+        }
+    }
+
+    @Override
+    public void onMotionGestureEvent(MotionGestureEvent ev) {
+        //currentMotionGesture == TouchMotionGestureFactory.getInstance().NO_MOTION &&
+        if (this.isMouseGestureOccurring == false) {
+            return;
+        }
+        MotionGestureInput motionGestureInput = ev.getMotionGesture();
+        if (motionGestureInput === TouchMotionGestureFactory.getInstance().@PRESSED) {
+            this.onPressedMotionGestureEvent(ev);
+        } else if (motionGestureInput === TouchMotionGestureFactory.getInstance().@RELEASED) {
+            this.released(ev);
+        } else {
+            if (this.currentMotionGesture !== motionGestureInput) {
+                this.currentMotionGesture = motionGestureInput;
+                this.motionGestureCollection.add(ev.getMotionGesture());
+            }
+        }
+    }
+
+}
+
+

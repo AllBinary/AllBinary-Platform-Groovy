@@ -1,0 +1,49 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.displayable.canvas;
+
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.NullCanvas;
+import org.allbinary.game.input.PlayerGameInput;
+import org.allbinary.graphics.displayable.MyCanvas;
+import org.allbinary.input.motion.gesture.observer.BaseMotionGestureEventListener;
+import org.allbinary.input.motion.gesture.observer.MotionGestureEvent;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class BasicMenuInputProcessor extends PlayerGameInput implements BaseMotionGestureEventListener {
+    public final BasicArrayList motionGestureEventList = new BasicArrayListD();
+
+    private Canvas canvas = NullCanvas.NULL_CANVAS;
+
+    protected BasicMenuInputProcessor(BasicArrayList gameKeyEventList, int playerInputId, Canvas gameCanvas) {
+        super(gameKeyEventList, new BasicArrayListD(), playerInputId);
+        this.canvas = gameCanvas;
+    }
+
+    @Override
+    public void onMotionGestureEvent(MotionGestureEvent motionGestureEvent) {
+        //.append(" point: ").append(motionGestureEvent.getCurrentPoint()).toString());
+        this.motionGestureEventList.add(motionGestureEvent);
+    }
+
+    @Override
+    public void onScrolledMotionGestureEvent(MotionGestureEvent motionGestureEvent) {
+    }
+
+    private void setCanvas(MyCanvas canvas) {
+        this.canvas = canvas;
+    }
+
+    protected MyCanvas getCanvas() {
+        return ((MyCanvas) this.canvas);
+    }
+
+    public int processInputList() throws Exception {
+        return -1;
+    }
+
+}
+
+

@@ -1,0 +1,26 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.media;
+
+import javax.imageio.ImageIO;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class MediaIOUtil {
+    private static final MediaIOUtil instance = new MediaIOUtil();
+
+    /**      * @return the instance      */
+    public static MediaIOUtil getInstance() {
+        return MediaIOUtil.instance;
+    }
+
+    public String[] getReaderFormatNames() {
+        return ImageIO.getReaderFormatNames();
+    }
+
+    public String[] getWriterFormatNames() {
+        return ImageIO.getWriterFormatNames();
+    }
+
+}
+
+

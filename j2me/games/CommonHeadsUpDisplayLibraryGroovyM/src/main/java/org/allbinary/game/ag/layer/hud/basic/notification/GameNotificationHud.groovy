@@ -1,0 +1,56 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.layer.hud.basic.notification;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.game.graphics.hud.BasicHud;
+import org.allbinary.game.graphics.hud.BasicHudFactory;
+import org.allbinary.game.layer.hud.event.GameNotificationEvent;
+import org.allbinary.game.layer.hud.event.GameNotificationListenerInterface;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.logic.util.event.EventStrings;
+
+@groovy.transform.CompileStatic
+public class GameNotificationHud extends BasicHud implements GameNotificationListenerInterface {
+    public static final GameNotificationHud NULL_GAME_NOTIFICATION = new GameNotificationHud(BasicHudFactory.getInstance().@TOPCENTER, BasicHudFactory.getInstance().@HORIZONTAL, 0, BasicColorFactory.getInstance().@RED);
+
+    public GameNotificationHud(final int location, final int direction, final int bufferZone, final BasicColor basicColor) {
+        super(location, direction, bufferZone, basicColor);
+    }
+
+    @Override
+    public void onEvent(final AllBinaryEventObject eventObject) {
+        ForcedLogUtil.log(EventStrings.getInstance().@PERFORMANCE_MESSAGE, this);
+    }
+
+    private final String METHOD_NAME = 'onGameNotificationEvent';
+
+    private GameNotificationEvent lastGameNotificationEvent = GameNotification.NULL_GAME_NOTIFICATION_EVENT;
+
+    @Override
+    public void onGameNotificationEvent(final GameNotificationEvent gameNotificationEvent) throws Exception {
+        if (this.lastGameNotificationEvent !== gameNotificationEvent) {
+            this.lastGameNotificationEvent = gameNotificationEvent;
+            this.logUtil.putF(gameNotificationEvent.getString(), this, this.METHOD_NAME);
+        }
+        this.add(gameNotificationEvent.getString(), gameNotificationEvent.getSeconds(), gameNotificationEvent.getBasicColorP(), gameNotificationEvent.getPermanent());
+    }
+
+    protected void add(final String string, final Integer seconds, final BasicColor basicColor, final Boolean permanent) {
+    }
+
+    public void processTick() throws Exception {
+    }
+
+    public void paint(final Graphics graphics) {
+    }
+
+    public void clear() {
+    }
+
+}
+
+

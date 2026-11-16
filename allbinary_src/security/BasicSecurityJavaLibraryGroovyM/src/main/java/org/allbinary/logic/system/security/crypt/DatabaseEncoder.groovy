@@ -1,0 +1,65 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.crypt;
+
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.tokens.Tokenizer;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class DatabaseEncoder {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private DatabaseEncoder() {
+    }
+
+    public static String encode(byte[] value) {
+        try {
+            byte[] array = value;
+            final StringMaker stringBuffer = new StringMaker();
+            for (int index = 0; index < array.length; index++) {
+                stringBuffer.append(new Byte(array[index]).toString());
+                if (index < array.length - 1) {
+                    stringBuffer.append(CommonSeps.getInstance().@SPACE);
+                }
+            }
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            //{
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            PreLogUtil.putOE(commonStrings.@EXCEPTION, 'DatabaseEncoder', 'decode', e);
+            //}
+            return StringUtil.getInstance().@EMPTY_STRING;
+        }
+    }
+
+    public static byte[] decode(String value) {
+        try {
+            final Tokenizer tokenizer = new Tokenizer(CommonSeps.getInstance().@SPACE);
+            final BasicArrayList vector = tokenizer.getTokensFromString(value, new BasicArrayListD());
+            final int size = vector.size();
+            //Each token is parsed straight into the array so no Byte objects are needed
+            final byte[] decode = new byte[size];
+            String byteOfData;
+            for (int index = 0; index < size; index++) {
+                byteOfData = ((String) vector.@objectArray[index]);
+                decode[index] = Byte.parseByte(byteOfData);
+            }
+            return decode;
+        } catch (Exception e) {
+            //{
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            PreLogUtil.putSE(commonStrings.@EXCEPTION, 'DatabaseEncoder', 'decode', e);
+            //}
+            return NullUtil.getInstance().@NULL_BYTE_ARRAY;
+        }
+    }
+
+}
+
+

@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.allbinary</groupId>
+  <artifactId>AdvancedCombatGameJavaLibraryPOMGroovy</artifactId>
+  <packaging>pom</packaging>
+  <!-- AllBinary Platform Version Start -->
+  <version>1.0.0-SNAPSHOT</version>
+  <!-- AllBinary Platform Version End -->
+
+  <name>AdvancedCombatGameJavaLibraryPOMGroovy</name>
+  <url>http://www.allbinary.com/</url>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>AllBinary Snapshots Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>AllBinary Releases Nexus</name>
+            <url>https://nexus-allbinary.rhcloud.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <buildLabel>${project.version}</buildLabel>
+        <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
+    </properties>
+
+    <modules>
+
+        <!--
+
+        -->
+
+        <!-- Should be in OtherGraphicsMediaLibrary but android dependencies ar not available then 
+        <module>../workinggroovy/media/graphics/animation/image/ImageAndroidJavaLibraryGroovyM</module>
+        -->
+        <!--
+        <module>../workinggroovy/media/graphics/animation/image/ImageHTMLJavaLibraryGroovyM</module>
+        <module>../workinggroovy/media/graphics/animation/image/ImageHTMLJavaLibraryM_1_1</module>
+        -->
+
+        <!--
+        HTML logging should be in the AllBinaryPOM, but they depend on playn
+        which depends on midp that depends on some of the AllBinary Platform
+        <module>../workinggroovy/allbinary_src/LogPlayNJavaLibraryGroovyM</module>
+        <module>../workinggroovy/logging/LoggingHTMLAllGroovyM</module>
+        <module>../workinggroovy/logging/LoggingHTMLExceptionGroovyM</module>
+        -->
+
+        <!--
+        <module>../../../graphics/opengl/OpenGLESJavaLibraryGroovyM</module>
+        -->
+        <module>../../../graphics/opengl/OpenGLJOGLJavaLibraryGroovyM</module>
+        <module>../../../graphics/opengl/OpenGLESBaseJavaLibraryGroovyM</module>
+
+        <!-- Not used in Platform Libraries -->
+        <module>../licensing/LicensingJavaLibraryGroovyP</module>
+        <module>../../../allbinary_src/allbinary_src_generic_event_srcGroovyM</module>
+        <!--
+        -->
+
+        <module>../../android/AllBinaryAndroidLibraryGroovyP</module>
+        <!-- Not used in Platform Libraries -->
+        <!--
+        <module>../../ProgressAndroidJavaLibraryGroovyM</module>
+        <module>../../media/graphics/animation/image/AllBinaryAndroidImageRotationJavaLibraryGroovyM</module>
+        -->
+
+        <module>../CommonPickupJavaLibraryGroovyM</module>
+        <module>../../../physics/FrictionJavaLibraryGroovyM</module>
+
+        <module>../Resources/images/GameImageLowResourcesJavaLibraryGroovyM</module>
+        <module>../Resources/images/GameImageMediumResourcesJavaLibraryGroovyM</module>
+
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
+

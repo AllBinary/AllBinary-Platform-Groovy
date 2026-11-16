@@ -1,0 +1,70 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.CircularIndexUtil;
+import org.allbinary.game.layer.geographic.map.LayerCoveringCellPositionsUtil;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.CellPositionsUtil;
+import org.allbinary.media.graphics.geography.map.GeographicMapCellPosition;
+import org.allbinary.util.BasicArrayListS;
+import org.allbinary.util.BasicArrayListUtil;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class GeographicMapCellPositionArea extends GeographicMapCellPositionAreaBase {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private final CellPositionsUtil cellPositionsUtil = CellPositionsUtil.getInstance();
+
+    private final LayerCoveringCellPositionsUtil layerCoveringCellPositionsUtil = LayerCoveringCellPositionsUtil.getInstance();
+
+    private final BasicArrayList reusableOccupyingGeographicMapCellPositionList = new BasicArrayListS(4);
+
+    private final BasicArrayList reusableSurroundingGeographicMapCellPositionList = new BasicArrayListS(12);
+
+    private final CircularIndexUtil surroundingCircularIndexUtil = CircularIndexUtil.createInstance(0);
+
+    private final AllBinaryLayer layerInterface;
+
+    private BasicArrayList LIST = BasicArrayListUtil.getInstance().getImmutableInstance();
+
+    private BasicArrayList occupyingGeographicMapCellPositionList = this.LIST;
+
+    private BasicArrayList surroundingGeographicMapCellPositionList = this.LIST;
+
+    public GeographicMapCellPositionArea(final AllBinaryLayer layerInterface) throws Exception {
+        this.layerInterface = layerInterface;
+    }
+
+    @Override
+    public void update(final BasicGeographicMap geographicMapInterface) throws Exception {
+        //this.logUtil.putF(new StringMaker().append(layerInterface.getName()).append(" c: ").append(((PathFindingLayerInterface) layerInterface).getCurrentGeographicMapCellPosition()).append(CommonSeps.getInstance().SPACE).append(((PathFindingLayerInterface) layerInterface).getTopLeftGeographicMapCellPosition()).append(" topLeftGeographicMapCellPosition: ").append(topLeftGeographicMapCellPosition).toString(), this, "visit");
+        this.occupyingGeographicMapCellPositionList = this.layerCoveringCellPositionsUtil.getAllXY(geographicMapInterface, this.layerInterface, this.layerInterface.getXP(), this.layerInterface.getYP(), this.reusableOccupyingGeographicMapCellPositionList);
+        this.surroundingGeographicMapCellPositionList = this.cellPositionsUtil.getAllSurrounding(geographicMapInterface, this.occupyingGeographicMapCellPositionList, this.reusableSurroundingGeographicMapCellPositionList);
+        this.surroundingCircularIndexUtil.setSize(this.surroundingGeographicMapCellPositionList.size());
+    }
+
+    /**      * @return the occupyingGeographicMapCellPositionList      */
+    @Override
+    public BasicArrayList getOccupyingGeographicMapCellPositionList() {
+        return this.occupyingGeographicMapCellPositionList;
+    }
+
+    /**      * @return the surroundingGeographicMapCellPositionList      */
+    @Override
+    public BasicArrayList getSurroundingGeographicMapCellPositionList() {
+        return this.surroundingGeographicMapCellPositionList;
+    }
+
+    @Override
+    public GeographicMapCellPosition getNextSurroundingGeographicMapCellPosition() {
+        final GeographicMapCellPosition geographicMapCellPosition = ((GeographicMapCellPosition) this.surroundingGeographicMapCellPositionList.get(this.surroundingCircularIndexUtil.getIndex()));
+        this.surroundingCircularIndexUtil.next();
+        return geographicMapCellPosition;
+    }
+
+}
+
+

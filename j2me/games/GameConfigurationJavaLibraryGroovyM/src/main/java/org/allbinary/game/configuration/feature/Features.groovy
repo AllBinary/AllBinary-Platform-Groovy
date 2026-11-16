@@ -1,0 +1,127 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.configuration.feature;
+
+import org.allbinary.game.configuration.event.GameFeatureEvent;
+import org.allbinary.game.configuration.event.GameFeatureEventHandler;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.system.os.GenericOperatingSystem;
+import org.allbinary.logic.system.os.OperatingSystemFactory;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class Features {
+    private static Object SINGLETON = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static Features getInstance() {
+        if (Features.SINGLETON === NullUtil.getInstance().@NULL_OBJECT) {
+            Features.SINGLETON = new Features();
+        }
+        return ((Features) Features.SINGLETON);
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final BasicArrayList list;
+
+    private final BasicArrayList defaultList;
+
+    private Features() {
+        this.list = new BasicArrayListD();
+        this.defaultList = new BasicArrayListD();
+        this.init();
+    }
+
+    //For default or reload required features
+    public void addDefault(final Feature gameFeature) throws Exception {
+        //      commonStrings.START_LABEL).append(gameFeature.toString(), //    "GameFeature", "addDefault");
+        this.add(gameFeature);
+        if (!this.defaultList.contains(gameFeature)) {
+            this.defaultList.add(gameFeature);
+        }
+    }
+
+    public void add(final Feature gameFeature) throws Exception {
+        if (!this.list.contains(gameFeature)) {
+            //            }
+            this.logUtil.putF(new StringMaker().append(CommonLabels.getInstance().@START_LABEL).append(gameFeature.toString()).toString(), this, this.commonStrings.@ADD);
+            this.list.add(gameFeature);
+            GameFeatureEventHandler.getInstance().fireEvent(new GameFeatureEvent(gameFeature, gameFeature.toString()));
+        }
+    }
+
+    //For default or reload required features
+    public void removeDefault(final Feature gameFeature) throws Exception {
+        this.logUtil.putF(new StringMaker().append(CommonLabels.getInstance().@START_LABEL).append(gameFeature.toString()).toString(), this, 'removeDefault');
+        this.remove(gameFeature);
+        this.defaultList.remove(gameFeature);
+    }
+
+    public void remove(final Feature gameFeature) throws Exception {
+        if (this.list.contains(gameFeature)) {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@REMOVE);
+            this.list.remove(gameFeature);
+            GameFeatureEventHandler.getInstance().fireEvent(new GameFeatureEvent(gameFeature, gameFeature.toString()));
+        }
+    }
+
+    private void init() {
+        try {
+            final GameFeatureFactory gameFeatureFactory = GameFeatureFactory.getInstance();
+            final InputFeatureFactory inputFeatureFactory = InputFeatureFactory.getInstance();
+            final SensorFeatureFactory sensorFeatureFactory = SensorFeatureFactory.getInstance();
+            final TouchFeatureFactory touchFeatureFactory = TouchFeatureFactory.getInstance();
+            this.addDefault(gameFeatureFactory.@ARTIFICIAL_INTELLEGENCE_PROCESSOR);
+            this.addDefault(gameFeatureFactory.@COLLIDABLE_INTERFACE_LAYER_PROCESSOR);
+            this.addDefault(gameFeatureFactory.@GAME_INPUT_LAYER_PROCESSOR);
+            this.addDefault(gameFeatureFactory.@TICKABLE_LAYER_PROCESSOR);
+            this.addDefault(inputFeatureFactory.@MULTI_KEY_PRESS);
+            this.addDefault(inputFeatureFactory.@REMOVE_DUPLICATE_KEY_PRESSES);
+            this.addDefault(gameFeatureFactory.@SCREEN_SHAKE);
+            this.addDefault(gameFeatureFactory.@POST_IMAGE_LOADING_MODIFICATION);
+            final GenericOperatingSystem operatingSystemInterface = OperatingSystemFactory.getInstance().getOperatingSystemInstance();
+            if (operatingSystemInterface.isOverScan()) {
+                this.addDefault(sensorFeatureFactory.@NO_ORIENTATION);
+                this.addDefault(touchFeatureFactory.@HIDE_SCREEN_BUTTONS);
+            } else {
+                this.addDefault(sensorFeatureFactory.@ORIENTATION_SENSORS);
+                this.addDefault(touchFeatureFactory.@AUTO_HIDE_SHOW_SCREEN_BUTTONS);
+            }
+            // defaultVector.addAll(vector);
+            this.addDefault(touchFeatureFactory.@TOUCH_ENABLED);
+            this.addDefault(MainFeatureFactory.getInstance().@FULL_SCREEN);
+            //this.addDefault(MainFeatureFactory.getInstance().LOAD_ALL);
+            this.addDefault(MainFeatureFactory.getInstance().@LOAD_ONDEMAND);
+        } catch (Exception e) {
+            PreLogUtil.putOE(this.commonStrings.@EXCEPTION, this, this.commonStrings.@INIT, e);
+        }
+    }
+
+    //For default or reload required features
+    public boolean isDefault(final Feature gameFeature) {
+        return this.defaultList.contains(gameFeature);
+    }
+
+    public boolean isFeature(final Feature gameFeature) {
+        return this.list.contains(gameFeature);
+    }
+
+    public void toggle(final Feature gameFeature) throws Exception {
+        if (this.isFeature(gameFeature)) {
+            this.remove(gameFeature);
+        } else {
+            this.add(gameFeature);
+        }
+    }
+
+}
+
+

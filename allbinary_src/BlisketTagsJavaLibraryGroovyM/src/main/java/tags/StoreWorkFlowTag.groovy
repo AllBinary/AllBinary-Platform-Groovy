@@ -1,0 +1,70 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package tags;
+
+import java.lang.reflect.Method;
+import javax.servlet.jsp.JspTagException;
+import org.allbinary.logic.communication.http.request.AbResponseHandler;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.system.security.licensing.LicensingException;
+import org.allbinary.logic.visual.transform.info.TransformInfoData;
+import taghelpers.StoreTagWorkFlowHelperFactory;
+
+//and hidden field removal
+@groovy.transform.CompileStatic
+public class StoreWorkFlowTag extends HelperTag {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private String viewName;
+
+    private String viewFile;
+
+    public StoreWorkFlowTag() {
+        super(new StoreTagWorkFlowHelperFactory());
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@JSPTAG)) {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        }
+    }
+
+    public void setName(String value) {
+        this.viewName = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@NAME, this.viewName);
+    }
+
+    /*    public void setObjectFile(String value)    {       this.viewFile = value;       this.getPropertiesHashMap().put(TransformInfoData.OBJECTFILENAME, this.viewFile);    }    */
+    private int process() throws Exception {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@JSPTAG)) {
+                this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@PROCESS);
+            }
+            Class helperClass = this.getHelper().getClass();
+            Method method = helperClass.getMethod(commonStrings.@PROCESS, null);
+            Integer result = ((Integer) method.invoke(this.getHelper(), null));
+            return result.intValue();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLTAGSERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@PROCESS, e);
+            }
+            throw e;
+        }
+    }
+
+    public int doStartTag() throws JspTagException {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@JSPTAG)) {
+                this.logUtil.putF(this.commonStrings.@START, this, tagStrings.@DO_START_TAG);
+            }
+            this.setHelper();
+            return this.process();
+        } catch (LicensingException e) {
+            AbResponseHandler.sendJspTagLicensingRedirect(this.pageContext, e);
+            return SKIP_BODY;
+        } catch (Exception e) {
+            AbResponseHandler.sendJspTagRedirect(this.pageContext, e);
+            return SKIP_BODY;
+        }
+    }
+
+}
+
+

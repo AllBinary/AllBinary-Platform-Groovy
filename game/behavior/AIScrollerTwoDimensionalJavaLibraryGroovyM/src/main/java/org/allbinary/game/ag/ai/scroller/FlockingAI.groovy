@@ -1,0 +1,77 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.ai.scroller;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.game.ai.BasicAI;
+import org.allbinary.game.identification.BasicGroupFactory;
+import org.allbinary.game.input.GameInput;
+import org.allbinary.game.layer.identification.GroupLayerManagerListener;
+import org.allbinary.game.layer.weapon.WeaponLayer;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.logic.math.MathUtil;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+
+@groovy.transform.CompileStatic
+public class FlockingAI extends BasicAI {
+    private final int allowedDistance;
+
+    public FlockingAI(final ABHashtable<Object, Object> hashtable, final AllBinaryLayer ownerLayerInterface, final GameInput gameInput) throws Exception {
+        super(ownerLayerInterface, gameInput);
+        final Integer allowedDistance = ((Integer) hashtable.get(BasePatrolAI.MAX_DISTANCE));
+        this.allowedDistance = allowedDistance.intValue();
+    }
+
+    @Override
+    public void processAI(final AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        int maxDistance = 0;
+        AllBinaryLayer farAllbinaryLayer = AllBinaryLayer.NULL_ALLBINARY_LAYER;
+        final GroupLayerManagerListener groupLayerManagerListener = GroupLayerManagerListener.getInstance();
+        final BasicArrayList list = groupLayerManagerListener.getList(BasicGroupFactory.getInstance().@ENEMY);
+        final int size = list.size();
+        AllBinaryLayer allBinaryLayer;
+        AllBinaryLayer ownerLayerInterface;
+        for (int index = 0; index < size; index++) {
+            allBinaryLayer = ((AllBinaryLayer) list.get(index));
+            if (allBinaryLayer.getType() != WeaponLayer.getStaticType()) {
+                int distance = this.getXYDistance(allBinaryLayer);
+                if (distance > maxDistance) {
+                    maxDistance = distance;
+                    farAllbinaryLayer = allBinaryLayer;
+                    if (distance > this.allowedDistance) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (maxDistance > this.allowedDistance) {
+            // Go towards flock
+            if (farAllbinaryLayer !== AllBinaryLayer.NULL_ALLBINARY_LAYER) {
+                ownerLayerInterface = this.getOwnerLayerInterface();
+                if (farAllbinaryLayer.getXP() < ownerLayerInterface.getXP()) {
+                    this.processKeyAI(Canvas.LEFT);
+                } else if (farAllbinaryLayer.getXP() > ownerLayerInterface.getXP()) {
+                    this.processKeyAI(Canvas.RIGHT);
+                } else if (farAllbinaryLayer.getYP() > ownerLayerInterface.getYP()) {
+                    this.processKeyAI(Canvas.UP);
+                } else if (farAllbinaryLayer.getYP() < ownerLayerInterface.getYP()) {
+                    this.processKeyAI(Canvas.DOWN);
+                }
+            }
+        }
+    }
+
+    private int getXYDistance(final AllBinaryLayer allBinaryLayer) {
+        final AllBinaryLayer ownerLayerInterface = this.getOwnerLayerInterface();
+        final int xTotalDistance = (allBinaryLayer.getXP() + allBinaryLayer.getHalfWidth()) - (ownerLayerInterface.getXP() + ownerLayerInterface.getHalfWidth());
+        final int yTotalDistance = (allBinaryLayer.getYP() + allBinaryLayer.getHalfHeight()) - (ownerLayerInterface.getYP() + ownerLayerInterface.getHalfHeight());
+        final MathUtil mathUtil = MathUtil.getInstance();
+        final int totalDistance = mathUtil.abs(xTotalDistance) + mathUtil.abs(yTotalDistance);
+        return totalDistance;
+    }
+
+}
+
+

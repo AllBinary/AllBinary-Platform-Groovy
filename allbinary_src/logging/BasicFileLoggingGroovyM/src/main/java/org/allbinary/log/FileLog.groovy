@@ -1,0 +1,175 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.log;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.RandomAccessFile;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.communication.log.LogFormatUtil;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class FileLog {
+    private static final StringUtil stringUtil = StringUtil.getInstance();
+
+    // 33MB
+    private static final long logLength = 33000000;
+
+    //private static final String logPath = MyFrame.PATH + "/log/";
+    private static final String logPath = 'g:\\log\\';
+
+    private static final String extension = new String('dat');
+
+    private static final String fileName = new String('log.' + FileLog.extension);
+
+    private static final String backupFileName = FileLog.fileName.concat('.bak');
+
+    private static final String ORG_ALLBINARY = 'org.allbinary: ';
+
+    private static boolean firstTime = true;
+
+    private static File logFile = new File(FileLog.logPath, FileLog.fileName);
+
+    private static File logFileBak;
+
+    private static BufferedWriter fileOut;
+
+    private static int backupIndex;
+
+    private FileLog() {
+    }
+
+    public static synchronized boolean createLogFile() {
+        try {
+            FileLog.logFile = new File(logPath, fileName);
+            if (!FileLog.firstTime) {
+                FileLog.fileOut = new BufferedWriter(new FileWriter(logFile));
+            } else {
+                FileLog.firstTime = false;
+                RandomAccessFile raFile = new RandomAccessFile(logFile, 'rw');
+                raFile.seek(raFile.length());
+                FileLog.fileOut = new BufferedWriter(new FileWriter(raFile.getFD()));
+            }
+            boolean canWrite = FileLog.logFile.canWrite();
+            return canWrite;
+        } catch (Exception e) {
+            System.out.println('Error Creating Log: ' + e);
+            return false;
+        }
+    }
+
+    private static synchronized boolean createLogFileBackup() {
+        try {
+            final StringMaker stringMaker = new StringMaker();
+            FileLog.logFileBak = new File(logPath, stringMaker.append(backupFileName).append(CommonSeps.getInstance().@PERIOD).appendint(backupIndex).toString());
+            while (FileLog.logFileBak.isFile()) {
+                FileLog.backupIndex++;
+                stringMaker.delete(0, stringMaker.length());
+                FileLog.logFileBak = new File(logPath, stringMaker.append(backupFileName).append(CommonSeps.getInstance().@PERIOD).appendint(backupIndex).toString());
+            }
+            //String time= new String(date.toString());
+            String line = new String();
+            //+ time
+            BufferedWriter tmpOut = new BufferedWriter(new FileWriter(logFileBak));
+            BufferedReader tmpIn = new BufferedReader(new FileReader(logFile));
+            //ready instead of a null readLine so languages without null strings stop at the end of the file and not at an empty line
+            while (tmpIn.ready()) {
+                line = tmpIn.readLine();
+                tmpOut.write(line, 0, line.length());
+                tmpOut.newLine();
+            }
+            tmpOut.flush();
+            tmpOut.close();
+            tmpIn.close();
+            FileLog.logFile.delete();
+            return true;
+        } catch (Exception e) {
+            System.out.println('Error Creating Backup: ' + e);
+            return false;
+        }
+    }
+
+    public synchronized static String put(String specialMessage, Object anyType, String functionName) {
+        return FileLog.put(specialMessage, anyType, functionName, null);
+    }
+
+    public synchronized static String put(String specialMessage, Object anyType, String functionName, Throwable exception) {
+        try {
+            if (FileLog.firstTime == true) {
+                FileLog.createLogFileBackup();
+                if (createLogFile() == false) {
+                    return new String('Log File Creation Error');
+                }
+            }
+            long length = FileLog.logFile.length();
+            if (length > FileLog.logLength) {
+                if (!(createLogFileBackup()) || createLogFile() == false) {
+                    return new String('Couldn\'t Create a Backup file');
+                }
+            }
+            String className = new String(stringUtil.@NULL_STRING);
+            if (functionName == null) {
+                functionName = new String(FileLog.stringUtil.@NULL_STRING);
+            }
+            if (specialMessage == null) {
+                specialMessage = new String(FileLog.stringUtil.@NULL_STRING);
+            }
+            if (anyType.getClass().getName() != null) {
+                className = new String(anyType.getClass().getName());
+            }
+            final String message = LogFormatUtil.getInstance().get(className, functionName, specialMessage, exception);
+            FileLog.fileOut.write(message, 0, message.length());
+            FileLog.fileOut.newLine();
+            FileLog.fileOut.flush();
+            return new String(FileLog.ORG_ALLBINARY + message);
+        } catch (Exception e) {
+            return new String('Error: ' + e);
+        }
+    }
+
+    public synchronized static String put(final String specialMessage, final String className, final String functionName) {
+        return FileLog.put(specialMessage, className, functionName, null);
+    }
+
+    public synchronized static String put(String specialMessage, final String className, String functionName, final Exception exception) {
+        try {
+            if (FileLog.firstTime == true) {
+                FileLog.createLogFileBackup();
+                if (createLogFile() == false) {
+                    return new String('Log File Creation Error');
+                }
+            }
+            long length = FileLog.logFile.length();
+            if (length > FileLog.logLength) {
+                if (!(createLogFileBackup()) || createLogFile() == false) {
+                    return new String('Couldn\'t Create a Backup file');
+                }
+            }
+            if (functionName == null) {
+                functionName = new String(FileLog.stringUtil.@NULL_STRING);
+            }
+            if (specialMessage == null) {
+                specialMessage = new String(FileLog.stringUtil.@NULL_STRING);
+            }
+            final String message = LogFormatUtil.getInstance().get(className, functionName, specialMessage, exception);
+            FileLog.fileOut.write(message, 0, message.length());
+            FileLog.fileOut.newLine();
+            FileLog.fileOut.flush();
+            return new String(FileLog.ORG_ALLBINARY + message);
+        } catch (Exception e) {
+            return new String('Error: ' + e);
+        }
+    }
+
+    public static String getFilePath() {
+        return FileLog.logPath + FileLog.fileName;
+    }
+
+}
+
+

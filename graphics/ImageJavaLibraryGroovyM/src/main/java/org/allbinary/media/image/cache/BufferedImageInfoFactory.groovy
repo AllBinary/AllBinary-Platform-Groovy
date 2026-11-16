@@ -1,0 +1,32 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image.cache;
+
+import java.util.HashMap;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringMaker;
+
+@groovy.transform.CompileStatic
+public class BufferedImageInfoFactory {
+    private static HashMap hashMap = StdUtil.getInstance().createHashMap();
+
+    private BufferedImageInfoFactory() {
+    }
+
+    public static BufferedImageInfo getInstance(int width, int height, int type) {
+        StringMaker stringbuffer = new StringMaker();
+        stringbuffer.appendint(width);
+        stringbuffer.appendint(height);
+        stringbuffer.appendint(type);
+        String key = stringbuffer.toString();
+        BufferedImageInfo bufferedImageInfo = ((BufferedImageInfo) BufferedImageInfoFactory.hashMap.get(key));
+        if (bufferedImageInfo == null) {
+            bufferedImageInfo = new BufferedImageInfo(width, height, type);
+            BufferedImageInfoFactory.hashMap.put(key, bufferedImageInfo);
+        }
+        return bufferedImageInfo;
+    }
+
+}
+
+

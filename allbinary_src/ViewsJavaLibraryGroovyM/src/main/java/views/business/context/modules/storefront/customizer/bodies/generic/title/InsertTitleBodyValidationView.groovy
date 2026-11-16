@@ -1,0 +1,91 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package views.business.context.modules.storefront.customizer.bodies.generic.title;
+
+import java.util.HashMap;
+import org.allbinary.data.tree.dom.DomNodeInterface;
+import org.allbinary.logic.communication.http.request.RequestParams;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.control.validate.ValidationComponentInterface;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.visual.transform.info.TransformInfoInterface;
+import org.allbinary.logic.visual.transform.template.customizer.bodies.title.TitleBodyValidation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import views.business.context.modules.storefront.customizer.CustomizerUtil;
+import views.business.context.modules.storefront.customizer.StoreCustomizerComponentUtil;
+
+@groovy.transform.CompileStatic
+public class InsertTitleBodyValidationView extends TitleBodyCustomizerView implements ValidationComponentInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    public InsertTitleBodyValidationView(TransformInfoInterface transformInfoInterface) throws Exception {
+        super(transformInfoInterface);
+        HashMap requestHashMap = new RequestParams(this.getPageContext()).toHashMap();
+        this.titleBody = new TitleBodyValidation(requestHashMap);
+    }
+
+    public Document toXmlDoc() throws Exception {
+        return null;
+    }
+
+    public Boolean isValid() {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.putF('Started Validation', this, this.commonStrings.@IS_VALID);
+            }
+            Boolean isValid = this.titleBody.isValid();
+            if (isValid === Boolean.TRUE) {
+                //Insert XML into the view specified by the Object Config for this view
+                CustomizerUtil.getInstance().insert(this.getTransformInfoInterface(), ((DomNodeInterface) this.titleBody));
+            }
+            return isValid;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEWERROR)) {
+                this.logUtil.put('Failed to validate', this, this.commonStrings.@IS_VALID, e);
+            }
+            return Boolean.FALSE;
+        }
+    }
+
+    public String validationInfo() {
+        try {
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(this.titleBody.validationInfo());
+            return stringBuffer.toString();
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEWERROR)) {
+                this.logUtil.put('Failed to generate validation error info', this, 'validationInfo()', e);
+            }
+            return 'Error Getting Validation Info';
+        }
+    }
+
+    public Document toValidationInfoDoc() {
+        return null;
+    }
+
+    public Node toValidationInfoNode(Document document) {
+        return null;
+    }
+
+    public String view() throws Exception {
+        try {
+            return StoreCustomizerComponentUtil.getInstance().generate(this.abeClientInformation, this.getTransformInfoInterface());
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@TAGHELPERERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'view()', e);
+            }
+            throw e;
+        }
+    }
+
+    //Needed for polyglot do not remove
+    @Override
+    public TransformInfoInterface getTransformInfoInterface() throws Exception {
+        return super.getTransformInfoInterface();
+    }
+
+}
+
+

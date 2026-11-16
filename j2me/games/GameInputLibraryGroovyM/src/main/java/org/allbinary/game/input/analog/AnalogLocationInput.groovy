@@ -1,0 +1,63 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input.analog;
+
+import org.allbinary.graphics.CustomGPoint;
+
+@groovy.transform.CompileStatic
+public class AnalogLocationInput {
+    public static final AnalogLocationInput NULL_ANALOG_LOCATION_INPUT = new AnalogLocationInput(-1);
+
+    private final int playerId;
+
+    private final CustomGPoint customGPoint;
+
+    private int rz;
+
+    private int rightTrigger;
+
+    private int leftTrigger;
+
+    AnalogLocationInput(int playerId) {
+        this.playerId = playerId;
+        this.customGPoint = new CustomGPoint(0, 0, 0);
+    }
+
+    public int getPlayerId() {
+        return this.playerId;
+    }
+
+    public CustomGPoint getCustomGPoint() {
+        return this.customGPoint;
+    }
+
+    public int getRz() {
+        return this.rz;
+    }
+
+    public void setRz(int rz) {
+        this.rz = rz;
+    }
+
+    /**      * @return the rightTrigger      */
+    public int getRightTrigger() {
+        return this.rightTrigger;
+    }
+
+    /**      * @param rightTrigger the rightTrigger to set      */
+    public void setRightTrigger(int rightTrigger) {
+        this.rightTrigger = rightTrigger;
+    }
+
+    /**      * @return the leftTrigger      */
+    public int getLeftTrigger() {
+        return this.leftTrigger;
+    }
+
+    /**      * @param leftTrigger the leftTrigger to set      */
+    public void setLeftTrigger(int leftTrigger) {
+        this.leftTrigger = leftTrigger;
+    }
+
+}
+
+

@@ -1,0 +1,135 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.logic.system.security.licensing.LockedFeatureNotificationUtil;
+import org.allbinary.logic.system.security.licensing.LockedUtil;
+import org.allbinary.canvas.Processor;
+import org.allbinary.game.displayable.canvas.AllBinaryGameCanvas;
+import org.allbinary.game.displayable.canvas.PreGameSelectorPaintable;
+import org.allbinary.game.input.event.GameKeyEventHandler;
+import org.allbinary.game.input.event.GameKeyEventUtil;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.media.audio.SecondaryPlayerQueueFactory;
+import org.allbinary.media.audio.SelectSound;
+import org.allbinary.media.graphics.geography.map.racetrack.MultiLevelRaceTrackGeographicMapInterfaceFactoryInterface;
+import org.allbinary.thread.ABRunnable;
+import org.allbinary.thread.ThreadObjectUtil;
+import org.allbinary.time.TimeDelayHelper;
+
+@groovy.transform.CompileStatic
+public class MapSelectionGameInputProcessor extends Processor implements GameInputProcessorInterface, PlayerGameInputCompositeInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final AllBinaryGameCanvas gameCanvas;
+
+    private final MultiLevelRaceTrackGeographicMapInterfaceFactoryInterface raceTrackGeographicMapInterfaceFactoryInterface;
+
+    private final PreGameSelectorPaintable preGameSelectorPaintable;
+
+    private final TimeDelayHelper inputTimeHelper = new TimeDelayHelper(650);
+
+    private final PlayerGameInput playerGameInput;
+
+    private final int lockedIndex;
+
+    class MapSelectionRunnable extends ABRunnable {
+        private final MapSelectionGameInputProcessor inputProcessor;
+
+        MapSelectionRunnable(final MapSelectionGameInputProcessor inputProcessor) {
+            this.inputProcessor = inputProcessor;
+        }
+
+        @Override
+        public void run() {
+            try {
+                this.setRunning(true);
+                SecondaryPlayerQueueFactory.getInstance().add(SelectSound.getInstance());
+                // this.gameCanvas.setGameState(Intermission.WAIT_LEVEL_INTERMISSION_GAME_STATE);
+                final int track = this.inputProcessor.@preGameSelectorPaintable.getPreGameSelectionForm().getSelectedIndex() + 1;
+                final int wave = this.inputProcessor.@raceTrackGeographicMapInterfaceFactoryInterface.getFirstWaveWithTrack(track);
+                this.inputProcessor.@gameCanvas.getLayerManager().getGameInfo().setCurrentLevel(wave);
+                this.inputProcessor.@gameCanvas.buildGameInit(false);
+                GameKeyEventHandler.getInstance().removeListener(this.inputProcessor.getPlayerGameInput());
+                this.setRunning(false);
+            } catch (Exception e) {
+                this.setRunning(false);
+                final LogUtil logUtil = LogUtil.getInstance();
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@RUN, e);
+            }
+        }
+
+    }
+
+    private final ABRunnable abRunnable = new MapSelectionRunnable(this);
+
+    public MapSelectionGameInputProcessor(AllBinaryGameCanvas gameCanvas, MultiLevelRaceTrackGeographicMapInterfaceFactoryInterface raceTrackGeographicMapInterfaceFactoryInterface, PreGameSelectorPaintable mapSelectorPaintable, int lockedIndex) {
+        this.gameCanvas = gameCanvas;
+        this.raceTrackGeographicMapInterfaceFactoryInterface = raceTrackGeographicMapInterfaceFactoryInterface;
+        this.preGameSelectorPaintable = mapSelectorPaintable;
+        this.playerGameInput = new GameInputProcessorComposite('Map Selection', this);
+        this.lockedIndex = lockedIndex;
+    }
+
+    @Override
+    public void process() throws Exception {
+        // this.logUtil.putF(this.commonStrings.START, this, this.commonStrings.PROCESS);
+        this.getPlayerGameInput().update();
+    }
+
+    @Override
+    public void onInput(BasicArrayList list) throws Exception {
+        int size = list.size();
+        for (int index = 0; index < size; index++) {
+            Object anyType = list.get(index);
+            int key = GameKeyEventUtil.getKey(anyType);
+            if (key == Canvas.LEFT || key == Canvas.RIGHT || key == Canvas.UP || key == Canvas.DOWN) {
+                if (this.inputTimeHelper.isTimeTNT()) {
+                    SecondaryPlayerQueueFactory.getInstance().add(SelectSound.getInstance());
+                    this.preGameSelectorPaintable.getPreGameSelectionForm().processInputKey(key);
+                    break;
+                }
+            } else if (key == Canvas.KEY_NUM0) {
+                int selectedIndex = this.preGameSelectorPaintable.getPreGameSelectionForm().getSelectedIndex();
+                if (selectedIndex < this.lockedIndex || !LockedUtil.getInstance().isLocked()) {
+                    //PreLogUtil.put("selectedIndex: " + selectedIndex + " LockedUtil.getInstance().isLockedFeature(): " + LockedUtil.getInstance().isLockedFeature(), this, "onInput");
+                    if (!abRunnable.isRunning()) {
+                        abRunnable.setRunning(true);
+                        //Better to mix this in with the UI thread that is already running.
+                        ThreadObjectUtil.getInstance().processThread(abRunnable);
+                    }
+                    break;
+                } else {
+                    LockedFeatureNotificationUtil.getInstance().fire();
+                }
+            }
+            list.clear();
+        }
+    }
+
+    @Override
+    public void processInput(AllBinaryLayerManager layerManager) throws Exception {
+    }
+
+    @Override
+    public void initInputProcessors() {
+    }
+
+    @Override
+    public String getName() {
+        return this.toString();
+    }
+
+    @Override
+    public PlayerGameInput getPlayerGameInput() {
+        return this.playerGameInput;
+    }
+
+}
+
+

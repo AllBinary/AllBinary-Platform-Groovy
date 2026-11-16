@@ -1,0 +1,52 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *  * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *  * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *  * Created By: Travis Berthelot  *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.emulator.device;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.lcdui.Image;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.image.opengles.OpenGLESImage;
+
+@groovy.transform.CompileStatic
+public class TrueTypeFontUtil extends TrueTypeFontUtilBase {
+    private static final TrueTypeFontUtil instance = new TrueTypeFontUtil();
+
+    public static TrueTypeFontUtil getInstance() {
+        return TrueTypeFontUtil.instance;
+    }
+
+    public OpenGLESImage fontImage = OpenGLESImage.NULL_OPENGL_IMAGE;
+
+    private TrueTypeFontUtil() {
+        super(1);
+    }
+
+    @Override
+    public int getAsTextureSize(int textureSize) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public int getCellSize(int cellSize) {
+        throw new RuntimeException();
+    }
+
+    public Image getFontBitmap(final String filename, final int fontSize, final int cellSize, final BasicColor basicColor) {
+        throw new RuntimeException();
+    }
+
+    //This is only called from OpenGLES on Android via OpenGLESStrings
+    public void saveFontAtlasAsFile() {
+    }
+
+    public Image getFontBitmapGL(final GL10 gl, final String filename, final int cellSize, final BasicColor basicColor) {
+        throw new RuntimeException();
+    }
+
+    public int[] getFontWidths(final String filename, final int fontSize) {
+        throw new RuntimeException();
+    }
+
+}
+
+

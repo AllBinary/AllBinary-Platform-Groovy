@@ -1,0 +1,56 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image.comparison.pixel;
+
+import org.allbinary.graphics.GPoint;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.util.cache.CacheableInterface;
+import org.allbinary.media.image.comparison.color.ColorDelta;
+import org.allbinary.string.CommonSeps;
+
+@groovy.transform.CompileStatic
+public class PixelDelta implements CacheableInterface {
+    private GPoint point;
+
+    private ColorDelta colorDelta;
+
+    private Object key;
+
+    public PixelDelta(GPoint point, ColorDelta colorDelta) {
+        this.setPoint(point);
+        this.setColorDelta(colorDelta);
+        this.key = PixelDelta.getKey(this.getPoint(), this.getColorDelta());
+    }
+
+    public Object getKey() {
+        return this.key;
+    }
+
+    public static Object getKey(GPoint point, ColorDelta colorDelta) {
+        return new StringMaker().appendint(TsUtil.getInstance().hashCode(point)).append(CommonSeps.getInstance().@UNDERSCORE).append(colorDelta.getKey().toString()).toString();
+    }
+
+    public GPoint getPoint() {
+        return this.point;
+    }
+
+    public void setPoint(GPoint point) {
+        this.point = point;
+    }
+
+    public ColorDelta getColorDelta() {
+        return this.colorDelta;
+    }
+
+    public void setColorDelta(ColorDelta colorDelta) {
+        this.colorDelta = colorDelta;
+    }
+
+    public String toString() {
+        return new StringMaker().append('PixelDelta: Point: ').append(this.point.toString()).append(CommonSeps.getInstance().@SPACE).append(this.colorDelta.toString()).toString();
+    }
+
+}
+
+

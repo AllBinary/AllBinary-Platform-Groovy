@@ -1,0 +1,55 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import org.allbinary.game.collision.CollisionType;
+import org.allbinary.game.collision.CollisionTypeFactory;
+import org.allbinary.game.layer.special.CollidableDestroyableDamageableBehavior;
+
+@groovy.transform.CompileStatic
+public class CollidableRTSBehavior extends CollidableDestroyableDamageableBehavior {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    public CollidableRTSBehavior(final boolean collidable) {
+        super(collidable);
+    }
+
+    //public void collide(CollidableInterfaceCompositeInterface collidableInterfaceCompositeInterface)
+    @Override
+    public boolean isCollision(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterfaceCompositeInterface) {
+        final CollisionTypeFactory collisionTypeFactory = CollisionTypeFactory.getInstance();
+        final CollisionType collisionType = collidableInterfaceCompositeInterface.getCollidableInferface().getCollisionTypeWith(ownerLayer);
+        // collisionType.toString(), this, damageUtil.COLLIDE);
+        if (collisionType === collisionTypeFactory.@PICKUP) {
+        } else if (collisionType === collisionTypeFactory.@COLLISION) {
+            return super.isCollision(ownerLayer, collidableInterfaceCompositeInterface);
+        } else {
+            if (collidableInterfaceCompositeInterface.getX2() <= ownerLayer.getXP() || collidableInterfaceCompositeInterface.getY2() <= ownerLayer.getYP() || collidableInterfaceCompositeInterface.getYP() >= ownerLayer.getY2() || collidableInterfaceCompositeInterface.getXP() >= ownerLayer.getX2()) {
+                return false;
+            } else {
+                // collisionLayer).getViewPosition().getY2(), this, // damageUtil.IS_COLLISION);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void collide(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterfaceCompositeInterface) throws Exception {
+        final CollisionTypeFactory collisionTypeFactory = CollisionTypeFactory.getInstance();
+        final CollisionType collisionType = collidableInterfaceCompositeInterface.getCollidableInferface().getCollisionTypeWith(ownerLayer);
+        //this.logUtil.putF("collisionType: ").append(collisionType.toString(), this, damageUtil.COLLIDE);
+        if (collisionType === collisionTypeFactory.@PICKUP) {
+        } else if (collisionType === collisionTypeFactory.@COLLISION) {
+            //this.logUtil.putF("isCollision: ").append(this.getGroupInterface().getGroupName()).append("==").append(((CollidableDestroyableDamageableLayer) collidableInterface).getGroupInterface().getGroupName(), this, damageUtil.IS_COLLISION);
+            super.collide(ownerLayer, collidableInterfaceCompositeInterface);
+        } else {
+            this.collideNone(ownerLayer, collidableInterfaceCompositeInterface);
+        }
+    }
+
+    protected void collideNone(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterface) throws Exception {
+    }
+
+}
+
+

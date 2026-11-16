@@ -1,0 +1,54 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.user.commerce.money.payment.gateway;
+
+import java.util.HashMap;
+import org.allbinary.data.tree.dom.DomNodeInterface;
+import org.allbinary.data.tree.dom.ModDomHelper;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+@groovy.transform.CompileStatic
+public class PaymentGatewayView implements DomNodeInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private PaymentGatewayInterface paymentGatewayInterface;
+
+    public PaymentGatewayView(final PaymentGatewayInterface paymentGatewayInterface) {
+        this.paymentGatewayInterface = paymentGatewayInterface;
+    }
+
+    public PaymentGatewayInterface getPaymentGatewayInterface() {
+        return this.paymentGatewayInterface;
+    }
+
+    public HashMap toHashMap() throws Exception {
+        final HashMap hashMap = StdUtil.getInstance().createHashMap();
+        return hashMap;
+    }
+
+    public Node toXmlNode(final Document document) throws Exception {
+        try {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.putF(this.commonStrings.@START, this, 'toXmlNode');
+            }
+            final HashMap hashMap = new PaymentGatewayMapping(this.paymentGatewayInterface).toHashMap();
+            hashMap.putAll(this.toHashMap());
+            final Node paymentGatewayNode = ModDomHelper.createNodeWithValueNodes(document, PaymentGatewayData.NAME.toString(), hashMap);
+            return paymentGatewayNode;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@XSLLOGGINGERROR)) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, 'toXmlNode', e);
+            }
+            throw e;
+        }
+    }
+
+}
+
+

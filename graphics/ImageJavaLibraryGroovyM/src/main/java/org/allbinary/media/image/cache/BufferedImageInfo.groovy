@@ -1,0 +1,61 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image.cache;
+
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonLabels;
+
+@groovy.transform.CompileStatic
+public class BufferedImageInfo {
+    private int width;
+
+    private int height;
+
+    private int type;
+
+    public BufferedImageInfo(int width, int height, int type) {
+        this.width = width;
+        this.height = height;
+        this.type = type;
+    }
+
+    public int getWidth() {
+        return this.width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getType() {
+        return this.type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String toString() {
+        final CommonLabels commonLabels = CommonLabels.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append('BufferedImageInfo -');
+        stringBuffer.append(commonLabels.@WIDTH_LABEL);
+        stringBuffer.appendint(this.getWidth());
+        stringBuffer.append(commonLabels.@HEIGHT_LABEL);
+        stringBuffer.appendint(this.getHeight());
+        stringBuffer.append(' Type: ');
+        stringBuffer.appendint(this.getType());
+        return stringBuffer.toString();
+    }
+
+}
+
+

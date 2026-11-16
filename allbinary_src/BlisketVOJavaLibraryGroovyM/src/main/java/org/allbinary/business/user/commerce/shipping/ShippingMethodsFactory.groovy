@@ -1,0 +1,98 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.user.commerce.shipping;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.business.DynamicObjectData;
+import org.allbinary.business.context.modules.storefront.StoreFrontInterface;
+import org.allbinary.business.user.commerce.shipping.modules.BasicWeightShippingModuleView;
+import org.allbinary.business.user.commerce.shipping.modules.NoShippingModuleView;
+import org.allbinary.business.user.commerce.shipping.modules.ShippingInterface;
+import org.allbinary.data.tree.dom.DomNodeHelper;
+import org.allbinary.data.tree.dom.DomSearchHelper;
+import org.allbinary.data.tree.dom.document.DomDocumentHelper;
+import org.allbinary.globals.FREEBLISKET_PATH_GLOBALS;
+import org.allbinary.globals.URLGLOBALS;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.control.crypt.file.CryptFileReader;
+import org.allbinary.logic.io.path.AbPath;
+import org.allbinary.logic.io.path.AbPathData;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.system.loader.AbeFactory;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.logic.visual.transform.info.objectConfig.TransformInfoObjectConfigData;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+@groovy.transform.CompileStatic
+public class ShippingMethodsFactory {
+    private ShippingInterface defaultShippingMethodInterface;
+
+    //private final String DEFAULTSHIPPING
+    private static final String SHIPPINGMETHODSFILEPATHSTRING;
+
+    static {
+        final StringMaker stringBuffer = new StringMaker();
+        final String sep = AbPathData.getInstance().@SEPARATOR;
+        stringBuffer.append(sep);
+        stringBuffer.append('generic');
+        stringBuffer.append(sep);
+        stringBuffer.append('shipping');
+        stringBuffer.append(sep);
+        SHIPPINGMETHODSFILEPATHSTRING = stringBuffer.toString();
+    }
+
+    private static final String SHIPPINGMETHODSFILENAME = 'shippingMethods.xml';
+
+    private Document document;
+
+    private BasicArrayList shippingVector;
+
+    public ShippingMethodsFactory(final AbeClientInformationInterface abeClientInformation, final StoreFrontInterface storeFrontInterface) throws Exception {
+        final StringMaker stringBuffer = new StringMaker();
+        final String sep = AbPathData.getInstance().@SEPARATOR;
+        stringBuffer.append(URLGLOBALS.getMainPath());
+        stringBuffer.append(FREEBLISKET_PATH_GLOBALS.getInstance().@XSLPATH);
+        stringBuffer.append(storeFrontInterface.getName());
+        stringBuffer.append(sep);
+        stringBuffer.append(ShippingMethodsFactory.SHIPPINGMETHODSFILEPATHSTRING);
+        final AbPath abPath = ((AbPath) new AbPath(stringBuffer.toString(), this.SHIPPINGMETHODSFILENAME));
+        final String data = new CryptFileReader(TransformInfoObjectConfigData.getInstance().@UNCRYPTED_EXTENSION, TransformInfoObjectConfigData.getInstance().@ENCRYPTED_EXTENSION).get(abPath);
+        this.document = DomDocumentHelper.create(data);
+        this.shippingVector = new BasicArrayListD();
+        final NodeList nodeList = this.document.getElementsByTagName(ShippingMethodsData.NAME);
+        for (int index = 0; index < nodeList.getLength(); index++) {
+            final Node node = nodeList.item(index);
+            final NodeList shippingMethodNodeChildren = node.getChildNodes();
+            final Node shippingMethodNameNode = DomSearchHelper.getNode(ShippingMethodData.NAME, shippingMethodNodeChildren);
+            final Node classNameNode = DomSearchHelper.getNode(DynamicObjectData.NAME, shippingMethodNameNode.getChildNodes());
+            final String shippingMethodClassName = DomNodeHelper.getTextNodeValue(classNameNode);
+            final ShippingInterface shippingMethodInterface = ((ShippingInterface) AbeFactory.getInstance().getInstance(abeClientInformation, shippingMethodClassName));
+            this.shippingVector.add(shippingMethodInterface);
+            final Node defaultShippingMethodNameNode = DomSearchHelper.getNode(ShippingMethodData.DEFAULT, shippingMethodNameNode.getChildNodes());
+            final String defaultShippingMethodNameNodeValue = DomNodeHelper.getTextNodeValue(defaultShippingMethodNameNode);
+            if (defaultShippingMethodNameNodeValue != null && defaultShippingMethodNameNodeValue.compareTo(ShippingMethodData.DEFAULT) == 0) {
+                this.defaultShippingMethodInterface = shippingMethodInterface;
+            }
+        }
+        //Default Shipping Options
+        if (this.shippingVector.size() < 1) {
+            this.defaultShippingMethodInterface = new BasicWeightShippingModuleView();
+            this.shippingVector.add(this.defaultShippingMethodInterface);
+            this.shippingVector.add(new NoShippingModuleView());
+        }
+    }
+
+    public BasicArrayList getInstance() throws Exception {
+        return this.shippingVector;
+    }
+
+    public ShippingInterface getDefaultInstance() {
+        return this.defaultShippingMethodInterface;
+    }
+
+}
+
+

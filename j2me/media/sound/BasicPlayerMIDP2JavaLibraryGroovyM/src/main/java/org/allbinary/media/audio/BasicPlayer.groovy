@@ -1,0 +1,115 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.audio;
+
+import javax.microedition.media.Control;
+import javax.microedition.media.MediaException;
+import javax.microedition.media.Player;
+import javax.microedition.media.PlayerListener;
+import javax.microedition.media.TimeBase;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+//BasicPlayerMIDP2JavaLibrary
+@groovy.transform.CompileStatic
+public class BasicPlayer implements Player, TimeBaseInterface, Controllable2 {
+    public static String CONTROL_TYPE = 'ToneControl';
+
+    protected final BasicArrayList listenersList = new BasicArrayListD();
+
+    private TimeBase timeBase;
+
+    protected int stateP;
+
+    protected int loopCountP;
+
+    public BasicPlayer() {
+        this.setLoopCount(0);
+        this.setState(Player.UNREALIZED);
+    }
+
+    public String getContentType() {
+        return StringUtil.getInstance().@EMPTY_STRING;
+    }
+
+    public Control getControl(String controlType) {
+        return new NullControl();
+    }
+
+    public Control[] getControls() {
+        return new Control[0];
+    }
+
+    public void close() {
+    }
+
+    public synchronized void addPlayerListener(PlayerListener playerListener) {
+        if (!this.listenersList.contains(playerListener)) {
+            this.listenersList.add(playerListener);
+        }
+    }
+
+    public void removePlayerListener(PlayerListener playerListener) {
+        this.listenersList.remove(playerListener);
+    }
+
+    public int getState() {
+        return this.stateP;
+    }
+
+    public synchronized void setState(int state) {
+        this.stateP = state;
+    }
+
+    public long getDuration() {
+        return 0;
+    }
+
+    public long getMediaTime() {
+        return 0;
+    }
+
+    public TimeBase getTimeBase() {
+        return this.timeBase;
+    }
+
+    public synchronized void setTimeBase(TimeBase timeBase) {
+        this.timeBase = timeBase;
+    }
+
+    public void deallocate() {
+    }
+
+    public void prefetch() throws MediaException {
+    }
+
+    public void realize() throws MediaException {
+    }
+
+    public synchronized void setLoopCount(int count) {
+        this.loopCountP = count;
+    }
+
+    protected int getLoopCount() {
+        return this.loopCountP;
+    }
+
+    public synchronized long setMediaTime(long now) throws MediaException {
+        return 0;
+    }
+
+    public synchronized void start() throws MediaException {
+        this.setState(Player.STARTED);
+    }
+
+    public synchronized void stop() throws MediaException {
+        this.setState(Player.PREFETCHED);
+    }
+
+    public void setVolume(final int leftVolume, final int rightVolume) {
+    }
+
+}
+
+

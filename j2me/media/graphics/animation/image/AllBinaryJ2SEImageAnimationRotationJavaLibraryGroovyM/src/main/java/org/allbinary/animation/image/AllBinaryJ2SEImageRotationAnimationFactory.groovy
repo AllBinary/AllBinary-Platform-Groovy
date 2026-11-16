@@ -1,0 +1,72 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.animation.image;
+
+import javax.microedition.lcdui.Image;
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationBehaviorFactory;
+import org.allbinary.game.configuration.feature.Features;
+import org.allbinary.graphics.opengles.OpenGLFeatureFactory;
+import org.allbinary.graphics.opengles.OpenGLUtil;
+import org.allbinary.logic.math.PrimitiveIntUtil;
+import org.allbinary.math.AngleFactory;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.media.image.ImageCopyUtil;
+
+@groovy.transform.CompileStatic
+public class AllBinaryJ2SEImageRotationAnimationFactory extends BaseImageAnimationFactory {
+    protected final short angleIncrementP;
+
+    private final boolean resizeCanvasForRotation;
+
+    public static AllBinaryJ2SEImageRotationAnimationFactory createDXY(final Image image, final int width, final int height, final int dx, final int dy, final short angleIncrement, final AnimationBehaviorFactory animationBehaviorFactory, final boolean resizeCanvasForRotation) throws Exception {
+        final AllBinaryJ2SEImageRotationAnimationFactory imageRotationAnimationFactory = new AllBinaryJ2SEImageRotationAnimationFactory(image, width, height, angleIncrement, animationBehaviorFactory, resizeCanvasForRotation);
+        imageRotationAnimationFactory.@animationFactoryInitializationVisitor.@dx = dx;
+        imageRotationAnimationFactory.@animationFactoryInitializationVisitor.@dy = dy;
+        imageRotationAnimationFactory.@animationFactoryInitializationVisitor.@originalDx = dx;
+        imageRotationAnimationFactory.@animationFactoryInitializationVisitor.@originalDy = dy;
+        return imageRotationAnimationFactory;
+    }
+
+    //    }
+    public AllBinaryJ2SEImageRotationAnimationFactory(final Image image, final int width, final int height, final short angleIncrement, final AnimationBehaviorFactory animationBehaviorFactory, final boolean resizeCanvasForRotation) throws Exception {
+        super(image, PrimitiveIntUtil.getArrayInstance(), width, height, 0, 0, animationBehaviorFactory);
+        this.angleIncrementP = angleIncrement;
+        this.resizeCanvasForRotation = resizeCanvasForRotation;
+    }
+
+    private Image getCanvasImage() throws Exception {
+        final Features features = Features.getInstance();
+        if (this.resizeCanvasForRotation && !features.isDefault(OpenGLFeatureFactory.getInstance().@OPENGL)) {
+            return ImageCopyUtil.getInstance().createImageScale(this.getImage(), 1.44f, false);
+        } else {
+            return this.getImage();
+        }
+    }
+
+    //final LogUtil logUtil = LogUtil.getInstance();
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        final ImageCopyUtil imageCopyUtil = ImageCopyUtil.getInstance();
+        final Image canvasImage = this.getCanvasImage();
+        Image scaledImage = this.animationFactoryImageScaleUtil.createImage(canvasImage, this.animationFactoryInitializationVisitor.@width, this.animationFactoryInitializationVisitor.@height, this.scaleProperties.@scaleWidth, this.scaleProperties.@scaleHeight);
+        final OpenGLUtil openGLUtil = OpenGLUtil.getInstance();
+        scaledImage = openGLUtil.addImage(scaledImage);
+        //final Image image = imageCopyUtil.createImage(this.image);
+        final Image copyOfScaledImage = imageCopyUtil.createImageForRotation(scaledImage);
+        if (this.animationFactoryInitializationVisitor.@dx != 0 || this.animationFactoryInitializationVisitor.@dy != 0) {
+            //this.logUtil.putF(new StringMaker().append(PositionStrings.getInstance().DX_LABEL).append((float) this.animationFactoryInitializationVisitor.dx).append(PositionStrings.getInstance().DY_LABEL).append((float) this.animationFactoryInitializationVisitor.dy).toString(), this, "getInstance");
+            this.animationFactoryImageScaleUtil.processAdjust(this);
+            return new AllBinaryAdjustedJ2SEImageRotationAnimation(scaledImage, copyOfScaledImage, AngleInfo.getInstance(this.angleIncrementP), AngleFactory.getInstance().@TOTAL_ANGLE, this.animationFactoryInitializationVisitor.@dx, this.animationFactoryInitializationVisitor.@dy, this.animationBehaviorFactory.getOrCreateInstance());
+        } else {
+            return new AllBinaryJ2SEImageRotationAnimation(scaledImage, copyOfScaledImage, AngleInfo.getInstance(this.angleIncrementP), AngleFactory.getInstance().@TOTAL_ANGLE, this.animationBehaviorFactory.getOrCreateInstance());
+        }
+    }
+
+    protected short getAngleIncrement() {
+        return this.angleIncrementP;
+    }
+
+}
+
+

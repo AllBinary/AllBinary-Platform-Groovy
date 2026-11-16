@@ -1,0 +1,60 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.business.user.commerce.money.payment.types;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class BasicPaymentTypeUtil {
+    private static final BasicPaymentTypeUtil instance = new BasicPaymentTypeUtil();
+
+    static {
+    }
+
+    /**      * @return the instance      */
+    public static BasicPaymentTypeUtil getInstance() {
+        return BasicPaymentTypeUtil.instance;
+    }
+
+    private BasicPaymentTypeUtil() {
+    }
+
+    private BasicArrayList paymentTypeVector = new BasicArrayListD();
+
+    public void add(BasicPaymentType paymentType) {
+        this.paymentTypeVector.add(paymentType);
+    }
+
+    public BasicPaymentType get(String paymentTypeString) throws Exception {
+        int size = this.paymentTypeVector.size();
+        for (int i = 0; i < size; i++) {
+            BasicPaymentType paymentType = ((BasicPaymentType) this.paymentTypeVector.get(i));
+            if (paymentType.getName().compareTo(paymentTypeString) == 0) {
+                return paymentType;
+            }
+        }
+        throw new Exception('Unknown PaymentType: ' + paymentTypeString);
+    }
+
+    public boolean isContain(BasicPaymentType paymentType) {
+        return this.paymentTypeVector.contains(paymentType);
+    }
+
+    public BasicArrayList difference(BasicArrayList a_PaymentTypeVector) {
+        BasicArrayList diff = new BasicArrayListD();
+        int size = this.paymentTypeVector.size();
+        for (int i = 0; i < size; i++) {
+            BasicPaymentType paymentType = ((BasicPaymentType) this.paymentTypeVector.get(i));
+            if (!a_PaymentTypeVector.contains(paymentType)) {
+                diff.add(paymentType);
+            }
+        }
+        return diff;
+    }
+
+}
+
+

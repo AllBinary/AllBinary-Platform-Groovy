@@ -1,0 +1,115 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.motion.button;
+
+import org.allbinary.game.input.event.DownGameKeyEventHandler;
+import org.allbinary.game.input.event.GameKeyEvent;
+import org.allbinary.game.input.event.UpGameKeyEventHandler;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.math.RectangleCollisionUtil;
+import org.allbinary.util.BasicArrayList;
+
+@groovy.transform.CompileStatic
+public class TouchButtonRecognizer {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final RectangleCollisionUtil rectangleCollisionUtil = RectangleCollisionUtil.getInstance();
+
+    @groovy.transform.PackageScope final UpGameKeyEventHandler upGameKeyEventHandler = UpGameKeyEventHandler.getInstance();
+
+    private final DownGameKeyEventHandler downGameKeyEventHandler = DownGameKeyEventHandler.getInstance();
+
+    private TouchButtonInput lastPressedTouchButtonInput = BasicTouchInputFactory.getInstance().@NONE;
+
+    @groovy.transform.PackageScope final CurrentlyPressedTouchButtonSingleton currentlyPressedTouchButtonSingleton = CurrentlyPressedTouchButtonSingleton.getInstance();
+
+    //CurrentlyPressedTouchButtonSingletonDebug.getInstance();
+    private final ReleaseHelper releaseHelper;
+
+    public TouchButtonRecognizer() {
+        if (TouchScreenFactory.getInstance().isMultiTouch()) {
+            //PreLogUtil.put("Multitouch Release Helper", this, this.commonStrings.CONSTRUCTOR);
+            this.releaseHelper = new MultitouchReleaseHelper(this);
+        } else {
+            //PreLogUtil.put("Singletouch Release Helper", this, this.commonStrings.CONSTRUCTOR);
+            this.releaseHelper = new ReleaseHelper(this);
+        }
+    }
+
+    /*     public void releaseAll() throws Exception     {         for (int index = this.currentlyPressedTouchButtonInputList.size() - 1; index >= 0; index--)         {             TouchButtonInput nextTouchButtonInput = (TouchButtonInput)                this.currentlyPressedTouchButtonInputList.get(index);              // this.logUtil.putF(             // "Release Associated Button Press", this, // "processTouchButtonInput");             UpGameKeyEventHandler.getInstance().fireEvent(                     nextTouchButtonInput.getGameKeyEvent());         }         this.currentlyPressedTouchButtonInputList.clear();     }     */
+    private void processRelease(final TouchButtonInput touchButtonInput, int deviceId) throws Exception {
+        // Release associated button if not released
+        this.releaseHelper.release(touchButtonInput, deviceId);
+        //this.logUtil.putF("Event Inside Button Area - Action: " + touchButtonInput.getGameKeyEvent(), this, "processTouchButtonInput");
+        final GameKeyEvent gameKeyEvent = touchButtonInput.getGameKeyEvent();
+        this.upGameKeyEventHandler.fireEvent(gameKeyEvent);
+        this.upGameKeyEventHandler.getInstanceForDevice(deviceId).fireEvent(gameKeyEvent);
+        this.currentlyPressedTouchButtonSingleton.remove(touchButtonInput);
+    }
+
+    public synchronized boolean releaseTouchButtonInput(int x, int y, int deviceId) throws Exception {
+        //TouchButtonInput touchButtonInput = BasicTouchInputFactory.getInstance().NONE;
+        TouchButtonInput touchButtonInput = this.lastPressedTouchButtonInput;
+        // if already pressed then cancel associated button and release
+        if (this.currentlyPressedTouchButtonSingleton.contains(touchButtonInput)) {
+            this.lastPressedTouchButtonInput = BasicTouchInputFactory.getInstance().@NONE;
+            this.processRelease(touchButtonInput, deviceId);
+            //this.currentlyPressedTouchButtonSingleton.releaseAndFired(touchButtonInput);
+            return true;
+        } else {
+            final BasicArrayList list = TouchButtonFactory.getInstance().getList();
+            Rectangle rectangle;
+            GPoint point;
+            TouchButton touchButton;
+            for (int index = list.size() - 1; index >= 0; index--) {
+                touchButton = ((TouchButton) list.@objectArray[index]);
+                rectangle = touchButton.getRectangle();
+                point = rectangle.getPoint();
+                if (this.rectangleCollisionUtil.isInside(point.getX(), point.getY(), rectangle.getMaxX(), rectangle.getMaxY(), x, y)) {
+                    touchButtonInput = touchButton.getTouchButtonInput();
+                    this.processRelease(touchButtonInput, deviceId);
+                    //this.currentlyPressedTouchButtonSingleton.releaseAndFired2(touchButtonInput);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public synchronized boolean pressTouchButtonInput(final int x, final int y, final int deviceId) throws Exception {
+        //PreLogUtil.put(string, this, "processTouchButtonInput");
+        final BasicArrayList list = TouchButtonFactory.getInstance().getList();
+        Rectangle rectangle;
+        GPoint point;
+        TouchButton touchButton;
+        TouchButtonInput touchButtonInput;
+        GameKeyEvent gameKeyEvent;
+        for (int index = list.size() - 1; index >= 0; index--) {
+            touchButton = ((TouchButton) list.@objectArray[index]);
+            rectangle = touchButton.getRectangle();
+            point = rectangle.getPoint();
+            if (this.rectangleCollisionUtil.isInside(point.getX(), point.getY(), rectangle.getMaxX(), rectangle.getMaxY(), x, y)) {
+                touchButtonInput = touchButton.getTouchButtonInput();
+                //if not already pressed then cancel associated button and press
+                if (!this.currentlyPressedTouchButtonSingleton.contains(touchButtonInput)) {
+                    //Release associated button if not released
+                    this.releaseHelper.release(touchButtonInput, deviceId);
+                    this.lastPressedTouchButtonInput = touchButtonInput;
+                    this.currentlyPressedTouchButtonSingleton.add(touchButtonInput);
+                    //PreLogUtil.put("Event Inside Button Area - Action: " + touchButtonInput.getGameKey(), this, "processTouchButtonInput");
+                    gameKeyEvent = touchButtonInput.getGameKeyEvent();
+                    this.downGameKeyEventHandler.fireEvent(gameKeyEvent);
+                    this.downGameKeyEventHandler.getInstanceForDevice(deviceId).fireEvent(gameKeyEvent);
+                }
+                /*                 else                 {                     currentlyPressedTouchButtonSingleton.pressedAndNotFired(touchButtonInput);                 }                 */
+                return true;
+            }
+        }
+        return false;
+    }
+
+}
+
+

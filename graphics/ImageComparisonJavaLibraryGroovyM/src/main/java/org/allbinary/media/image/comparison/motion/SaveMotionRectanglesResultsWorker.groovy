@@ -1,0 +1,68 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image.comparison.motion;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.time.TimeDelayHelper;
+
+@groovy.transform.CompileStatic
+public class SaveMotionRectanglesResultsWorker implements MotionRectanglesResultsListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private boolean running;
+
+    private BasicArrayList motionRectanglesVector;
+
+    public SaveMotionRectanglesResultsWorker() {
+        this.motionRectanglesVector = new BasicArrayListD();
+    }
+
+    public BasicArrayList getMotionRectanglesVector() {
+        return this.motionRectanglesVector;
+    }
+
+    public void onMotionRectanglesImageComparisonResultsEvent(MotionRectanglesResultsEvent motionRectanglesResultsEvent) {
+        this.getMotionRectanglesVector().add(motionRectanglesResultsEvent);
+        this.run();
+    }
+
+    public void onEvent(AllBinaryEventObject allBinaryEventObject) {
+        this.onMotionRectanglesImageComparisonResultsEvent(((MotionRectanglesResultsEvent) allBinaryEventObject));
+    }
+
+    public synchronized boolean isRunning() {
+        return this.running;
+    }
+
+    public synchronized void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public void run() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@RUN);
+            this.setRunning(true);
+            TimeDelayHelper timeHelper = new TimeDelayHelper(1000);
+            timeHelper.setStartTimeTNT();
+            MotionRectanglesResultsEvent motionRectanglesResultsEvent = ((MotionRectanglesResultsEvent) this.getMotionRectanglesVector().get(0));
+            MotionRectangles motionRectangles = motionRectanglesResultsEvent.getMotionRectangles();
+            new MotionRectanglesImageInputOutput().save(motionRectangles, motionRectanglesResultsEvent.getFrame());
+            this.getMotionRectanglesVector().remove(motionRectangles);
+            this.logUtil.putF(CommonLabels.getInstance().@ELAPSED + timeHelper.getElapsedTNT(), this, this.commonStrings.@RUN);
+            this.logUtil.putF(this.commonStrings.@END, this, this.commonStrings.@RUN);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@RUN, e);
+        }
+    }
+
+}
+
+

@@ -1,0 +1,116 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2006 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.input.form;
+
+import org.allbinary.game.layer.RTSPlayerLayerInterface;
+import org.allbinary.graphics.form.item.ABCustomItem;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.game.identification.Group;
+import org.allbinary.game.layer.AllBinaryGameLayerManager;
+import org.allbinary.game.layer.special.CollidableDestroyableDamageableLayer;
+import org.allbinary.graphics.GPoint;
+import org.allbinary.graphics.form.ScrollSelectionForm;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.GeographicMapCompositeInterface;
+import org.allbinary.string.CommonLabels;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class CompositeRTSFormInput extends RTSFormInput {
+    private final RTSFormInput[] rtsFormInputArray;
+
+    private final int[] itemIndex;
+
+    private final boolean isPrimaryWaypointCreator;
+
+    public CompositeRTSFormInput(final Group[] groupInterface, final boolean isPrimaryWaypointCreator, final int[] itemIndex) {
+        super(groupInterface);
+        this.itemIndex = itemIndex;
+        this.isPrimaryWaypointCreator = isPrimaryWaypointCreator;
+        this.rtsFormInputArray = new RTSFormInput[2];
+        this.rtsFormInputArray[0] = new WaypointRTSFormInput(this.groupInterfaceArray, isPrimaryWaypointCreator);
+        this.rtsFormInputArray[1] = new UnitRTSFormInput(this.groupInterfaceArray);
+    }
+
+    @Override
+    public void setAllBinaryGameLayerManager(final AllBinaryGameLayerManager allBinaryGameLayerManager) throws Exception {
+        super.setAllBinaryGameLayerManager(allBinaryGameLayerManager);
+        final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) allBinaryGameLayerManager);
+        final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+        final int size = this.rtsFormInputArray.length;
+        for (int index = 0; index < size; index++) {
+            this.rtsFormInputArray[index].setAllBinaryGameLayerManager(allBinaryGameLayerManager);
+        }
+    }
+
+    @Override
+    public void processAtPoint(final CollidableDestroyableDamageableLayer associatedRtsLayer, RTSPlayerLayerInterface rtsPlayerLayerInterface, AllBinaryLayerManager layerManager, GPoint point) throws Exception {
+        ScrollSelectionForm scrollSelectionForm = rtsPlayerLayerInterface.getCurrentScrollSelectionForm();
+        int index = scrollSelectionForm.getSelectedIndexForPoint(point);
+        if (this.isStickyItemSelected() && associatedRtsLayer === CollidableDestroyableDamageableLayer.getNullInstance()) {
+            //Make sure your not drag and dropping units yet
+            if (this.getSelectedStickyItemIndex() <= this.itemIndex[0]) {
+                this.rtsFormInputArray[0].processAtPoint(associatedRtsLayer, rtsPlayerLayerInterface, layerManager, point);
+            }
+        } else if (index > this.itemIndex[0]) {
+            this.rtsFormInputArray[1].processAtPoint(associatedRtsLayer, rtsPlayerLayerInterface, layerManager, point);
+        }
+    }
+
+    @Override
+    public void processGameSpecific(final CollidableDestroyableDamageableLayer associatedRtsLayer, RTSPlayerLayerInterface rtsPlayerLayerInterface, AllBinaryLayerManager layerManager, ABCustomItem item, int index) throws Exception {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        this.logUtil.putF(CommonLabels.getInstance().@INDEX_LABEL + index + ' > ' + this.itemIndex[0], this, commonStrings.@PROCESS);
+        if (this.isStickyItemSelected() && associatedRtsLayer === CollidableDestroyableDamageableLayer.getNullInstance()) {
+            //Make sure your not drag and dropping units yet
+            if (this.getSelectedStickyItemIndex() <= this.itemIndex[0]) {
+                this.rtsFormInputArray[0].processGameSpecific(associatedRtsLayer, rtsPlayerLayerInterface, layerManager, item, index);
+            }
+        } else if (index > this.itemIndex[0]) {
+            this.rtsFormInputArray[1].processGameSpecific(associatedRtsLayer, rtsPlayerLayerInterface, layerManager, item, index);
+        }
+    }
+
+    @Override
+    public boolean processSticky(final CollidableDestroyableDamageableLayer associatedRtsLayer, RTSPlayerLayerInterface rtsPlayerLayerInterface, AllBinaryLayerManager layerManager, GPoint point) throws Exception {
+        return this.rtsFormInputArray[0].processSticky(associatedRtsLayer, rtsPlayerLayerInterface, layerManager, point);
+    }
+
+    @Override
+    public void processStickyGameSpecific(final CollidableDestroyableDamageableLayer associatedRtsLayer, RTSPlayerLayerInterface rtsPlayerLayerInterface, AllBinaryLayerManager layerManager, ABCustomItem item, int index) throws Exception {
+        this.rtsFormInputArray[0].processStickyGameSpecific(associatedRtsLayer, rtsPlayerLayerInterface, layerManager, item, index);
+    }
+
+    @Override
+    public int getSelectedStickyItemIndex() {
+        return this.rtsFormInputArray[0].getSelectedStickyItemIndex();
+    }
+
+    /**      * @return the stickyItemSelected      */
+    @Override
+    public boolean isStickyItemSelected() {
+        return this.rtsFormInputArray[0].isStickyItemSelected();
+    }
+
+    /**      * @param stickyItemSelected the stickyItemSelected to set      */
+    @Override
+    public void setStickyItemSelected(boolean stickyItemSelected) {
+        this.rtsFormInputArray[0].setStickyItemSelected(stickyItemSelected);
+    }
+
+    /**      * @return the selectedStickyItem      */
+    @Override
+    public ABCustomItem getSelectedStickyItem() {
+        return this.rtsFormInputArray[0].getSelectedStickyItem();
+    }
+
+    /**      * @param selectedStickyItem the selectedStickyItem to set      */
+    @Override
+    public void setSelectedStickyItem(ABCustomItem selectedStickyItem) {
+        this.rtsFormInputArray[0].setSelectedStickyItem(selectedStickyItem);
+    }
+
+}
+
+

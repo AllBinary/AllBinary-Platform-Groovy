@@ -1,0 +1,38 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2003 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.graphics.paint.InitUpdatePaintable;
+import org.allbinary.graphics.paint.NullInitUpdatePaintable;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class RTSLayerInfoPaintable extends InitUpdatePaintable {
+    private InitUpdatePaintable initUpdatePaintable = NullInitUpdatePaintable.getInstance();
+
+    public RTSLayerInfoPaintable() throws Exception {
+    }
+
+    @Override
+    public void update() {
+        this.initUpdatePaintable.update();
+    }
+
+    @Override
+    public void paint(Graphics graphics) {
+        this.initUpdatePaintable.paint(graphics);
+    }
+
+    public void updateRTSLayerInfoInit(InitUpdatePaintable hudPaintable) {
+        this.initUpdatePaintable = hudPaintable;
+    }
+
+    public void updateRTSLayerInfoSelection(SelectionHudPaintable hudPaintable) {
+        hudPaintable.updateSelectionInfo();
+        this.initUpdatePaintable = hudPaintable;
+    }
+
+}
+
+

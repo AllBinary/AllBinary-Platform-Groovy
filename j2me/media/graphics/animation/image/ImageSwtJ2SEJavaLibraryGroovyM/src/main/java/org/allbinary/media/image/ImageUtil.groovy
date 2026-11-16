@@ -1,0 +1,170 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.ImageData;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonLabels;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.Display;
+import org.microemu.app.BareMain;
+
+@groovy.transform.CompileStatic
+public class ImageUtil {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final ImageUtil instance = new ImageUtil();
+
+    /**      * @return the instance      */
+    public static ImageUtil getInstance() {
+        return ImageUtil.instance;
+    }
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final CommonSeps commonSeps = CommonSeps.getInstance();
+
+    private String IIOIMAGE_POOL_NAME = 'IIOIMAGE_POOL_NAME';
+
+    //public static PoolInterface poolInterface = null;
+    private final String CREATE_BUFFERED_IMAGE = 'createBufferedImage';
+
+    private ImageUtil() {
+        try {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStrings.@CONSTRUCTOR);
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@CONSTRUCTOR, e);
+        }
+    }
+
+    public org.eclipse.swt.graphics.Image create(final int width, final int height) {
+        final Display display = BareMain.shell.getDisplay();
+        return new org.eclipse.swt.graphics.Image(display, width, height);
+    }
+
+    public org.eclipse.swt.graphics.Image[] createBufferedImage(final org.eclipse.swt.graphics.Image[] bufferedImageArray, final int percent, final boolean scale) throws Exception {
+        final int size = bufferedImageArray.length;
+        final org.eclipse.swt.graphics.Image[] scaledBufferedImageArray = new org.eclipse.swt.graphics.Image[size];
+        org.eclipse.swt.graphics.Image bufferedImage;
+        ImageData imageData;
+        for (int index = 0; index < size; index++) {
+            bufferedImage = bufferedImageArray[index];
+            imageData = bufferedImage.getImageData();
+            final int newWidth = ((int) (Math.divideExact(imageData.@width * percent, 100)));
+            final int newHeight = ((int) (Math.divideExact(imageData.@height * percent, 100)));
+            scaledBufferedImageArray[index] = this.createBufferedImage5(bufferedImage, newWidth, newHeight, scale);
+        }
+        return scaledBufferedImageArray;
+    }
+
+    public org.eclipse.swt.graphics.Image[] createBufferedImage2(final org.eclipse.swt.graphics.Image[] bufferedImageArray, final float percent, final boolean scale) throws Exception {
+        final int size = bufferedImageArray.length;
+        final org.eclipse.swt.graphics.Image[] scaledBufferedImageArray = new org.eclipse.swt.graphics.Image[size];
+        org.eclipse.swt.graphics.Image bufferedImage;
+        ImageData imageData;
+        for (int index = 0; index < size; index++) {
+            bufferedImage = bufferedImageArray[index];
+            imageData = bufferedImage.getImageData();
+            final int newWidth = ((int) (imageData.@width * percent));
+            final int newHeight = ((int) (imageData.@height * percent));
+            scaledBufferedImageArray[index] = this.createBufferedImage5(bufferedImage, newWidth, newHeight, scale);
+        }
+        return scaledBufferedImageArray;
+    }
+
+    public org.eclipse.swt.graphics.Image[] createBufferedImage3(final org.eclipse.swt.graphics.Image[] bufferedImageArray, final int width, final int height, final boolean scale) throws Exception {
+        final int size = bufferedImageArray.length;
+        final org.eclipse.swt.graphics.Image[] scaledBufferedImageArray = new org.eclipse.swt.graphics.Image[size];
+        for (int index = 0; index < size; index++) {
+            scaledBufferedImageArray[index] = this.createBufferedImage5(bufferedImageArray[index], width, height, scale);
+        }
+        return scaledBufferedImageArray;
+    }
+
+    public org.eclipse.swt.graphics.Image createBufferedImage4(final org.eclipse.swt.graphics.Image bufferedImage, final int newWidth, int newHeight) throws Exception {
+        return this.createBufferedImage5(bufferedImage, newWidth, newHeight, true);
+    }
+
+    public org.eclipse.swt.graphics.Image createBufferedImage5(final org.eclipse.swt.graphics.Image bufferedImage, final int newWidth, int newHeight, final boolean scale) throws Exception {
+        return this.createBufferedImage6(bufferedImage, newWidth, newHeight, scale, false);
+    }
+
+    public org.eclipse.swt.graphics.Image createBufferedImage6(final org.eclipse.swt.graphics.Image bufferedImage, final int newWidth, int newHeight, final boolean scale, final boolean allowTranslate) throws Exception {
+        final ImageData imageData = bufferedImage.getImageData();
+        final float width = imageData.@width;
+        final float height = imageData.@height;
+        final float d_newWidth = newWidth;
+        final float d_newHeight = newHeight;
+        final float widthRatio = ((float) (d_newWidth / width));
+        final float heightRatio = ((float) (d_newHeight / height));
+        float ratioX = 1.0f;
+        float ratioY = 1.0f;
+        if (scale) {
+            ratioX = widthRatio;
+            ratioY = heightRatio;
+        }
+        this.logUtil.putF(new StringMaker().appendfloat(width).append(this.commonSeps.@FORWARD_SLASH).appendfloat(height).append(this.commonSeps.@COLON).appendint(newWidth).append(this.commonSeps.@FORWARD_SLASH).appendint(newHeight).append(this.commonSeps.@COLON).appendfloat(widthRatio).append(this.commonSeps.@FORWARD_SLASH).appendfloat(heightRatio).toString(), this, this.CREATE_BUFFERED_IMAGE);
+        float dx = 0;
+        float dy = 0;
+        if (!scale && allowTranslate) {
+            dx = ((float) ((((float) (newWidth - width))) / 2));
+            dy = ((float) ((((float) (newHeight - height))) / 2));
+            this.logUtil.putF(new StringMaker().append('Translate dx: ').appendfloat(dx).append(' dy: ').appendfloat(dy).toString(), this, this.CREATE_BUFFERED_IMAGE);
+        }
+        final org.eclipse.swt.graphics.Image newBufferedImage = new org.eclipse.swt.graphics.Image(BareMain.shell.getDisplay(), newWidth, newHeight);
+        //bufferedImage.getImageData().scaledTo(newWidth, newHeight);
+        final GC gc = new GC(newBufferedImage);
+        final Transform affineTransform = new Transform(gc.getDevice());
+        affineTransform.scale(ratioX, ratioY);
+        affineTransform.translate(dx, dy);
+        gc.setTransform(affineTransform);
+        gc.setAntialias(SWT.ON);
+        gc.setInterpolation(SWT.HIGH);
+        gc.drawImage(bufferedImage, 0, 0, bufferedImage.getBounds().@width, bufferedImage.getBounds().@height, 0, 0, newWidth, newHeight);
+        //gc.drawImage(bufferedImage, 0, 0, bufferedImage.getBounds().width, bufferedImage.getBounds().height, (int) dx, (int) dy, (int) ((width * ratioX) + dx), (int) ((height * ratioY) + dy));
+        gc.dispose();
+        return newBufferedImage;
+    }
+
+    public Canvas drawTransformedImage(final org.eclipse.swt.graphics.Image image, final Composite parent, final int dx, final int dy, final int width, final int height) {
+        final Canvas imageCanvas = new Canvas(parent, SWT.NONE);
+        imageCanvas.addPaintListener(new PaintListener() {
+                public void paintControl(PaintEvent event) {
+                    final GC gc = event.@gc;
+                    final Transform affineTransform = new Transform(gc.getDevice());
+                    affineTransform.translate(dx, dy);
+                    gc.setAntialias(SWT.ON);
+                    gc.setInterpolation(SWT.HIGH);
+                    gc.drawImage(image, 0, 0, image.getBounds().@width, image.getBounds().@height, 0, 0, width, height);
+                }
+
+            });
+        return imageCanvas;
+    }
+
+    public String toString(org.eclipse.swt.graphics.Image bufferedImage) {
+        final CommonLabels commonLabels = CommonLabels.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        final ImageData imageData = bufferedImage.getImageData();
+        stringBuffer.append(' org.eclipse.swt.graphics.Image: ');
+        stringBuffer.append(commonLabels.@WIDTH_LABEL);
+        stringBuffer.appendint(imageData.@width);
+        stringBuffer.append(commonLabels.@HEIGHT_LABEL);
+        stringBuffer.appendint(imageData.@height);
+        stringBuffer.append(' Type: ');
+        stringBuffer.appendint(imageData.@type);
+        return stringBuffer.toString();
+    }
+
+}
+
+

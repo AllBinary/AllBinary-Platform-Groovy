@@ -1,0 +1,166 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.media.audio.music;
+
+import android.app.Service;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.os.IBinder;
+import org.allbinary.android.NullAndroidCanvas;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonStateStrings;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.thread.ARunnable;
+
+@groovy.transform.CompileStatic
+public class BaseMusicService extends Service {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final CommonStateStrings commonStateStrings = CommonStateStrings.getInstance();
+
+    private final String ALREADY_PLAYING = 'This is one song per music service';
+
+    private final String WAITING_FOR_MUSIC_TO_END = 'Waiting for music to end';
+
+    private MediaPlayer player = NullAndroidCanvas.NULL_MEDIA_PLAYER;
+
+    private int songId = -1;
+
+    private int leftVolume = -1;
+
+    private int rightVolume = -1;
+
+    @Override
+    public IBinder onBind(final Intent intent) {
+        //PrelogUtil.putF(this.commonStrings.START, this, "onBind");
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@BIND);
+        //songId = intent.getIntExtra("SONG", AndroidResources.raw.angels_we_have_heard);
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        //Toast.makeText(this, "Music Service Created", Toast.LENGTH_LONG).show();
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@CREATE);
+    }
+
+    @Override
+    public void onDestroy() {
+        //Toast.makeText(this, "Music Service Stopped", Toast.LENGTH_LONG).show();
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@DESTROY);
+        //PrelogUtil.putF(this.commonStrings.START, this, "onDestroy");
+        if (this.player !== NullAndroidCanvas.NULL_MEDIA_PLAYER) {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@PAUSE);
+            this.player.stop();
+            this.player.reset();
+            this.player.release();
+        }
+    }
+
+    public void pause() {
+        if (this.player !== NullAndroidCanvas.NULL_MEDIA_PLAYER) {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@PAUSE);
+            this.player.pause();
+        }
+    }
+
+    public void resume() {
+        if (this.player !== NullAndroidCanvas.NULL_MEDIA_PLAYER && !this.player.isPlaying()) {
+            this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@RESUME);
+            this.player.start();
+        }
+    }
+
+    public void start() {
+        this.player = MediaPlayer.create(this, this.songId);
+        this.player.setVolume(((float) ((((float) this.leftVolume)) / 100.0f)), ((float) ((((float) this.rightVolume)) / 100.0f)));
+        this.player.setLooping(false);
+        this.player.start();
+    }
+
+    @Override
+    public void onStart(final Intent intent, final int startid) {
+        //Toast.makeText(this, "Music Service Started", Toast.LENGTH_LONG).show();
+        this.onStartCommandIntent(intent);
+        //PrelogUtil.putF(this.commonStrings.START, this, "onStart");
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@START);
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        this.onStartCommandIntent(intent);
+        return Service.START_STICKY;
+    }
+
+    public void onStartCommandIntent(final Intent intent) {
+        //PrelogUtil.putF(this.commonStrings.START, this, "onStartCommand");
+        this.logUtil.putF(this.commonStrings.@START, this, this.commonStateStrings.@ON_START_COMMAND);
+        final MusicStrings musicStrings = MusicStrings.getInstance();
+        if (intent != null) {
+            final int command = intent.getIntExtra(this.commonStateStrings.@ON_START_COMMAND, -1);
+            this.logUtil.putF(CommonLabels.getInstance().@COMMAND_LABEL + command, this, this.commonStateStrings.@ON_START_COMMAND);
+            if (command == 1) {
+                this.pause();
+                return;
+            } else if (command == 2) {
+                this.resume();
+                return;
+            } else {
+                this.songId = intent.getIntExtra(musicStrings.@SONG_EXTRA, -1);
+                this.leftVolume = intent.getIntExtra(musicStrings.@LEFT_VOLUME, -1);
+                this.rightVolume = intent.getIntExtra(musicStrings.@RIGHT_VOLUME, -1);
+            }
+        } else {
+            throw new RuntimeException('Started service without intent');
+        }
+        if (this.songId != -1) {
+            System.gc();
+            if (this.player !== NullAndroidCanvas.NULL_MEDIA_PLAYER && this.player.isPlaying()) {
+                final MediaPlayer player = this.player;
+                this.logUtil.putF(this.ALREADY_PLAYING, this, this.commonStateStrings.@ON_START_COMMAND);
+                final Runnable runnable = new MusicRunnable(this, player, intent);
+                final Thread thread = new Thread(runnable);
+                thread.start();
+                return;
+            }
+            this.start();
+        }
+    }
+
+    //A member class instead of a local class using the method's player and intent since most of the converted languages do not have local classes.
+    private static class MusicRunnable extends ARunnable {
+        private final BaseMusicService baseMusicService;
+
+        private final MediaPlayer player;
+
+        private final Intent intent;
+
+        MusicRunnable(final BaseMusicService baseMusicService, final MediaPlayer player, final Intent intent) {
+            this.baseMusicService = baseMusicService;
+            this.player = player;
+            this.intent = intent;
+        }
+
+        @Override
+        public void run() {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            final CommonStateStrings commonStateStrings = CommonStateStrings.getInstance();
+            try {
+                while (this.player.isPlaying()) {
+                    logUtil.putF(this.baseMusicService.@WAITING_FOR_MUSIC_TO_END, this, commonStateStrings.@ON_START_COMMAND);
+                    Thread.sleep(1200);
+                }
+                this.baseMusicService.onStartCommandIntent(this.intent);
+            } catch (Exception e) {
+                logUtil.put(commonStrings.@EXCEPTION, this, commonStateStrings.@ON_START_COMMAND, e);
+            }
+        }
+
+    }
+
+}
+
+

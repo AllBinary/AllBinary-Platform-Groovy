@@ -1,0 +1,44 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security;
+
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.logic.system.security.licensing.AbeLicenseInterfaceFactory;
+import org.allbinary.logic.system.security.licensing.LicensingException;
+
+@groovy.transform.CompileStatic
+public class AbKeys {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final AbKeys instance = new AbKeys();
+
+    public static AbKeys getInstance() {
+        return AbKeys.instance;
+    }
+
+    private AbKeys() {
+    }
+
+    public synchronized String getKey(final AbeClientInformationInterface abeClientInformation, final String keyName) throws LicensingException {
+        try {
+            //{
+            this.logUtil.putF('Getting Key: ' + keyName, this, 'getKey');
+            //TWB - Replace with key from server
+            if (keyName.compareTo('DirectX 8') == 0 || keyName.compareTo('DirectX') == 0 || keyName.compareTo('Low Level') == 0 || keyName.compareTo('System Drivers') == 0) {
+                return 'Temp For Input Library';
+            }
+            return AbeLicenseInterfaceFactory.getInstance().getLicenseInstance(abeClientInformation).getKey(keyName);
+        } catch (LicensingException e) {
+            throw e;
+        } catch (Exception e) {
+            //{
+            this.logUtil.put('Licensing Failure', this, 'getKey()', e);
+            //}
+            throw new LicensingException('Unknown License Failure');
+        }
+    }
+
+}
+
+

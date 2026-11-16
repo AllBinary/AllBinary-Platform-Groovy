@@ -1,0 +1,116 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.transform.info.objectConfig;
+
+import java.util.HashMap;
+import org.allbinary.business.context.modules.storefront.StoreFrontData;
+import org.allbinary.data.tree.dom.document.DomDocumentHelper;
+import org.allbinary.data.tree.dom.document.XmlDocumentHelper;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.regex.replace.Replace;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.logic.visual.transform.info.RootTransformInfoData;
+import org.allbinary.logic.visual.transform.info.TransformInfoData;
+import org.allbinary.logic.visual.transform.info.TransformInfoHttp;
+import org.allbinary.logic.visual.transform.info.TransformInfoInterface;
+import org.allbinary.logic.visual.transform.template.TransformTemplateFactory;
+import org.allbinary.logic.visual.transform.template.TransformTemplateInterface;
+import org.allbinary.logic.visual.transform.template.util.TransformTemplateCustomizerUtil;
+import org.allbinary.string.CommonSeps;
+import org.w3c.dom.Document;
+
+@groovy.transform.CompileStatic
+public class GenericStoreTransformInfoObjectConfig extends TransformInfoObjectConfig {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final AbeClientInformationInterface abeClientInformation;
+
+    public GenericStoreTransformInfoObjectConfig(final AbeClientInformationInterface abeClientInformation, final TransformInfoInterface transformInfoInterface) throws Exception {
+        super(transformInfoInterface);
+        this.abeClientInformation = abeClientInformation;
+    }
+
+    public GenericStoreTransformInfoObjectConfig(final AbeClientInformationInterface abeClientInformation, final TransformInfoInterface transformInfoInterface, final Document document) throws Exception {
+        super(transformInfoInterface, document);
+        this.abeClientInformation = abeClientInformation;
+        this.setDocument(this.generate(this.toXmlDoc()));
+    }
+
+    public GenericStoreTransformInfoObjectConfig(final AbeClientInformationInterface abeClientInformation, final TransformInfoInterface transformInfoInterface, final String name, final String type) throws Exception {
+        super(transformInfoInterface, name, type);
+        this.abeClientInformation = abeClientInformation;
+        this.setDocument(this.generate(this.toXmlDoc()));
+    }
+
+    //private final int HACK = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".length();
+    protected Document generate(final Document objectConfigDocument) throws Exception {
+        //final String docString = XmlDocumentHelper.toString(objectConfigDocument);
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append('TransformInfo: ');
+            if (this.getTransformInfoInterface() != null) {
+                stringBuffer.append(this.getTransformInfoInterface().getName());
+            } else {
+                stringBuffer.append('No Owner!?#@');
+            }
+            //stringBuffer.append(docString);
+            this.logUtil.putF(stringBuffer.toString(), this, 'generate()');
+        }
+        //(TransformInfoHttpStore)
+        final TransformInfoHttp transformInfoHttpStoreInterface = ((TransformInfoHttp) this.getTransformInfoInterface());
+        final String objectConfigDocumentString = XmlDocumentHelper.toString(objectConfigDocument);
+        final HashMap replaceHashMap = this.createReplaceHashMap(transformInfoHttpStoreInterface, objectConfigDocumentString);
+        return this.generate(objectConfigDocumentString, replaceHashMap);
+    }
+
+    private HashMap createReplaceHashMap(final TransformInfoHttp transformInfoHttpStoreInterface, final String objectConfigDocumentString) throws Exception {
+        String storeName = transformInfoHttpStoreInterface.getStoreName();
+        //String viewName = this.getTransformInfoInterface().getName();
+        final HashMap hashMap = this.createHashMap(transformInfoHttpStoreInterface, objectConfigDocumentString);
+        final TransformInfoObjectConfigData transformInfoObjectConfigData = TransformInfoObjectConfigData.getInstance();
+        hashMap.put(transformInfoObjectConfigData.@VARKEY + StoreFrontData.getInstance().@NAME, storeName);
+        //created by objectconfigfactory or better yet use multiple objectconfig files
+        final String pageName = TransformTemplateCustomizerUtil.getInstance().getPageNameHack(this.getTransformInfoInterface().getName(), storeName);
+        hashMap.put(transformInfoObjectConfigData.@VARKEY + TransformInfoData.getInstance().@PARTIAL, pageName);
+        return hashMap;
+    }
+
+    //could cause infinite loop is templateNameKey is in root objectconfig
+    private HashMap createHashMap(final TransformInfoHttp transformInfoHttpStoreInterface, final String objectConfigDocumentString) throws Exception {
+        HashMap hashMap = StdUtil.getInstance().createHashMap();
+        String storeName = transformInfoHttpStoreInterface.getStoreName();
+        //by itself unless it is using a objectconfig that specifies preview as the parent
+        HashMap propertiesHashMap = transformInfoHttpStoreInterface.getPropertiesHashMap();
+        String templateNameOverride = StringUtil.getInstance().getNonNull(((String) propertiesHashMap.get(TransformInfoData.getInstance().@PARTIAL)));
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('TemplateNameOverride: ' + templateNameOverride, this, 'generate()');
+        }
+        StringMaker templateNameStringBuffer = new StringMaker();
+        templateNameStringBuffer.append(storeName);
+        templateNameStringBuffer.append(templateNameOverride);
+        templateNameStringBuffer.append(CommonSeps.getInstance().@SPACE);
+        templateNameStringBuffer.append(RootTransformInfoData.NAME);
+        String templateNameKey = TransformInfoObjectConfigData.getInstance().@VARKEY + TransformInfoData.getInstance().@OWNER;
+        if (objectConfigDocumentString.indexOf(templateNameKey) != -1) {
+            TransformTemplateInterface templateInterface = TransformTemplateFactory.getInstance().getInstance(this.abeClientInformation, templateNameStringBuffer.toString(), transformInfoHttpStoreInterface.getPropertiesHashMap(), transformInfoHttpStoreInterface.getPageContext());
+            String selectedTemplate = templateInterface.getName();
+            hashMap.put(templateNameKey, selectedTemplate);
+        }
+        return hashMap;
+    }
+
+    private Document generate(String objectConfigDocumentString, HashMap hashMap) throws Exception {
+        Replace replace = new Replace(hashMap);
+        Document newObjectConfigDocument = DomDocumentHelper.create(replace.all(objectConfigDocumentString));
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('Final ObjectConfig: ' + XmlDocumentHelper.toString(newObjectConfigDocument), this, 'generate()');
+        }
+        return newObjectConfigDocument;
+    }
+
+}
+
+

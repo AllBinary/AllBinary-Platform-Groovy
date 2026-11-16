@@ -1,0 +1,157 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2006 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer.unit;
+
+import javax.microedition.lcdui.Canvas;
+import org.allbinary.game.layer.SteeringVisitor;
+import org.allbinary.game.layer.AdvancedRTSGameLayer;
+import org.allbinary.game.layer.CollidableCompositeLayer;
+import org.allbinary.game.layer.CollidableRTSBehavior;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.game.input.event.GameKeyEventFactory;
+import org.allbinary.game.layer.AllBinaryTiledLayer;
+import org.allbinary.game.layer.TiledLayerUtil;
+import org.allbinary.game.layer.geographic.map.LayerPartialCellPositionsUtil;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.java.bool.BooleanFactory;
+import org.allbinary.math.AngleInfo;
+import org.allbinary.media.graphics.geography.map.BasicGeographicMap;
+import org.allbinary.media.graphics.geography.map.GeographicMapCompositeInterface;
+import org.allbinary.media.graphics.geography.map.drop.DropCellPositionHistory;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class CollidableUnitBehavior extends CollidableRTSBehavior {
+    private final LayerPartialCellPositionsUtil layerPartialCellPositionsUtil = LayerPartialCellPositionsUtil.getInstance();
+
+    public CollidableUnitBehavior(final boolean collidable) {
+        super(collidable);
+    }
+
+    //Collision with RTSLayers or other none damage game objects
+    @Override
+    protected void collideNone(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterfaceCompositeInterface) throws Exception {
+        //this.logUtil.putF(CommonLabels.getInstance().START + collidableInterface.getName(), this, "collideNone");
+        this.chase(ownerLayer, collidableInterfaceCompositeInterface);
+        final AdvancedRTSGameLayer rtsLayer = ((AdvancedRTSGameLayer) collidableInterfaceCompositeInterface);
+        if (rtsLayer.getType() == UnitLayer.getStaticType()) {
+            this.collideUnit(ownerLayer, ((UnitLayer) rtsLayer));
+        }
+    }
+
+    private class SimpleSteeringVisitor extends SteeringVisitor {
+        @Override
+        public Object visit(final Object anyType) {
+            final LogUtil logUtil = LogUtil.getInstance();
+            try {
+                final CollidableCompositeLayer ownerLayer = ((CollidableCompositeLayer) anyType);
+                if (this.getList().size() > 0) {
+                    ///logUtil.putF("steering", this, "visit");
+                    final CollidableCompositeLayer allbinaryLayer = ((CollidableCompositeLayer) this.getList().get(0));
+                    boolean clear = CollidableUnitBehavior.this.steer(ownerLayer, allbinaryLayer);
+                    if (clear) {
+                        this.getList().clear();
+                        return NullUtil.getInstance().@NULL_OBJECT;
+                    }
+                    return BooleanFactory.getInstance().@TRUE;
+                }
+                return NullUtil.getInstance().@NULL_OBJECT;
+            } catch (Exception e) {
+                final CommonStrings commonStrings = CommonStrings.getInstance();
+                logUtil.put(commonStrings.@EXCEPTION, this, 'visit', e);
+                return NullUtil.getInstance().@NULL_OBJECT;
+            }
+        }
+
+    }
+
+    private final SimpleSteeringVisitor simpleSteeringVisitor = new SimpleSteeringVisitor();
+
+    private boolean steer(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterfaceCompositeInterface) throws Exception {
+        //this.logUtil.putF("Unit: " + collidableInterface.getName(), this, "chase");
+        final UnitLayer ownerUnitLayer = ((UnitLayer) ownerLayer);
+        final UnitLayer unitLayer = ((UnitLayer) collidableInterfaceCompositeInterface);
+        final AngleInfo angleInfo2 = unitLayer.getRotationAnimationInterface().getAngleInfoP();
+        //Since buildings don't move just turn to go around
+        final AngleInfo angleInfo = ownerUnitLayer.getRotationAnimationInterface().getAngleInfoP();
+        final int angle = angleInfo.getAngle() - angleInfo2.getAngle();
+        //this.logUtil.putF("Unit: " + collidableInterface.getName(), this, "chase");
+        if (angle < 90 || angle > 270) {
+            return true;
+        } else if (angle >= 90 || angle <= 270) {
+            ownerUnitLayer.getGameKeyEventList().add(GameKeyEventFactory.getInstance().getInstanceForKey(ownerUnitLayer, Canvas.RIGHT));
+            return false;
+        }
+        throw new Exception('Error');
+    }
+
+    //This allows units to go around other units that it collides with
+    private void chase(final CollidableCompositeLayer ownerLayer, final CollidableCompositeLayer collidableInterfaceCompositeInterface) throws Exception {
+        //this.logUtil.putF(CommonLabels.getInstance().START + collidableInterface.getName(), this, "chase");
+        final AdvancedRTSGameLayer rtsLayer = ((AdvancedRTSGameLayer) collidableInterfaceCompositeInterface);
+        if (rtsLayer.getType() == UnitLayer.getStaticType()) {
+            if (!this.simpleSteeringVisitor.getList().contains(collidableInterfaceCompositeInterface)) {
+                this.simpleSteeringVisitor.getList().add(collidableInterfaceCompositeInterface);
+            }
+            final UnitLayer ownerUnitLayer = ((UnitLayer) ownerLayer);
+            final BasicArrayList list = ownerUnitLayer.getUnitWaypointBehavior().getSteeringVisitorList();
+            if (!list.contains(this.simpleSteeringVisitor)) {
+                list.add(this.simpleSteeringVisitor);
+            }
+        }
+    }
+
+    protected void collideUnit(final CollidableCompositeLayer ownerLayer, final UnitLayer unitLayer) throws Exception {
+        final UnitLayer ownerUnitLayer = ((UnitLayer) ownerLayer);
+        final BasicArrayList partialPositionList = UnitLayer.getPartialpositionlist();
+        final GeographicMapCompositeInterface geographicMapCompositeInterface = ((GeographicMapCompositeInterface) ownerUnitLayer.@allBinaryGameLayerManagerP);
+        final BasicGeographicMap geographicMapInterface = geographicMapCompositeInterface.getGeographicMapInterface()[0];
+        final BasicGeographicMap basicGeographicMap = geographicMapInterface;
+        //        }
+        final DropCellPositionHistory dropCellPositionHistory = DropCellPositionHistory.getInstance();
+        final TiledLayerUtil tiledLayerUtil = TiledLayerUtil.getInstance();
+        final AllBinaryTiledLayer tiledLayer = basicGeographicMap.getAllBinaryTiledLayer();
+        if (ownerLayer.getXP() < unitLayer.getXP() && ownerLayer.getX2() > unitLayer.getXP()) {
+            final int diff = ownerLayer.getWidth() + 1;
+            this.layerPartialCellPositionsUtil.getAllDXY(basicGeographicMap, ownerLayer, -diff, 0, partialPositionList);
+            if (!dropCellPositionHistory.anyCellPositionWithDrop(partialPositionList)) {
+                int x = unitLayer.getXP() - diff;
+                int y = ownerLayer.getYP();
+                x = tiledLayerUtil.keepOnMapX(tiledLayer, x, ownerLayer.getWidth());
+                y = tiledLayerUtil.keepOnMapY(tiledLayer, y, ownerLayer.getHeight());
+                ownerLayer.setPosition(x, y, ownerLayer.getZP());
+            }
+            this.layerPartialCellPositionsUtil.getAllDXY(basicGeographicMap, unitLayer, diff, 0, partialPositionList);
+            if (!dropCellPositionHistory.anyCellPositionWithDrop(partialPositionList)) {
+                int x = unitLayer.getXP() + diff;
+                int y = unitLayer.getYP();
+                x = tiledLayerUtil.keepOnMapX(tiledLayer, x, unitLayer.getWidth());
+                y = tiledLayerUtil.keepOnMapY(tiledLayer, y, unitLayer.getHeight());
+                unitLayer.setPosition(x, y, unitLayer.getZP());
+            }
+        }
+        if (ownerLayer.getYP() < unitLayer.getYP() && ownerLayer.getY2() > unitLayer.getYP()) {
+            int diff = ownerLayer.getHeight() + 1;
+            this.layerPartialCellPositionsUtil.getAllDXY(basicGeographicMap, ownerLayer, 0, -diff, partialPositionList);
+            if (!dropCellPositionHistory.anyCellPositionWithDrop(partialPositionList)) {
+                int x = ownerLayer.getXP();
+                int y = unitLayer.getYP() - diff;
+                x = tiledLayerUtil.keepOnMapX(tiledLayer, x, ownerLayer.getWidth());
+                y = tiledLayerUtil.keepOnMapY(tiledLayer, y, ownerLayer.getHeight());
+                ownerLayer.setPosition(x, y, ownerLayer.getZP());
+            }
+            this.layerPartialCellPositionsUtil.getAllDXY(basicGeographicMap, unitLayer, 0, diff, partialPositionList);
+            if (!dropCellPositionHistory.anyCellPositionWithDrop(partialPositionList)) {
+                int x = unitLayer.getXP();
+                int y = unitLayer.getYP() + diff;
+                x = tiledLayerUtil.keepOnMapX(tiledLayer, x, unitLayer.getWidth());
+                y = tiledLayerUtil.keepOnMapY(tiledLayer, y, unitLayer.getHeight());
+                unitLayer.setPosition(x, y, unitLayer.getZP());
+            }
+        }
+    }
+
+}
+
+

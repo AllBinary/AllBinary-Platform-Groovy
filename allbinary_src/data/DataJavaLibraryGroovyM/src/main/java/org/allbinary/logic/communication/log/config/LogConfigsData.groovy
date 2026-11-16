@@ -1,0 +1,18 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.log.config;
+
+
+@groovy.transform.CompileStatic
+public class LogConfigsData {
+    private static final LogConfigsData instance = new LogConfigsData();
+
+    public static LogConfigsData getInstance() {
+        return LogConfigsData.instance;
+    }
+
+    public final String NAME = 'LOG_CONFIGS_NAME';
+
+}
+
+

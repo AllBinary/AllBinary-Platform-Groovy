@@ -1,0 +1,174 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.audio;
+
+import org.allbinary.thread.ARunnable;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import javax.microedition.media.Control;
+import javax.microedition.media.MediaException;
+import javax.microedition.media.PlayerListener;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.thread.MusicThreadPool;
+
+@groovy.transform.CompileStatic
+public class PCClipWavPlayer extends BasicPlayer implements LineListener {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final AudioInputStream audioInputStream;
+
+    private final Clip clip;
+
+    public PCClipWavPlayer(InputStream inputStream) {
+        AudioInputStream audioInputStream = new AudioInputStream(new ByteArrayInputStream(NullUtil.getInstance().@NULL_BYTE_ARRAY), NullAudioFormat.NULL_AUDIO_FORMAT, 0);
+        Clip clip = new NullClip();
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(inputStream);
+            clip = this.create(audioInputStream);
+            if (clip == null) {
+                this.logUtil.put('Clip was null', this, this.commonStrings.@CONSTRUCTOR, new Exception());
+                throw new RuntimeException();
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@CONSTRUCTOR, e);
+        }
+        this.audioInputStream = audioInputStream;
+        this.clip = clip;
+    }
+
+    @Override
+    public void close() {
+        MusicThreadPool.getInstance().runTask(new ARunnable() {
+                @Override
+                public void run() {
+                    try {
+                        close2();
+                    } catch (Exception e) {
+                        PreLogUtil.putOE(commonStrings.@EXCEPTION, this, commonStrings.@PROCESS, e);
+                    }
+                }
+
+            });
+    }
+
+    private void close2() throws Exception {
+        this.clip.drain();
+        this.clip.flush();
+        this.clip.close();
+    }
+
+    @Override
+    public String getContentType() {
+        return StringUtil.getInstance().@EMPTY_STRING;
+    }
+
+    @Override
+    public synchronized void start() throws MediaException {
+        MusicThreadPool.getInstance().runTask(new ARunnable() {
+                @Override
+                public void run() {
+                    try {
+                        start2();
+                    } catch (Exception e) {
+                        PreLogUtil.putOE(commonStrings.@EXCEPTION, this, commonStrings.@PROCESS, e);
+                    }
+                }
+
+            });
+    }
+
+    private void start2() throws Exception {
+        this.clip.setFramePosition(0);
+        this.clip.loop(this.getLoopCount());
+        this.clip.start();
+        super.start();
+    }
+
+    private final Clip create(AudioInputStream audioInputStream) throws Exception {
+        final Clip clip = AudioSystem.getClip();
+        clip.addLineListener(this);
+        clip.open(audioInputStream);
+        //PrelogUtil.putF(clip.getFormat().toString(), this, commonStrings.PROCESS);
+        return clip;
+    }
+
+    @Override
+    public synchronized void stop() throws MediaException {
+        MusicThreadPool.getInstance().runTask(new ARunnable() {
+                @Override
+                public void run() {
+                    try {
+                        stop2();
+                    } catch (Exception e) {
+                        PreLogUtil.putOE(commonStrings.@EXCEPTION, this, commonStrings.@PROCESS, e);
+                    }
+                }
+
+            });
+    }
+
+    private void stop2() throws Exception {
+        //clip.drain();
+        this.clip.stop();
+        ////clip.close();
+        super.stop();
+    }
+
+    @Override
+    public Control getControl(String controlType) {
+        return new NullControl();
+    }
+
+    @Override
+    public Control[] getControls() {
+        return new Control[0];
+    }
+
+    @Override
+    public void setVolume(final int leftVolume, final int rightVolume) {
+        this.setVolumeF(((float) ((((float) leftVolume)) / 100.0f)));
+    }
+
+    private float getVolume() {
+        final FloatControl masterGainFloatControl = ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN));
+        return ((float) Math.pow(10f, masterGainFloatControl.getValue() / 20f));
+    }
+
+    private void setVolumeF(final float volume) {
+        if (volume < 0f || volume > 1f) {
+            throw new IllegalArgumentException('Volume: ' + volume);
+        }
+        final FloatControl masterGainFloatControl = ((FloatControl) this.clip.getControl(FloatControl.Type.MASTER_GAIN));
+        masterGainFloatControl.setValue(((float) (20f * ((float) Math.log10(volume)))));
+    }
+
+    @Override
+    public long getDuration() {
+        return Math.divideExact(this.clip.getMicrosecondLength(), 1000);
+    }
+
+    @Override
+    public void update(LineEvent event) {
+        //this.logUtil.putF("LineEvent: " + event.getType(), this, "update");
+        if (event.getType().equals(LineEvent.Type.STOP)) {
+            //this.close();
+            final int size = this.listenersList.size();
+            for (int index = 0; index < size; index++) {
+                PlayerListener listener = ((PlayerListener) this.listenersList.get(size));
+                listener.playerUpdate(this, PlayerListener.END_OF_MEDIA, null);
+            }
+        }
+    }
+
+}
+
+

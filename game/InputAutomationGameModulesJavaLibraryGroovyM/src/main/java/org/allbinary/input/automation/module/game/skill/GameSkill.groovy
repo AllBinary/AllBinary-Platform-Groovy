@@ -1,0 +1,90 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.input.automation.module.game.skill;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonSeps;
+
+@groovy.transform.CompileStatic
+public class GameSkill {
+    private static HashMap hashMap = StdUtil.getInstance().createHashMap();
+
+    private GameSkillType gameSkillType;
+
+    private String extra;
+
+    private int time;
+
+    private BasicArrayList vector;
+
+    private final String GAME_SKILL_LABEL = 'GameSkill: ';
+
+    private final String EXTRA_LABEL = 'Extra: ';
+
+    private final String TIME_LABEL = 'Time: ';
+
+    public GameSkill(GameSkillType gameSkillType, String extra, int time) {
+        this.setGameSkillType(gameSkillType);
+        this.setExtra(extra);
+        this.setTime(time);
+        this.vector = new BasicArrayListD();
+        GameSkill.hashMap.put(new StringMaker().append(this.getGameSkillType().getName()).append(CommonSeps.getInstance().@SPACE).append(extra).toString(), this);
+    }
+
+    public GameSkillType getGameSkillType() {
+        return this.gameSkillType;
+    }
+
+    public void setGameSkillType(GameSkillType gameSkillType) {
+        this.gameSkillType = gameSkillType;
+    }
+
+    public String getExtra() {
+        return this.extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
+    }
+
+    public int getTime() {
+        return this.time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public void addProperty(GameSkillPropertyInterface gameSkillPropertyInterface) {
+        this.vector.add(gameSkillPropertyInterface);
+    }
+
+    public BasicArrayList getProperties() {
+        return this.vector;
+    }
+
+    public static GameSkill getInstance(GameSkillType gameSkillType, String extra) {
+        return ((GameSkill) GameSkill.hashMap.get(new StringMaker().append(gameSkillType.getName()).append(CommonSeps.getInstance().@SPACE).append(extra).toString()));
+    }
+
+    public String toString() {
+        final CommonSeps commonSeps = CommonSeps.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(this.GAME_SKILL_LABEL);
+        stringBuffer.append(this.getGameSkillType().toString());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(this.EXTRA_LABEL);
+        stringBuffer.append(this.getExtra());
+        stringBuffer.append(commonSeps.@SPACE);
+        stringBuffer.append(this.TIME_LABEL);
+        stringBuffer.appendlong(this.getTime());
+        return stringBuffer.toString();
+    }
+
+}
+
+

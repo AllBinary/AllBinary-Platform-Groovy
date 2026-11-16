@@ -1,0 +1,41 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.opengles.renderer;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+import org.allbinary.emulator.InitEmulatorFactory;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class EmulatorCustomRenderer {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    protected final RendererStrings renderStrings = RendererStrings.getInstance();
+
+    //Wait until emulator is initialized
+    public void onSurfaceCreated(final GL10 gl, final EGLConfig eglConfig) {
+        this.logUtil.putF(this.commonStrings.@START, this, this.renderStrings.@ON_SURFACE_CREATED);
+        final InitEmulatorFactory initEmulatorFactory = InitEmulatorFactory.getInstance();
+        if (!initEmulatorFactory.isInitEmulator()) {
+            try {
+                final String WAIT_FOR_EMULATOR = 'Waiting on Emulator Initialization';
+                while (!initEmulatorFactory.isInitEmulator()) {
+                    //this.logUtil.putF(WAIT_FOR_EMULATOR, this, METHOD_NAME);
+                    PreLogUtil.put(WAIT_FOR_EMULATOR, this, this.renderStrings.@ON_SURFACE_CREATED);
+                    Thread.sleep(180);
+                }
+            } catch (Exception e) {
+                this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.renderStrings.@ON_SURFACE_CREATED, e);
+            }
+        }
+    }
+
+}
+
+

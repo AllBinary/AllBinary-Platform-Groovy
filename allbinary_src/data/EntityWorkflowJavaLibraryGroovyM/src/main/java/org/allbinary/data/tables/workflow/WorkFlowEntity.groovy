@@ -1,0 +1,141 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.data.tables.workflow;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.business.DynamicObjectData;
+import org.allbinary.business.context.modules.storefront.StoreFrontData;
+import org.allbinary.business.entry.EntryData;
+import org.allbinary.business.init.db.UserDbInitInfo;
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.sql.AbSqlBean;
+import org.allbinary.logic.control.workflow.DbWorkFlowFactory;
+import org.allbinary.logic.control.workflow.WorkFlowData;
+import org.allbinary.logic.control.workflow.WorkFlowInterface;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.logic.system.security.licensing.LicensingException;
+import org.allbinary.logic.system.security.licensing.ServiceClientInformationInterfaceFactory;
+
+@groovy.transform.CompileStatic
+public class WorkFlowEntity extends AbSqlBean implements WorkFlowEntityInterface {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final AbeClientInformationInterface abeClientInformation = ServiceClientInformationInterfaceFactory.getInstance();
+
+    protected final String tableName = 'workflows';
+
+    private final String METHOD_GET = 'get()';
+
+    private final String METHOD_UPDATE = 'update';
+
+    public WorkFlowEntity() {
+        super(new UserDbInitInfo());
+        this.setTableName(this.tableName);
+    }
+
+    public void insert(final BasicArrayList values) {
+        try {
+            super.insert(values);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.putF(this.commonStrings.@SUCCESS, this, INSERT);
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, INSERT, e);
+            }
+        }
+    }
+
+    public void delete(final String name, final String storeName) {
+        try {
+            final HashMap keysAndValues = StdUtil.getInstance().createHashMap();
+            keysAndValues.put(WorkFlowData.getInstance().@NAME, name);
+            keysAndValues.put(StoreFrontData.getInstance().@NAME, storeName);
+            super.deleteWhere(keysAndValues);
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.putF(this.commonStrings.@SUCCESS, this, this.commonStrings.@delete);
+            }
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, this.commonStrings.@delete, e);
+            }
+        }
+    }
+
+    public WorkFlowInterface get(final String name, final String storeName) throws Exception, LicensingException {
+        try {
+            final HashMap keysAndValues = StdUtil.getInstance().createHashMap();
+            keysAndValues.put(WorkFlowData.getInstance().@NAME, name);
+            keysAndValues.put(StoreFrontData.getInstance().@NAME, storeName);
+            final HashMap hashMap = super.getRow(keysAndValues);
+            return ((WorkFlowInterface) DbWorkFlowFactory.getInstance().getInstance(this.abeClientInformation, hashMap));
+        } catch (LicensingException e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, METHOD_GET, e);
+            }
+            throw e;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, METHOD_GET, e);
+            }
+            throw e;
+        }
+    }
+
+    public BasicArrayList get(String storeName) {
+        try {
+            BasicArrayList workFlowsVector = new BasicArrayListD();
+            HashMap keysAndValues = StdUtil.getInstance().createHashMap();
+            keysAndValues.put(StoreFrontData.getInstance().@NAME, storeName);
+            BasicArrayList hashMapVector = super.getRows(keysAndValues);
+            int size = hashMapVector.size();
+            for (int i = 0; i < size; i++) {
+                HashMap workFlowHashMap = ((HashMap) hashMapVector.get(i));
+                if (workFlowHashMap != null) {
+                    workFlowsVector.add(DbWorkFlowFactory.getInstance().getInstance(abeClientInformation, workFlowHashMap));
+                }
+            }
+            return workFlowsVector;
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, this.METHOD_GET, e);
+            }
+            return null;
+        }
+    }
+
+    public void update(HashMap updatedValues) {
+        try {
+            HashMap wherekeysAndValues = StdUtil.getInstance().createHashMap();
+            wherekeysAndValues.put(WorkFlowData.getInstance().@NAME, ((String) updatedValues.get(WorkFlowData.getInstance().@NAME)));
+            wherekeysAndValues.put(StoreFrontData.getInstance().@NAME, ((String) updatedValues.get(StoreFrontData.getInstance().@NAME)));
+            super.updateWhere(wherekeysAndValues, updatedValues);
+        } catch (Exception e) {
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@SQLLOGGING)) {
+                this.logUtil.put(this.commonStrings.@FAILURE, this, METHOD_UPDATE, e);
+            }
+        }
+    }
+
+    public final String createTableStatement() {
+        final WorkFlowData workFlowData = WorkFlowData.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(this.sqlStrings.@CREATE_TABLE).append(tableName).append(this.sqlStrings.@START).append(workFlowData.@NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(StoreFrontData.getInstance().@NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(DynamicObjectData.NAME).append(this.sqlTypeStrings.@MAX_CHAR_COLUMN_NOT_NULL).append(workFlowData.@DATA).append(this.sqlTypeStrings.@BLOB_NOT_NULL).append(EntryData.getInstance().@TIMECREATED).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(EntryData.getInstance().@LASTMODIFIED).append(this.sqlTypeStrings.@MAX_BIG_INT_UNSIGNED_NOT_NULL).append(this.sqlStrings.@PRIMARY_KEY).append(workFlowData.@NAME).append(this.sqlStrings.@END);
+        return stringBuffer.toString();
+    }
+
+    public String createTable() {
+        return super.createTable(this.createTableStatement());
+    }
+
+    public String dropTable() {
+        return super.dropTable();
+    }
+
+}
+
+

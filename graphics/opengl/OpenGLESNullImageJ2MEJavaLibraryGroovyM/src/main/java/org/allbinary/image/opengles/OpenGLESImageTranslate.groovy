@@ -1,0 +1,25 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2025 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.image.opengles;
+
+import javax.microedition.khronos.opengles.GL10;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class OpenGLESImageTranslate {
+    private static final OpenGLESImageTranslate instance = new OpenGLESImageTranslate();
+
+    /**      * @return the instance      */
+    public static OpenGLESImageTranslate getInstance() {
+        return OpenGLESImageTranslate.instance;
+    }
+
+    public void translate(final GL10 gl, final OpenGLESImage openGLESImage, final float x, final float y) {
+    }
+
+    public void translate2(final GL10 gl, final OpenGLESImage openGLESImage) {
+    }
+
+}
+
+

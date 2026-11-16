@@ -1,0 +1,36 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.health;
+
+import org.allbinary.animation.Animation;
+import org.allbinary.animation.AnimationInterfaceFactoryInterface;
+import org.allbinary.animation.ProceduralAnimationInterfaceFactoryInterface;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.media.ScaleProperties;
+
+@groovy.transform.CompileStatic
+public class HealthBarAnimationInterfaceFactory implements AnimationInterfaceFactoryInterface, ProceduralAnimationInterfaceFactoryInterface {
+    public HealthBarAnimationInterfaceFactory() {
+    }
+
+    public HealthBarAnimation getInstanceByLocation(AllBinaryLayer layerInterface, int location) throws Exception {
+        return new HealthBarThreedAnimation(layerInterface, location);
+    }
+
+    @Override
+    public Animation getInstance(final int instanceId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Animation getInstanceAnimation(Animation animationInterface) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void setInitialScale(final ScaleProperties scaleProperties) {
+    }
+
+}
+
+

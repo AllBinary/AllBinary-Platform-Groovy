@@ -1,0 +1,49 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.color;
+
+
+@groovy.transform.CompileStatic
+public class BasicColorUtil {
+    private static final BasicColorUtil instance = new BasicColorUtil();
+
+    public static BasicColorUtil getInstance() {
+        return BasicColorUtil.instance;
+    }
+
+    public final BasicColor[] ZERO_ARRAY = new BasicColor[0];
+
+    public final int ALPHA = ((int) ((int) 0xFF000000L));
+
+    public final boolean isAlpha = true;
+
+    public final boolean ffOpaque = true;
+
+    public int getRGB(int red, int green, int blue) {
+        int value = 0;
+        if (this.isAlpha) {
+            if (this.ffOpaque) {
+                value = this.ALPHA;
+            }
+        }
+        value = (red << 16) | value;
+        value = (green << 8) | value;
+        value = blue | value;
+        return value;
+    }
+
+    public int getARGB(final int alphaValue, final int r, final int g, final int b) {
+        return ((alphaValue << 24) & this.ALPHA) + ((r << 16) & 0x00FF0000) + ((g << 8) & 0x0000FF00) + (b & 0x000000FF);
+    }
+
+    public int get(final int alphaValue, final int color) {
+        return ((alphaValue << 24) & this.ALPHA) + color;
+    }
+
+    public int invert(final int color) {
+        return (0xFFFFFF - color) | this.ALPHA;
+    }
+
+}
+
+

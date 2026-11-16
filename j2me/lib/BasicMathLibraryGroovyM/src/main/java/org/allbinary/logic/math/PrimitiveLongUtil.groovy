@@ -1,0 +1,86 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.math;
+
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class PrimitiveLongUtil {
+    public static PrimitiveLongUtil createPowerOfTen(int powerOfTen) {
+        final PrimitiveLongUtil primitiveLongUtil = new PrimitiveLongUtil(powerOfTen, NullUtil.getInstance().@NULL_OBJECT);
+        if (powerOfTen % 10 != 0) {
+            final LogUtil logUtil = LogUtil.getInstance();
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            logUtil.put(commonStrings.@EXCEPTION, primitiveLongUtil, commonStrings.@CONSTRUCTOR, new Exception('Max must be power of 10'));
+        }
+        return primitiveLongUtil;
+    }
+
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    //private final CommonStrings commonStrings = CommonStrings.getInstance();
+    private int powerOfTen;
+
+    private int maxValue;
+
+    private int maxDigits;
+
+    private final char[] charArray;
+
+    private int currentTotalDigits;
+
+    private final PrimitiveLongSingleton primitiveLongSingleton = PrimitiveLongSingleton.getInstance();
+
+    public PrimitiveLongUtil(int powerOfTen, Object unused) {
+        this.maxDigits = MathUtil.getInstance().getTotalDigits(powerOfTen);
+        this.powerOfTen = powerOfTen;
+        this.maxValue = (powerOfTen * 10) - 1;
+        this.charArray = new char[this.maxDigits];
+    }
+
+    /*     private final StringMaker stringBuffer = new StringMaker();     public String getString(int value)     {         if(value == 0)         {             return NUMBER_STRING_ARRAY[0];         }                                      if(value > this.maxValue)         {             return PrimitiveLongUtil.UNK;         }                  this.stringBuffer.delete(0, this.stringBuffer.length());         int div = this.powerOfTen;         int lastValue = 0;         while(div >= 1)         {             int digit = (int) (value - lastValue) / div;             if(digit >= 0 && digit < 10)             {                 if(digit == 0 && this.stringBuffer.length() == 0)                 {                                   }                 else                 {                     this.stringBuffer.append(NUMBER_STRING_ARRAY[digit]);                 }                 lastValue += digit * div;             }             div = div / 10;         }         return stringBuffer.toString();     }     */
+    public char[] getCharArray(int value) {
+        if (value < 10) {
+            this.setCurrentTotalDigits(1);
+            return this.primitiveLongSingleton.@NUMBER_CHAR_ARRAYS[value];
+        }
+        if (value > this.maxValue) {
+            this.setCurrentTotalDigits(3);
+            return this.primitiveLongSingleton.@UNK;
+        }
+        int index = 0;
+        int div = this.powerOfTen;
+        int lastValue = 0;
+        while (div >= 1) {
+            int digit = Math.divideExact((value - lastValue), div);
+            if (digit >= 0 && digit < 10) {
+                if (digit == 0 && index == 0) {
+                } else {
+                    this.charArray[index++] = this.primitiveLongSingleton.@NUMBER_CHAR_ARRAY[digit];
+                }
+                lastValue += digit * div;
+            }
+            div = Math.divideExact(div, 10);
+        }
+        this.setCurrentTotalDigits(index);
+        /*         while(index < this.maxDigits)         {             this.charArray[index] = ' ';             index++;         }         */
+        return this.charArray;
+    }
+
+    private void setCurrentTotalDigits(int currentTotalDigits) {
+        this.currentTotalDigits = currentTotalDigits;
+    }
+
+    public int getCurrentTotalDigits() {
+        return this.currentTotalDigits;
+    }
+
+    public int getMaxDigits() {
+        return this.maxDigits;
+    }
+
+}
+
+

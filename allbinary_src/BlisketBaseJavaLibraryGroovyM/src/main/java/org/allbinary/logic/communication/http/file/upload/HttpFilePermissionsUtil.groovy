@@ -1,0 +1,26 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.http.file.upload;
+
+import org.allbinary.logic.io.file.AbFile;
+import org.allbinary.logic.io.path.AbPath;
+
+@groovy.transform.CompileStatic
+public class HttpFilePermissionsUtil {
+    private static final HttpFilePermissionsUtil instance = new HttpFilePermissionsUtil();
+
+    /**      * @return the instance      */
+    public static HttpFilePermissionsUtil getInstance() {
+        return HttpFilePermissionsUtil.instance;
+    }
+
+    public void create(AbPath path) throws Exception {
+        AbFile file = AbFile.createAbFileFromAbPath(path);
+        if (!file.isFile()) {
+            file.createNewFile();
+        }
+    }
+
+}
+
+

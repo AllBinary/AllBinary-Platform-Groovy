@@ -1,0 +1,121 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.licensing;
+
+import org.allbinary.logic.StdUtil;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.string.StringValidationUtil;
+import org.allbinary.util.ABHashtable;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+
+@groovy.transform.CompileStatic
+public class AbeClientLicense implements AbeLicenseInterface {
+    private ABHashtable<Object, Object> hashtable;
+
+    private String id;
+
+    private BasicArrayList servers;
+
+    private String special;
+
+    private LicenseType licenseType;
+
+    public AbeClientLicense(ABHashtable<Object, Object> hashtable) {
+        this.hashtable = StdUtil.getInstance().createHashtable();
+        AbeClientInformationData abeClientInformationData = AbeClientInformationData.getInstance();
+        Object keyValue = hashtable.get(abeClientInformationData.@KEY);
+        if (keyValue != null) {
+            if (keyValue instanceof String) {
+                this.hashtable.put(abeClientInformationData.@KEY, keyValue);
+            }
+        }
+        /*          * Set set = hashtable.keySet(); iter = set;          * while(iter.hasNext()) { String nextKey = (String) iter.next(); Object          * keyValue = hashtable.get(nextKey);          *           * if(keyValue instanceof String) { //this.hashtable.put(new          * String(nextKey),new String(keyValue)); this.hashtable.put(nextKey,          * keyValue); } }          */
+        this.id = ((String) hashtable.get(abeClientInformationData.@LICENSEID));
+        BasicArrayList vector = ((BasicArrayList) hashtable.get(abeClientInformationData.@LICENSESERVERS));
+        this.servers = new BasicArrayListD();
+        int size = vector.size();
+        for (int index = 0; index < size; index++) {
+            this.servers.add(vector.get(index));
+        }
+        final StringUtil stringUtil = StringUtil.getInstance();
+        this.setSpecial(stringUtil.getNonNull(((String) hashtable.get(abeClientInformationData.@SPECIAL))));
+        String licenseTypeString = stringUtil.getNonNull(((String) hashtable.get(abeClientInformationData.@LICENSE_TYPE)));
+        this.licenseType = LicenseTypeFactory.getInstance().getInstance(licenseTypeString);
+    }
+
+    // Should only fail is server is not working correctly
+    public static boolean hasRequiredKeys(ABHashtable<Object, Object> resultHashtable) {
+        final AbeClientInformationData abeClientInformationData = AbeClientInformationData.getInstance();
+        if (resultHashtable.containsKey(abeClientInformationData.@LICENSEID) && resultHashtable.containsKey(abeClientInformationData.@LICENSESERVERS) && resultHashtable.containsKey(abeClientInformationData.@KEY) && resultHashtable.containsKey(abeClientInformationData.@LICENSE_TYPE)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean hasKey() {
+        return this.isValid();
+    }
+
+    public String getKey(String keyName) {
+        return ((String) this.hashtable.get(keyName));
+    }
+
+    public String getLicenseId() {
+        return this.id;
+    }
+
+    public BasicArrayList getServers() {
+        return this.servers;
+    }
+
+    public boolean isValid() {
+        final StringValidationUtil stringValidationUtil = StringValidationUtil.getInstance();
+        if (!stringValidationUtil.isEmpty(this.getKey(AbeClientInformationData.getInstance().@KEY))) {
+            return true;
+        }
+        return false;
+    }
+
+    /*      * public void setKey(String keyType, String keyValue) {      * this.keyHashtable.put(keyType,keyValue); }      */
+    public String toString() {
+        StringMaker stringBuffer = new StringMaker();
+        // getKey(String keyName);
+        final String BREAK = '<br/>';
+        stringBuffer.append('License Id: ');
+        stringBuffer.append(this.getLicenseId());
+        stringBuffer.append(BREAK);
+        stringBuffer.append('Is Valid: ');
+        stringBuffer.appendboolean(this.isValid());
+        stringBuffer.append(BREAK);
+        stringBuffer.append('Keys: ');
+        stringBuffer.append(this.hashtable.toString());
+        stringBuffer.append(BREAK);
+        BasicArrayList serverVector = this.getServers();
+        int size = serverVector.size();
+        for (int index = 0; index < size; index++) {
+            String nextServerString = ((String) serverVector.get(index));
+            stringBuffer.append('Server: ');
+            stringBuffer.append(nextServerString);
+            stringBuffer.append(BREAK);
+        }
+        return stringBuffer.toString();
+    }
+
+    private void setSpecial(String special) {
+        this.special = special;
+    }
+
+    public String getSpecial() {
+        return this.special;
+    }
+
+    public LicenseType getLicenseType() {
+        return this.licenseType;
+    }
+
+}
+
+

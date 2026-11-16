@@ -1,0 +1,28 @@
+/* Generated Code Do Not Modify */
+package org.platform.opengl;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.lcdui.Image;
+import org.allbinary.platform.opengles.PlatformTextureBaseFactory;
+
+@groovy.transform.CompileStatic
+public class OpenGLTextureFactory extends PlatformTextureBaseFactory {
+    private static final OpenGLTextureFactory instance = new OpenGLTextureFactory();
+
+    public static OpenGLTextureFactory getInstance() {
+        return OpenGLTextureFactory.instance;
+    }
+
+    private final OpenGLGLUUtils gluUtils = OpenGLGLUUtils.getInstance();
+
+    private OpenGLTextureFactory() {
+    }
+
+    @Override
+    public void load(final GL10 gl, final int target, final int level, final Image image, final int border, final boolean flip) {
+        throw new RuntimeException();
+    }
+
+}
+
+

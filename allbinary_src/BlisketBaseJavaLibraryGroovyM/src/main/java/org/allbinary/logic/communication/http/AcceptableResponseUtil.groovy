@@ -1,0 +1,40 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.communication.http;
+
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.StdUtil;
+
+@groovy.transform.CompileStatic
+public class AcceptableResponseUtil {
+    private static final AcceptableResponseUtil instance = new AcceptableResponseUtil();
+
+    public static AcceptableResponseUtil getInstance() {
+        return AcceptableResponseUtil.instance;
+    }
+
+    static {
+        TsUtil.getInstance().hashCode(AcceptableResponseFactory.getInstance().@HTML);
+    }
+
+    public final BasicArrayList candidateVector = new BasicArrayListD();
+
+    public final BasicArrayList tagNameVector = new BasicArrayListD();
+
+    public String get(int index) {
+        return ((String) this.candidateVector.get(index));
+    }
+
+    public String getTagName(int index) {
+        return ((String) this.tagNameVector.get(index));
+    }
+
+    public int size() {
+        return this.candidateVector.size();
+    }
+
+}
+
+

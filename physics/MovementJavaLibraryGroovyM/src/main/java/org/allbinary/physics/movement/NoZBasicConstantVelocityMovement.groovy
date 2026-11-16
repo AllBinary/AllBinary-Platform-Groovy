@@ -1,0 +1,75 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.physics.movement;
+
+import org.allbinary.game.layer.AllBinaryGameLayer;
+import org.allbinary.game.physics.velocity.BasicVelocityProperties;
+import org.allbinary.game.physics.velocity.VelocityInterfaceCompositeInterface;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.logic.math.BasicDecimal;
+import org.allbinary.logic.math.vector.AxisMathVectorUtil;
+import org.allbinary.math.AngleFactory;
+
+/**  *   * @author user  */
+@groovy.transform.CompileStatic
+public class NoZBasicConstantVelocityMovement extends Movement implements VelocityInterfaceCompositeInterface {
+    private BasicVelocityProperties velocityProperties;
+
+    private BasicDecimal speedBasicDecimal = BasicDecimal.ZERO_BIGDECIMAL;
+
+    private final AxisMathVectorUtil axisMathVectorUtil = AxisMathVectorUtil.getInstance();
+
+    public NoZBasicConstantVelocityMovement(BasicDecimal basicDecimal, BasicVelocityProperties velocityProperties) {
+        this.setSpeedBasicDecimal(basicDecimal);
+        this.velocityProperties = velocityProperties;
+    }
+
+    @Override
+    public void init(BasicDecimal speedBasicDecimal, int angle, int otherAngle) {
+        this.speedBasicDecimal = speedBasicDecimal;
+        AngleFactory angleFactory = AngleFactory.getInstance();
+        this.velocityProperties.setVelocityWithBigDecimal(speedBasicDecimal, angleFactory.getAt(angle), angleFactory.getAt(otherAngle));
+    }
+
+    public void moveOutsideRadius(AllBinaryLayer layer, long radius, int angle, int otherAngle) {
+        int scaleFactorValue = this.speedBasicDecimal.getScaledFactorValue();
+        int xVector = ((int) (Math.divideExact(this.axisMathVectorUtil.calculateX(radius, angle), ((long) scaleFactorValue))));
+        int yVector = ((int) (Math.divideExact(this.axisMathVectorUtil.calculateY(radius, angle), ((long) scaleFactorValue))));
+        //layer.move(xVector, yVector, zVector);
+        layer.moveDXYZ(xVector, yVector, 0);
+    }
+
+    @Override
+    public void process(AllBinaryGameLayer layer) throws Exception {
+        layer.moveDXYZ(this.velocityProperties.getVelocityXBasicDecimalP().getScaled(), this.velocityProperties.getVelocityYBasicDecimalP().getScaled(), 0);
+    }
+
+    public String toString() {
+        return this.velocityProperties.toString();
+    }
+
+    @Override
+    public void stop() {
+        this.velocityProperties.zero();
+    }
+
+    @Override
+    public BasicVelocityProperties getVelocityProperties() {
+        return this.velocityProperties;
+    }
+
+    public void setVelocityProperties(BasicVelocityProperties velocityProperties) {
+        this.velocityProperties = velocityProperties;
+    }
+
+    protected void setSpeedBasicDecimal(BasicDecimal speedBasicDecimal) {
+        this.speedBasicDecimal = speedBasicDecimal;
+    }
+
+    protected BasicDecimal getSpeedBasicDecimal() {
+        return this.speedBasicDecimal;
+    }
+
+}
+
+

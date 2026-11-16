@@ -1,0 +1,39 @@
+/*  * AllBinary Open License Version 1  * Copyright (c) 2011 AllBinary  *   * By agreeing to this license you and any business entity you represent are  * legally bound to the AllBinary Open License Version 1 legal agreement.  *   * You may obtain the AllBinary Open License Version 1 legal agreement from  * AllBinary or the root directory of AllBinary's AllBinary Platform repository.  *   * Created By: Travis Berthelot  *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.hardware;
+
+import org.allbinary.logic.system.os.GenericOperatingSystem;
+import org.allbinary.logic.system.os.OperatingSystems;
+import org.allbinary.logic.system.hardware.linux.LinuxHardware;
+import org.allbinary.logic.system.hardware.windows.WindowsHardware;
+
+@groovy.transform.CompileStatic
+public class HardwareFactory {
+    private static final HardwareFactory instance = new HardwareFactory();
+
+    /**      * @return the instance      */
+    public static HardwareFactory getInstance() {
+        return HardwareFactory.instance;
+    }
+
+    private HardwareFactory() {
+    }
+
+    public static HardwareInterface getInstance(GenericOperatingSystem os) throws Exception {
+        try {
+            final OperatingSystems operatingSystems = OperatingSystems.getInstance();
+            if (os.getName().compareTo(operatingSystems.@LINUX) == 0) {
+                return ((HardwareInterface) new LinuxHardware());
+            } else if (os.getName().indexOf(operatingSystems.@WINDOWS) >= 0) {
+                return ((HardwareInterface) new WindowsHardware());
+            }
+            /*              else              if(os.getName().compareTo(OperatingSystems.SOLARIS)==0)              {                         }*/
+            throw new Exception('No Hardware Imp for: ' + os.getName());
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+}
+
+

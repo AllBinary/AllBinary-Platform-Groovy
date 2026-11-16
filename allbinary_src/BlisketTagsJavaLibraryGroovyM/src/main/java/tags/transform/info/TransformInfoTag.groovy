@@ -1,0 +1,131 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package tags.transform.info;
+
+import javax.servlet.jsp.JspTagException;
+import admin.taghelpers.TagHelperFactoryInterface;
+import org.allbinary.business.context.modules.storefront.StoreFrontData;
+import org.allbinary.logic.communication.http.request.AbResponseHandler;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.io.OutputTypeData;
+import org.allbinary.logic.visual.transform.info.TransformInfoData;
+import taghelpers.transform.info.TransformInfoRequestHelperFactory;
+import tags.ModifyTag;
+
+@groovy.transform.CompileStatic
+public class TransformInfoTag extends ModifyTag {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private String name;
+
+    private String storeName;
+
+    //view object that implements the view interface
+    private String objectFile;
+
+    private String anyType;
+
+    private String objectConfigFile;
+
+    //inserted into database instead of file path   
+    private String objectConfig;
+
+    private String templateFile;
+
+    //inserted into database instead of file path
+    private String template;
+
+    private String dataFile;
+
+    //inserted into database instead of file path
+    private String data;
+
+    //like jsp, asp, pdf, and so on
+    private String type;
+
+    public TransformInfoTag() {
+        super(new TransformInfoRequestHelperFactory());
+    }
+
+    public TransformInfoTag(TagHelperFactoryInterface tagHelperFactoryInterface) {
+        super(tagHelperFactoryInterface);
+    }
+
+    public void setName(String value) {
+        this.name = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@NAME, this.name);
+    }
+
+    public void setStoreName(String value) {
+        this.storeName = value;
+        this.getPropertiesHashMap().put(StoreFrontData.getInstance().@NAME, this.storeName);
+    }
+
+    public void setObjectFile(String value) {
+        this.objectFile = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@OBJECTFILENAME, this.objectFile);
+    }
+
+    public void setObject(String value) {
+        this.anyType = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@OBJECT, this.anyType);
+    }
+
+    public void setTemplateFile(String value) {
+        this.templateFile = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@TEMPLATEFILENAME, this.templateFile);
+    }
+
+    public void setTemplate(String value) {
+        this.template = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@TEMPLATE, this.template);
+    }
+
+    public void setDataFile(String value) {
+        this.dataFile = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@DATAFILENAME, this.dataFile);
+    }
+
+    public void setData(String value) {
+        this.data = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@DATA, this.data);
+    }
+
+    public void setObjectConfigFile(String value) {
+        this.objectConfigFile = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@OBJECTCONFIGFILENAME, this.objectConfigFile);
+    }
+
+    public void setObjectConfig(String value) {
+        this.objectConfig = value;
+        this.getPropertiesHashMap().put(TransformInfoData.getInstance().@OBJECTCONFIG, this.objectConfig);
+    }
+
+    public void setType(String value) {
+        this.type = value;
+        this.getPropertiesHashMap().put(OutputTypeData.getInstance().@NAME, this.type);
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@JSPTAG)) {
+            this.logUtil.putF('TransformInfoTag type set: ' + this.type, this, 'setType');
+        }
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getObjectFile() {
+        return this.objectFile;
+    }
+
+    public int doStartTag() throws JspTagException {
+        try {
+            return super.doStartTag();
+        } catch (Exception e) {
+            AbResponseHandler.sendJspTagRedirect(this.pageContext, e);
+            return SKIP_BODY;
+        }
+    }
+
+}
+
+

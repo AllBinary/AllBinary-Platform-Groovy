@@ -1,0 +1,74 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.visual.dhtml.style;
+
+import java.util.HashMap;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.data.tree.dom.DomSearchHelper;
+import org.allbinary.data.tree.dom.document.XmlDocumentHelper;
+import org.allbinary.logic.communication.http.request.NameSpaceRequestParamData;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.visual.dhtml.style.css.CssElementData;
+import org.allbinary.logic.visual.dhtml.style.css.CssElementsValidationFactory;
+import org.allbinary.string.CommonStrings;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+@groovy.transform.CompileStatic
+public class StylesValidationFactory {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final StylesValidationFactory instance = new StylesValidationFactory();
+
+    public static StylesValidationFactory getInstance() {
+        return StylesValidationFactory.instance;
+    }
+
+    private StylesValidationFactory() {
+    }
+
+    public BasicArrayList getInstance(Document document) throws Exception {
+        final CommonStrings commonStrings = CommonStrings.getInstance();
+        //Get all styles nodes
+        NodeList nodeList = document.getElementsByTagName(StylesData.getInstance().@NAME);
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('Style Present: ' + XmlDocumentHelper.toString(document), this, commonStrings.@GET_INSTANCE);
+        }
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('Styles Present: ' + nodeList.getLength(), this, commonStrings.@GET_INSTANCE);
+        }
+        for (int index = 0; index < nodeList.getLength(); index++) {
+            Node stylesNode = nodeList.item(index);
+            //Get all style nodes
+            BasicArrayList styleNodeList = DomSearchHelper.getAllNodes(StyleData.getInstance().@NAME, stylesNode.getChildNodes());
+            if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                this.logUtil.putF('Number Of Style Nodes Present: ' + styleNodeList.size(), this, commonStrings.@GET_INSTANCE);
+            }
+            for (int styleNodesIndex = 0; styleNodesIndex < styleNodeList.size(); styleNodesIndex++) {
+                //Nodes with StyleData.NAME
+                Node styleNode = ((Node) styleNodeList.get(styleNodesIndex));
+                //Nodes with CssElementData.NAME
+                BasicArrayList cssElementStyleNodeList = DomSearchHelper.getAllNodes(CssElementData.getInstance().@NAME, styleNode.getChildNodes());
+                if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+                    this.logUtil.putF('Number Of Element Nodes Present: ' + cssElementStyleNodeList.size(), this, commonStrings.@GET_INSTANCE);
+                }
+                return CssElementsValidationFactory.getInstance(cssElementStyleNodeList);
+            }
+        }
+        if (org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().@VIEW)) {
+            this.logUtil.putF('No Style Present', this, commonStrings.@GET_INSTANCE);
+        }
+        return new BasicArrayListD();
+    }
+
+    public static BasicArrayList getInstance(HashMap hashMap) throws Exception {
+        //BasicArrayList styles = new BasicArrayListD();
+        Document stylesDocument = ((Document) hashMap.get(NameSpaceRequestParamData.DOCUMENT));
+        return StylesValidationFactory.getInstance().getInstance(stylesDocument);
+    }
+
+}
+
+

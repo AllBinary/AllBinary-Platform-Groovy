@@ -1,0 +1,117 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.lcdui.Graphics;
+import org.allbinary.graphics.Rectangle;
+import org.allbinary.graphics.color.BasicColor;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.graphics.color.BasicColorSetUtil;
+import org.allbinary.graphics.paint.NullPaintable;
+import org.allbinary.graphics.paint.Paintable;
+import org.allbinary.image.opengles.OpenGLSurfaceChangedInterface;
+import org.allbinary.layer.AllBinaryLayer;
+import org.allbinary.layer.AllBinaryLayerManager;
+import org.allbinary.logic.communication.log.ForcedLogUtil;
+import org.allbinary.logic.util.event.AllBinaryEventObject;
+import org.allbinary.logic.util.event.EventStrings;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.view.ViewPositionBase;
+import org.allbinary.view.event.ViewPositionEvent;
+import org.allbinary.view.event.ViewPositionEventListenerInterface;
+
+@groovy.transform.CompileStatic
+public class AllBinaryGameLayer extends AllBinaryLayer implements ViewPositionEventListenerInterface, OpenGLSurfaceChangedInterface {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    protected final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    protected final BasicColorSetUtil basicSetColorUtil = BasicColorSetUtil.getInstance();
+
+    protected final BasicColor RED = BasicColorFactory.getInstance().@RED;
+
+    private static Paintable createPaintable() {
+        if (SWTUtil.isSWT) {
+            return new SWTBlackPaintable();
+        }
+        return NullPaintable.getInstance();
+    }
+
+    private final Paintable paintable = createPaintable();
+
+    private final BasicArrayList gameKeyEventList = new BasicArrayListD();
+
+    public AllBinaryGameLayer(final String name, final Rectangle layerInfo, final ViewPositionBase viewPosition) {
+        super(name, layerInfo, viewPosition);
+    }
+
+    @Override
+    public void set(final GL gl) throws Exception {
+        //OpenGLSurfaceChangedInterface
+        throw new Exception(this.commonStrings.@NOT_IMPLEMENTED);
+    }
+
+    public void move() {
+    }
+
+    public BasicArrayList getGameKeyEventList() {
+        return this.gameKeyEventList;
+    }
+
+    public void processInput(final AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        throw new Exception(this.commonStrings.@NOT_IMPLEMENTED);
+    }
+
+    public void processTick(final AllBinaryLayerManager allBinaryLayerManager) throws Exception {
+        throw new Exception(this.commonStrings.@NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public void onEvent(final AllBinaryEventObject eventObject) {
+        ForcedLogUtil.log(EventStrings.getInstance().@PERFORMANCE_MESSAGE, this);
+    }
+
+    public void onViewPositionChangeEvent() throws Exception {
+        this.onChangeEvent(this.viewPositionEvent);
+    }
+
+    @Override
+    public void onChangeEvent(final ViewPositionEvent layerManagerEvent) throws Exception {
+        //this.logUtil.putF(this.commonStrings.START, this, "onChangeEvent");
+        if (GameLayerUtil.isOnScreen(this)) {
+            this.setVisible(true);
+        } else {
+            this.setVisible(false);
+        }
+    }
+
+    public void paintFirst(final Graphics graphics) {
+        this.paintable.paint(graphics);
+    }
+
+    //Should be overridden
+    public void paintDebug(final Graphics graphics) {
+        //this.logUtil.putF(this.commonStrings.NOT_IMPLEMENTED, this, canvasStrings.PAINT);
+        final ViewPositionBase viewPosition = this.getViewPosition();
+        final int viewX = viewPosition.getX();
+        final int viewY = viewPosition.getY();
+        //this.logUtil.putF("viewX: ").append(viewX).append(" viewY: ").append(viewY, this, canvasStrings.PAINT);
+        this.basicSetColorUtil.setBasicColorP(graphics, this.RED);
+        graphics.drawRect(viewX, viewY, this.getWidth(), this.getHeight());
+    }
+
+    public void setWidth(final int width) {
+        super.setLayerWidth(width);
+        this.setHalfWidth(width >> 1);
+    }
+
+    public void setHeight(final int height) {
+        super.setLayerHeight(height);
+        this.setHalfHeight(height >> 1);
+    }
+
+}
+
+

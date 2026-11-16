@@ -1,0 +1,51 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.layer;
+
+import org.allbinary.logic.math.SmallIntegerSingletonFactory;
+
+/**  *  * @author user  */
+@groovy.transform.CompileStatic
+public class Driver {
+    public static final Driver NULL_DRIVER = new Driver(SmallIntegerSingletonFactory.getInstance().getAt(0), SmallIntegerSingletonFactory.getInstance().getAt(0), new Aggression(SmallIntegerSingletonFactory.getInstance().getAt(0), SmallIntegerSingletonFactory.getInstance().getAt(0), SmallIntegerSingletonFactory.getInstance().getAt(0)));
+
+    //driver intelligence
+    private Integer turnSpeed = SmallIntegerSingletonFactory.getInstance().getAt(0);
+
+    private Integer trackPathSelectionSkill = SmallIntegerSingletonFactory.getInstance().getAt(0);
+
+    private Aggression aggression;
+
+    public Driver(Integer turnSpeed, Integer trackPathSelectionSkill, Aggression aggression) {
+        this.setTurnSpeed(turnSpeed);
+        this.setTrackPathSelectionSkill(trackPathSelectionSkill);
+        this.aggression = aggression;
+    }
+
+    public Integer getTurnSpeed() {
+        return this.turnSpeed;
+    }
+
+    public void setTurnSpeed(Integer turnSpeed) {
+        this.turnSpeed = turnSpeed;
+    }
+
+    public Integer getTrackPathSelectionSkill() {
+        return this.trackPathSelectionSkill;
+    }
+
+    public void setTrackPathSelectionSkill(Integer trackPathSelectionSkill) {
+        this.trackPathSelectionSkill = trackPathSelectionSkill;
+    }
+
+    public Aggression getAggression() {
+        return this.aggression;
+    }
+
+    public void setAggression(Aggression aggression) {
+        this.aggression = aggression;
+    }
+
+}
+
+

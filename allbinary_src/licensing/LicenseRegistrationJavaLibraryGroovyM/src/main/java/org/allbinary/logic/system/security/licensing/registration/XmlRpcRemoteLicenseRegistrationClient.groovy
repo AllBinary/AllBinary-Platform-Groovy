@@ -1,0 +1,87 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.logic.system.security.licensing.registration;
+
+import org.allbinary.logic.string.StringUtil;
+import java.io.IOException;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+import org.allbinary.util.BasicArrayList;
+import org.allbinary.util.BasicArrayListD;
+import org.allbinary.init.crypt.jcehelper.CryptInterface;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.xmlrpc.XmlRpcAbeClient;
+import org.allbinary.logic.java.exception.ExceptionUtil;
+import org.allbinary.logic.system.security.licensing.AbeClientInformationInterface;
+import org.allbinary.util.ABHashtable;
+
+@groovy.transform.CompileStatic
+public class XmlRpcRemoteLicenseRegistrationClient extends XmlRpcAbeClient {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private final String PAGE = 'licenseregistrationserverssl.php';
+
+    public XmlRpcRemoteLicenseRegistrationClient(AbeClientInformationInterface clientInfo) {
+        super(clientInfo, 'LicenseRegistrationServer.process');
+        //Start with the first server
+        this.setServer(0);
+    }
+
+    public Object get(final Object anyType, final CryptInterface cryptInterface) throws Exception {
+        try {
+            //System.out.println("Start Trying Server #" + this.getServer() + CommonLabels.getInstance().COLON_SEP + getClientInfo().getLicenseServer(this.getServer()));
+            String server = getClientInfo().getLicenseServer(this.getServer());
+            StringMaker stringBuffer = new StringMaker();
+            stringBuffer.append(TRYING);
+            stringBuffer.appendint(this.getServer());
+            stringBuffer.append(SEP);
+            stringBuffer.append(server);
+            this.logUtil.putF(CommonLabels.getInstance().@START_LABEL + stringBuffer.toString(), this, this.commonStrings.@GET);
+            // }
+            BasicArrayList param = new BasicArrayListD();
+            String serverUrl = getClientInfo().getLicenseServer(this.getServer());
+            int index = serverUrl.lastIndexOf('/');
+            serverUrl = serverUrl.substring(0, index + 1) + this.PAGE;
+            //System.out.println("Renamed Server: " + serverUrl);
+            final XmlRpcClient xmlRpcClient = new XmlRpcClient(serverUrl);
+            this.setClient(xmlRpcClient);
+            xmlRpcClient.setBasicAuthentication(StringUtil.getInstance().@EMPTY_STRING, StringUtil.getInstance().@EMPTY_STRING);
+            ABHashtable<Object, Object> hashtable = ((ABHashtable<Object, Object>) anyType);
+            //System.out.println("Client Info: \n" + hashtable.toString());
+            this.logUtil.putF(CLIENT_INFO + hashtable.toString(), this, this.commonStrings.@GET);
+            /*              * if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().LICENSING)) {              * this.logUtil.putF("Xml-Rpc Client Liscense Request: \n" +              * client.toString(), this, GET); }              */
+            param.add(hashtable);
+            // KeySpecFactory.DES,
+            Object result = xmlRpcClient.executeWithCrypt(this.getRemoteMethod(), param, cryptInterface);
+            //System.out.println(CommonLabels.getInstance().RESULT_ + CommonSeps.getInstance().NEW_LING + result.toString());
+            this.logUtil.putF(RESULT + result.toString(), this, this.commonStrings.@GET);
+            // }
+            isOnline = true;
+            return result;
+        } catch (IOException e) {
+            //System.out.println("IOException Trying Other Servers");
+            this.logUtil.putF(TRYING_OTHER_SERVERS + ExceptionUtil.getInstance().getStackTrace(e), this, this.commonStrings.@GET);
+            // }
+            if (!e.getMessage().startsWith(HOST_NOT_RESOLVED)) {
+                return this.tryAnother(anyType);
+            } else {
+                throw new Exception(HOST_NOT_RESOLVED_MSG);
+            }
+        } catch (XmlRpcException e) {
+            //System.out.println(message);
+            this.logUtil.put(SERVER_REPORTED_ERROR, this, this.commonStrings.@GET, e);
+            // }
+            return this.tryAnother(anyType);
+        } catch (Exception e) {
+            //System.out.println(message);
+            this.logUtil.put(UNKNOWN_ERROR, this, this.commonStrings.@GET, e);
+            // }
+            return this.tryAnother(anyType);
+        }
+    }
+
+}
+
+

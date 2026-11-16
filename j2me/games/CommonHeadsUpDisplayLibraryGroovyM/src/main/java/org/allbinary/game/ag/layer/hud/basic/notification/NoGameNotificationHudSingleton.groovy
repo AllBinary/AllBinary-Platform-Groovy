@@ -1,0 +1,38 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *   */
+/* Generated Code Do Not Modify */
+package org.allbinary.game.ag.layer.hud.basic.notification;
+
+import org.allbinary.game.graphics.hud.BasicHudFactory;
+import org.allbinary.graphics.color.BasicColorFactory;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.string.CommonStrings;
+
+@groovy.transform.CompileStatic
+public class NoGameNotificationHudSingleton {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static final NoGameNotificationHudSingleton instance = new NoGameNotificationHudSingleton();
+
+    public static NoGameNotificationHudSingleton getInstance() {
+        return NoGameNotificationHudSingleton.instance;
+    }
+
+    private GameNotificationHud gameNotificationHud = GameNotificationHud.NULL_GAME_NOTIFICATION;
+
+    private NoGameNotificationHudSingleton() {
+        try {
+            final BasicHudFactory basicHudFactory = BasicHudFactory.getInstance();
+            this.gameNotificationHud = new NoGameGameNotificationHud();
+        } catch (Exception e) {
+            final CommonStrings commonStrings = CommonStrings.getInstance();
+            this.logUtil.put(commonStrings.@EXCEPTION, this, commonStrings.@CONSTRUCTOR, e);
+        }
+    }
+
+    public GameNotificationHud getGameNotificationHud() {
+        return this.gameNotificationHud;
+    }
+
+}
+
+

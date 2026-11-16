@@ -1,0 +1,40 @@
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics;
+
+import java.io.InputStream;
+import javax.microedition.lcdui.Image;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import java.io.IOException;
+import org.allbinary.platform.graphics.PlatformBitmapBaseFactory;
+import org.allbinary.platform.graphics.PlatformBitmapBase;
+import org.microemu.android.device.AndroidImageInterface;
+
+/**  *  * @author User  */
+@groovy.transform.CompileStatic
+public class OpenGLBitmapFactory extends PlatformBitmapBaseFactory {
+    private static final OpenGLBitmapFactory instance = new OpenGLBitmapFactory();
+
+    /**      * @return the instance      */
+    public static OpenGLBitmapFactory getInstance() {
+        return OpenGLBitmapFactory.instance;
+    }
+
+    public final OpenGLBitmapConfig ARGB_8888 = new OpenGLBitmapConfig(Bitmap.Config.ARGB_8888);
+
+    public OpenGLBitmap createBitmap(int width, int height, OpenGLBitmapConfig config) {
+        return new OpenGLBitmap(Bitmap.createBitmap(width, height, config.@bitmapConfig));
+    }
+
+    public OpenGLBitmap decodeStream(InputStream inputStream) throws IOException {
+        return new OpenGLBitmap(BitmapFactory.decodeStream(inputStream));
+    }
+
+    @Override
+    public PlatformBitmapBase createBitmap(final Image image) {
+        return new OpenGLBitmap((((AndroidImageInterface) image)).getBitmap());
+    }
+
+}
+
+

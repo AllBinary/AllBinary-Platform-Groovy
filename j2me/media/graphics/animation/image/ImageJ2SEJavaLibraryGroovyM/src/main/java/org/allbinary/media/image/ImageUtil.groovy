@@ -1,0 +1,188 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.media.image;
+
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import javax.microedition.lcdui.Image;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.string.CommonLabels;
+import org.allbinary.string.CommonSeps;
+import org.allbinary.string.CommonStrings;
+import org.microemu.device.j2se.J2SEImmutableImage;
+import org.microemu.device.j2se.J2SEMutableImage;
+
+@groovy.transform.CompileStatic
+public class ImageUtil {
+    //protected final LogUtil logUtil = LogUtil.getInstance();
+    private static final ImageUtil instance = new ImageUtil();
+
+    /**      * @return the instance      */
+    public static ImageUtil getInstance() {
+        return ImageUtil.instance;
+    }
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final CommonSeps commonSeps = CommonSeps.getInstance();
+
+    private String IIOIMAGE_POOL_NAME = 'IIOIMAGE_POOL_NAME';
+
+    //public static PoolInterface poolInterface = null;
+    private final String CREATE_BUFFERED_IMAGE = 'createBufferedImage';
+
+    private ImageUtil() {
+    }
+
+    private GraphicsConfiguration getDefaultConfiguration() {
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice gd = ge.getDefaultScreenDevice();
+        return gd.getDefaultConfiguration();
+    }
+
+    public BufferedImage create(final int width, final int height) {
+        final GraphicsConfiguration graphicsConfiguration = this.getDefaultConfiguration();
+        return graphicsConfiguration.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    }
+
+    public BufferedImage[] createBufferedImageForResize(final BufferedImage[] bufferedImageArray, final int percent, final boolean scale) throws Exception {
+        final int size = bufferedImageArray.length;
+        final BufferedImage[] scaledBufferedImageArray = new BufferedImage[size];
+        BufferedImage bufferedImage;
+        for (int index = 0; index < size; index++) {
+            bufferedImage = bufferedImageArray[index];
+            final int newWidth = ((int) (Math.divideExact(bufferedImage.getWidth() * percent, 100)));
+            final int newHeight = ((int) (Math.divideExact(bufferedImage.getHeight() * percent, 100)));
+            scaledBufferedImageArray[index] = this.createBufferedImage(bufferedImage, newWidth, newHeight, scale);
+        }
+        return scaledBufferedImageArray;
+    }
+
+    public BufferedImage[] createBufferedImage2(final BufferedImage[] bufferedImageArray, final float percent, final boolean scale) throws Exception {
+        final int size = bufferedImageArray.length;
+        final BufferedImage[] scaledBufferedImageArray = new BufferedImage[size];
+        BufferedImage bufferedImage;
+        for (int index = 0; index < size; index++) {
+            bufferedImage = bufferedImageArray[index];
+            final int newWidth = ((int) (bufferedImage.getWidth() * percent));
+            final int newHeight = ((int) (bufferedImage.getHeight() * percent));
+            scaledBufferedImageArray[index] = this.createBufferedImage(bufferedImage, newWidth, newHeight, scale);
+        }
+        return scaledBufferedImageArray;
+    }
+
+    public BufferedImage[] createBufferedImage3(final BufferedImage[] bufferedImageArray, final int width, final int height, final boolean scale) throws Exception {
+        final int size = bufferedImageArray.length;
+        final BufferedImage[] scaledBufferedImageArray = new BufferedImage[size];
+        for (int index = 0; index < size; index++) {
+            scaledBufferedImageArray[index] = this.createBufferedImage(bufferedImageArray[index], width, height, scale);
+        }
+        return scaledBufferedImageArray;
+    }
+
+    public BufferedImage createBufferedImageForSave(final BufferedImage bufferedImage, final int newWidth, int newHeight) throws Exception {
+        return this.createBufferedImage(bufferedImage, newWidth, newHeight, true);
+    }
+
+    public BufferedImage createBufferedImage(final BufferedImage bufferedImage, final int newWidth, int newHeight, final boolean scale) throws Exception {
+        return this.createBufferedImageAllowTranslate(bufferedImage, newWidth, newHeight, scale, false);
+    }
+
+    //private final String TRANSLATE = "Translate ";
+    public BufferedImage createBufferedImageAllowTranslate(final BufferedImage bufferedImage, final int newWidth, int newHeight, final boolean scale, final boolean allowTranslate) throws Exception {
+        final double width = bufferedImage.getWidth();
+        final double height = bufferedImage.getHeight();
+        final double d_newWidth = newWidth;
+        final double d_newHeight = newHeight;
+        final double widthRatio = d_newWidth / width;
+        final double heightRatio = d_newHeight / height;
+        double ratioX = 1.0d;
+        double ratioY = 1.0d;
+        if (scale) {
+            ratioX = widthRatio;
+            ratioY = heightRatio;
+        }
+        final AffineTransform affineTransform = AffineTransform.getScaleInstance(ratioX, ratioY);
+        //              .append((float) widthRatio).append(this.commonSeps.FORWARD_SLASH).append((float) heightRatio).toString(), this, CREATE_BUFFERED_IMAGE);
+        if (!scale && allowTranslate) {
+            final double dx = (newWidth - width) / 2;
+            final double dy = (newHeight - height) / 2;
+            //this.logUtil.putF(new StringMaker().append(TRANSLATE).append(PositionStrings.getInstance().DX_LABEL).append((float) dx).append(PositionStrings.getInstance().DY_LABEL).append((float) dy).toString(), this, CREATE_BUFFERED_IMAGE);
+            affineTransform.translate(dx, dy);
+        }
+        final BufferedImage newBufferedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+        final Graphics2D graphics = newBufferedImage.createGraphics();
+        graphics.drawRenderedImage(bufferedImage, affineTransform);
+        /*       Graphics2D g = (Graphics2D) newBufferedImage.getGraphics();       g.scale(widthRatio, heightRatio);              ImageObserver imageObserver = (ImageObserver) new JFrame();       boolean isDrawDone = g.drawImage(bufferedImage, 0, 0, imageObserver);              if(!isDrawDone)       {       boolean isTimeUp = false;       final int MAX = 10;       int numberOfRetries = 0;       while(!isDrawDone && !isTimeUp)       {       if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().VIEW))       {       LogUtil.put("Draw Did Not Finish Yet.  Must Wait.... :-< Retry: " + numberOfRetries, "ImageUtil", this.CREATE_BUFFERED_IMAGE);       }              Thread.currentThread().sleep(1000);              isDrawDone = imageObserver.imageUpdate(       newBufferedImage, ImageObserver.ALLBITS, 0, 0, 0, 0);              if(numberOfRetries > MAX)       {       throw new Exception("Draw Image Is Taking To Long. >" + numberOfRetries*1000);       }              numberOfRetries++;       }       }       else       {       //if(org.allbinary.logic.communication.log.config.type.LogConfigTypes.LOGGING.contains(org.allbinary.logic.communication.log.config.type.LogConfigTypeFactory.getInstance().VIEW))       //{       LogUtil.put("Draw Was Complete", "ImageUtil", this.CREATE_BUFFERED_IMAGE);       //}       }        */
+        return newBufferedImage;
+    }
+
+    public BufferedImage createBufferedImageWithLargerCanvas(final BufferedImage bufferedImage, final int newWidth, int newHeight) throws Exception {
+        final double width = bufferedImage.getWidth();
+        final double height = bufferedImage.getHeight();
+        final double d_newWidth = newWidth;
+        final double d_newHeight = newHeight;
+        final double widthRatio = d_newWidth / width;
+        final double heightRatio = d_newHeight / height;
+        //              .append((float) widthRatio).append(this.commonSeps.FORWARD_SLASH).append((float) heightRatio).toString(), this, CREATE_BUFFERED_IMAGE);
+        final int dx2 = ((int) (newWidth - width));
+        final int dy2 = ((int) (newHeight - height));
+        final int dx = Math.divideExact(((int) dx2), 2);
+        final int dy = Math.divideExact(((int) dy2), 2);
+        final int dx4 = Math.divideExact(((int) dx2), 4);
+        final int dy4 = Math.divideExact(((int) dy2), 4);
+        //this.logUtil.putF(new StringMaker().append(TRANSLATE).append(PositionStrings.getInstance().DX_LABEL).append((float) dx).append(PositionStrings.getInstance().DY_LABEL).append((float) dy).toString(), this, CREATE_BUFFERED_IMAGE);
+        final BufferedImage newBufferedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB_PRE);
+        final Graphics2D graphics = newBufferedImage.createGraphics();
+        //graphics.drawImage(bufferedImage, dx, dy, null);
+        graphics.drawImage(bufferedImage, dx4, dy4, null);
+        //      graphics.drawLine((int) newWidth - dx, (int) newHeight - dy, (int) newWidth - dx - 1, (int) newHeight - dy - 1);
+        return newBufferedImage;
+    }
+
+    public BufferedImage convertToBufferedImage(java.awt.Image toolkitImage) {
+        if (toolkitImage == null) {
+            return null;
+        }
+        final BufferedImage bufferedImage = new BufferedImage(toolkitImage.getWidth(null), toolkitImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.drawImage(toolkitImage, 0, 0, null);
+        g2d.dispose();
+        return bufferedImage;
+    }
+
+    public BufferedImage getBufferedImage(final Image image) {
+        BufferedImage bufferedImage;
+        //java.awt.Image bufferedImage;
+        if (image.isMutable()) {
+            final J2SEMutableImage j2seImage = ((J2SEMutableImage) image);
+            bufferedImage = ((BufferedImage) j2seImage.getImage());
+        } else {
+            final J2SEImmutableImage j2seImage = ((J2SEImmutableImage) image);
+            //sun.awt.image.ToolkitImage cannot be cast to class java.awt.image.BufferedImage
+            bufferedImage = ((BufferedImage) j2seImage.getImage());
+        }
+        return bufferedImage;
+    }
+
+    public String toString(BufferedImage bufferedImage) {
+        final CommonLabels commonLabels = CommonLabels.getInstance();
+        final StringMaker stringBuffer = new StringMaker();
+        stringBuffer.append(' BufferedImage -');
+        stringBuffer.append(commonLabels.@WIDTH_LABEL);
+        stringBuffer.appendint(bufferedImage.getWidth());
+        stringBuffer.append(commonLabels.@HEIGHT_LABEL);
+        stringBuffer.appendint(bufferedImage.getHeight());
+        stringBuffer.append(' Type: ');
+        stringBuffer.appendint(bufferedImage.getType());
+        return stringBuffer.toString();
+    }
+
+}
+
+

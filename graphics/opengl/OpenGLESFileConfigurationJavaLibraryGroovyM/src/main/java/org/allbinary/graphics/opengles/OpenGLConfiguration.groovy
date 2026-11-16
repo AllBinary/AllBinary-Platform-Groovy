@@ -1,0 +1,300 @@
+/* * AllBinary Open License Version 1 * Copyright (c) 2011 AllBinary *  * By agreeing to this license you and any business entity you represent are * legally bound to the AllBinary Open License Version 1 legal agreement. *  * You may obtain the AllBinary Open License Version 1 legal agreement from * AllBinary or the root directory of AllBinary's AllBinary Platform repository. *  * Created By: Travis Berthelot *  */
+/* Generated Code Do Not Modify */
+package org.allbinary.graphics.opengles;
+
+import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.allbinary.TsUtil;
+import org.allbinary.logic.io.AbDataOutputStream;
+import org.allbinary.logic.io.FileStreamFactory;
+import org.allbinary.logic.io.StreamUtil;
+import org.allbinary.logic.io.file.FileFactory;
+import org.allbinary.string.CommonStrings;
+import org.allbinary.logic.string.StringMaker;
+import org.allbinary.logic.string.StringUtil;
+import org.allbinary.logic.communication.log.LogUtil;
+import org.allbinary.logic.communication.log.PreLogUtil;
+import org.allbinary.game.configuration.event.ChangedGameFeatureListener;
+import org.allbinary.game.configuration.feature.Feature;
+import org.allbinary.game.configuration.feature.Features;
+import org.allbinary.game.configuration.feature.MainFeatureFactory;
+import org.allbinary.logic.NullUtil;
+import org.allbinary.logic.io.NullCloseable;
+
+@groovy.transform.CompileStatic
+public class OpenGLConfiguration {
+    protected final LogUtil logUtil = LogUtil.getInstance();
+
+    private static Object instance = NullUtil.getInstance().@NULL_OBJECT;
+
+    public static OpenGLConfiguration getInstance() {
+        if (OpenGLConfiguration.instance === NullUtil.getInstance().@NULL_OBJECT) {
+            OpenGLConfiguration.instance = new OpenGLConfiguration();
+        }
+        return ((OpenGLConfiguration) OpenGLConfiguration.instance);
+    }
+
+    private final String FILE = 'OpenGLConfiguration.dat';
+
+    private final CommonStrings commonStrings = CommonStrings.getInstance();
+
+    private final TsUtil tsUtil = TsUtil.getInstance();
+
+    private boolean opengl = false;
+
+    private OpenGLFeature type = OpenGLFeatureFactory.getInstance().@OPENGL_AS_GAME_THREAD;
+
+    private OpenGLFeature imageColor = OpenGLFeatureFactory.getInstance().@IMAGE_COLOR_DEPTH_4444;
+
+    private OpenGLFeature color = OpenGLFeatureFactory.getInstance().@IMAGE_COLOR_DEPTH_4444;
+
+    private OpenGLFeature versionSelector = OpenGLFeatureFactory.getInstance().@OPENGL_AUTO_SELECT;
+
+    private OpenGLConfiguration() {
+        //PreLogUtil.put(color.getName(), this, "Constructor - color - depth");
+        try {
+            if (FileFactory.getInstance().isFile(this.FILE)) {
+                this.read();
+            } else {
+                this.write();
+            }
+        } catch (Exception e) {
+            this.logUtil.put(this.commonStrings.@EXCEPTION, this, this.commonStrings.@CONSTRUCTOR, e);
+        }
+    }
+
+    private void read() throws Exception {
+        final OpenGLFeatureFactory openGLFeatureFactory = OpenGLFeatureFactory.getInstance();
+        final FileStreamFactory fileInputStreamFactory = FileStreamFactory.getInstance();
+        final InputStream fileInputStream = fileInputStreamFactory.getFileInputStreamInstance(StringUtil.getInstance().@EMPTY_STRING, this.FILE);
+        final DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+        final int openGLValue = dataInputStream.readInt();
+        if (openGLValue == 0) {
+            this.setOpenGL(false);
+        } else if (openGLValue == 1) {
+            this.setOpenGL(true);
+        } else {
+            throw new Exception('Invalid OpenGL Setting');
+        }
+        final String version = dataInputStream.readUTF();
+        if (this.tsUtil.compareTo(version, openGLFeatureFactory.@OPENGL_AUTO_SELECT.getName()) == 0) {
+            this.setVersionSelector(openGLFeatureFactory.@OPENGL_AUTO_SELECT);
+        } else if (this.tsUtil.compareTo(version, openGLFeatureFactory.@OPENGL_MINIMUM.getName()) == 0) {
+            this.setVersionSelector(openGLFeatureFactory.@OPENGL_MINIMUM);
+        } else {
+            throw new Exception('OpenGLConfiguration: Error reading version selector: ' + version);
+        }
+        final String type = dataInputStream.readUTF();
+        if (this.tsUtil.compareTo(type, openGLFeatureFactory.@OPENGL_AS_GAME_THREAD.getName()) == 0) {
+            this.setType(openGLFeatureFactory.@OPENGL_AS_GAME_THREAD);
+        } else if (this.tsUtil.compareTo(type, openGLFeatureFactory.@OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS.getName()) == 0) {
+            this.setType(openGLFeatureFactory.@OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS);
+        } else {
+            throw new Exception('OpenGLConfiguration: Error reading image color');
+        }
+        final String imageColor = dataInputStream.readUTF();
+        if (this.tsUtil.compareTo(imageColor, openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444.getName()) == 0) {
+            this.setImageColor(openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444);
+        } else if (this.tsUtil.compareTo(imageColor, openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444.getName()) == 0) {
+            this.setImageColor(openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444);
+        } else if (this.tsUtil.compareTo(imageColor, openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444.getName()) == 0) {
+            this.setImageColor(openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444);
+        } else {
+            throw new Exception('OpenGLConfiguration: Error reading image color: ' + imageColor);
+        }
+        final String color = dataInputStream.readUTF();
+        if (this.tsUtil.compareTo(color, openGLFeatureFactory.@OPENGL_COLOR_DEPTH_4444.getName()) == 0) {
+            this.setColor(openGLFeatureFactory.@OPENGL_COLOR_DEPTH_4444);
+        } else if (this.tsUtil.compareTo(color, openGLFeatureFactory.@OPENGL_COLOR_DEPTH_565.getName()) == 0) {
+            this.setColor(openGLFeatureFactory.@OPENGL_COLOR_DEPTH_565);
+        } else if (this.tsUtil.compareTo(color, openGLFeatureFactory.@OPENGL_COLOR_DEPTH_8888.getName()) == 0) {
+            this.setColor(openGLFeatureFactory.@OPENGL_COLOR_DEPTH_8888);
+        } else {
+            throw new Exception('OpenGLConfiguration: Error reading color: ' + color);
+        }
+        PreLogUtil.put('Read Configuration: ' + this.toString(), this, 'read');
+    }
+
+    public void write() throws Exception {
+        Closeable closeable = NullCloseable.NULL_CLOSEABLE;
+        try {
+            //this.logUtil.putF("Write Configuration: " + this.toString(), this, "write");
+            PreLogUtil.put('Write Configuration: ' + this.toString(), this, 'write');
+            final FileStreamFactory fileInputStreamFactory = FileStreamFactory.getInstance();
+            final OutputStream fileOutputStream = fileInputStreamFactory.getFileOutputStreamInstance(StringUtil.getInstance().@EMPTY_STRING, this.FILE);
+            final AbDataOutputStream dataOutputStream = new AbDataOutputStream(fileOutputStream);
+            closeable = dataOutputStream;
+            if (this.isOpenGL()) {
+                dataOutputStream.writeInt(1);
+            } else {
+                dataOutputStream.writeInt(0);
+            }
+            dataOutputStream.writeUTF(this.getVersionSelector().getName());
+            dataOutputStream.writeUTF(this.getType().getName());
+            dataOutputStream.writeUTF(this.getImageColor().getName());
+            dataOutputStream.writeUTF(this.getColor().getName());
+            dataOutputStream.flush();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            StreamUtil.getInstance().close(closeable);
+        }
+    }
+
+    public void init() throws Exception {
+        final Features features = Features.getInstance();
+        if (ChangedGameFeatureListener.getInstance().isChangedFeature(MainFeatureFactory.getInstance().@STATIC)) {
+            final OpenGLFeatureFactory openGLFeatureFactory = OpenGLFeatureFactory.getInstance();
+            if (this.isOpenGL()) {
+                //this.logUtil.putF("OpenGL is enabled", this, this.commonStrings.INIT);
+                if (features.isFeature(openGLFeatureFactory.@OPENGL_2D) || features.isFeature(openGLFeatureFactory.@OPENGL_3D) || features.isFeature(openGLFeatureFactory.@OPENGL_2D_AND_3D)) {
+                    if (!features.isDefault(OpenGLFeatureFactory.getInstance().@OPENGL)) {
+                        this.logUtil.putF('Turning on OpenGL as Default', this, this.commonStrings.@INIT);
+                        features.addDefault(OpenGLFeatureFactory.getInstance().@OPENGL);
+                        this.logUtil.putF('Using OpenGL Type Feature: ' + this.getType(), this, this.commonStrings.@INIT);
+                        features.addDefault(this.getType());
+                        this.logUtil.putF('Using OpenGL ImageColor Feature: ' + this.getImageColor(), this, this.commonStrings.@INIT);
+                        features.addDefault(this.getImageColor());
+                        this.logUtil.putF('Using OpenGL Color Feature: ' + this.getColor(), this, this.commonStrings.@INIT);
+                        features.addDefault(this.getColor());
+                        this.logUtil.putF('Using OpenGL Version Selector Feature: ' + this.getVersionSelector(), this, this.commonStrings.@INIT);
+                        features.addDefault(this.getVersionSelector());
+                    }
+                } else {
+                    this.logUtil.putF('OpenGL is enabled, but this game does not support OpenGL (Probably from installing with the same package name from a game that had OpenGL available)', this, this.commonStrings.@INIT);
+                }
+            } else {
+                this.logUtil.putF('OpenGL is Off', this, this.commonStrings.@INIT);
+            }
+        } else {
+            if (this.isOpenGL() && !features.isDefault(OpenGLFeatureFactory.getInstance().@OPENGL)) {
+                PreLogUtil.put('OpenGL is set but not Enabled since statics where not cleared (Reboot or Complete exit is Required)', this, this.commonStrings.@INIT);
+            }
+        }
+        PreLogUtil.put(this.toString(), this, this.commonStrings.@INIT);
+    }
+
+    public void update(final Feature gameFeature, final boolean colorLocked) throws Exception {
+        final Features features = Features.getInstance();
+        final OpenGLFeatureFactory openGLFeatureFactory = OpenGLFeatureFactory.getInstance();
+        boolean modified = false;
+        if (gameFeature === openGLFeatureFactory.@OPENGL) {
+            if (features.isFeature(gameFeature)) {
+                if (!this.isOpenGL()) {
+                    this.setOpenGL(true);
+                    modified = true;
+                }
+            } else {
+                if (this.isOpenGL()) {
+                    this.setOpenGL(false);
+                    modified = true;
+                }
+            }
+        }
+        if (gameFeature === openGLFeatureFactory.@OPENGL_AND_GAME_HAVE_DIFFERENT_THREADS || gameFeature === openGLFeatureFactory.@OPENGL_AS_GAME_THREAD) {
+            if (features.isFeature(gameFeature)) {
+                if (gameFeature !== this.getType()) {
+                    this.setType(((OpenGLFeature) gameFeature));
+                    modified = true;
+                }
+            }
+        }
+        if (gameFeature === openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444 || gameFeature === openGLFeatureFactory.@IMAGE_COLOR_DEPTH_565 || gameFeature === openGLFeatureFactory.@IMAGE_COLOR_DEPTH_8888) {
+            if (features.isFeature(gameFeature)) {
+                if (this.getImageColor() !== gameFeature) {
+                    this.setImageColor(((OpenGLFeature) gameFeature));
+                    if (colorLocked) {
+                        if (gameFeature === openGLFeatureFactory.@IMAGE_COLOR_DEPTH_4444) {
+                            this.setColor(openGLFeatureFactory.@OPENGL_COLOR_DEPTH_4444);
+                        } else if (gameFeature === openGLFeatureFactory.@IMAGE_COLOR_DEPTH_565) {
+                            this.setColor(openGLFeatureFactory.@OPENGL_COLOR_DEPTH_565);
+                        } else if (gameFeature === openGLFeatureFactory.@IMAGE_COLOR_DEPTH_8888) {
+                            this.setColor(openGLFeatureFactory.@OPENGL_COLOR_DEPTH_8888);
+                        }
+                    }
+                    modified = true;
+                }
+            }
+        }
+        if (gameFeature === openGLFeatureFactory.@OPENGL_COLOR_DEPTH_4444 || gameFeature === openGLFeatureFactory.@OPENGL_COLOR_DEPTH_565 || gameFeature === openGLFeatureFactory.@OPENGL_COLOR_DEPTH_8888) {
+            if (features.isFeature(gameFeature)) {
+                if (this.getColor() !== gameFeature) {
+                    this.setColor(((OpenGLFeature) gameFeature));
+                    modified = true;
+                }
+            }
+        }
+        if (gameFeature === openGLFeatureFactory.@OPENGL_AUTO_SELECT || gameFeature === openGLFeatureFactory.@OPENGL_MINIMUM) {
+            if (features.isFeature(gameFeature)) {
+                this.setVersionSelector(((OpenGLFeature) gameFeature));
+            }
+            modified = true;
+        }
+        if (modified) {
+            this.write();
+        }
+    }
+
+    public void setOpenGL(final boolean opengl) {
+        this.opengl = opengl;
+    }
+
+    public boolean isOpenGL() {
+        return this.opengl;
+    }
+
+    public void setImageColor(final OpenGLFeature imageColor) {
+        //PreLogUtil.put(imageColor.getName(), this, "setImageColor - depth");
+        this.imageColor = imageColor;
+    }
+
+    public OpenGLFeature getImageColor() {
+        return this.imageColor;
+    }
+
+    public void setColor(final OpenGLFeature color) {
+        //PreLogUtil.put(imageColor.getName(), this, "setColor - depth");
+        this.color = color;
+    }
+
+    public OpenGLFeature getColor() {
+        return this.color;
+    }
+
+    public void setVersionSelector(final OpenGLFeature versionSelector) {
+        this.versionSelector = versionSelector;
+    }
+
+    public OpenGLFeature getVersionSelector() {
+        return this.versionSelector;
+    }
+
+    public void setType(final OpenGLFeature type) {
+        this.type = type;
+    }
+
+    public OpenGLFeature getType() {
+        return this.type;
+    }
+
+    public String toString() {
+        final StringMaker stringBuffer = new StringMaker();
+        final StringUtil stringUtil = StringUtil.getInstance();
+        stringBuffer.append(' isOpenGL: ');
+        stringBuffer.appendboolean(this.isOpenGL());
+        stringBuffer.append(' VersionSelector: ');
+        stringBuffer.append(stringUtil.toString(this.getVersionSelector()));
+        stringBuffer.append(' Type: ');
+        stringBuffer.append(stringUtil.toString(this.getType()));
+        stringBuffer.append(' Image Color: ');
+        stringBuffer.append(stringUtil.toString(this.getImageColor()));
+        stringBuffer.append(' Color: ');
+        stringBuffer.append(stringUtil.toString(this.getColor()));
+        return stringBuffer.toString();
+    }
+
+}
+
+
